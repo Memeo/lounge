@@ -1,0 +1,3 @@
+This is a storage system based on another popular, but slow and monolithic, storage system. It's written in C for performance and portability concerns.
+
+I'll tell you more when more of it is done.
