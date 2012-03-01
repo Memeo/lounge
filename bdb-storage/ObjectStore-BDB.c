@@ -14,6 +14,7 @@
 
 #include <db.h>
 #include "../Storage/ObjectStore.h"
+#include "../Utils/stringutils.h"
 
 #define min(a,b) ((a) < (b) ? (a) : (b))
 
@@ -34,6 +35,7 @@ keycpy(char *key, u_int32_t len)
 
 struct ObjectHeader
 {
+    uint64_t seq;
     char rev[MAX_REVISION_LEN + 1];
 };
 
@@ -46,6 +48,8 @@ struct LAStorageObjectStore
 {
     LAStorageEnvironment *env;
     DB *db;
+    DB *seq_db;
+    DB_SEQUENCE *seq;
 };
 
 struct LAStorageObjectIterator
@@ -114,10 +118,24 @@ void la_storage_close_env(LAStorageEnvironment *env)
     free(env);
 }
 
+static int seqindex(DB *secondary, const DBT *key, const DBT *value, DBT *result)
+{
+    if (((char *) key->data)[0] == '\0')
+        return DB_DONOTINDEX;
+    LAStorageObjectHeader *header = key->data;
+    result->data = &header->seq;
+    result->size = sizeof(uint64_t);
+    return 0;
+}
+
 LAStorageObjectStore *la_storage_open(LAStorageEnvironment *env, const char *path)
 {
     LAStorageObjectStore *store = (LAStorageObjectStore *) malloc(sizeof(struct LAStorageObjectStore));
     DB_TXN *txn;
+    char *seqpath;
+    DBT seq_key;
+    char seq_name[4];
+    
     if (store == NULL)
         return NULL;
     store->env = env;
@@ -131,11 +149,59 @@ LAStorageObjectStore *la_storage_open(LAStorageEnvironment *env, const char *pat
         free(store);
         return NULL;
     }
+    if (db_create(&store->seq_db, env->env, 0) != 0)
+    {
+        free(store);
+        return NULL;
+    }
     if (store->db->open(store->db, txn, path, NULL, DB_BTREE, DB_CREATE | DB_MULTIVERSION | DB_THREAD | DB_READ_UNCOMMITTED, 0) != 0)
     {
         txn->abort(txn);
         free(store);
         return NULL;
+    }
+    seqpath = string_append(path, ".seq");
+    if (seqpath == NULL)
+    {
+        store->db->close(store->db, 0);
+        txn->abort(txn);
+        free(store);
+        return NULL;
+    }
+    if (store->seq_db->open(store->seq_db, txn, seqpath, NULL, DB_BTREE, DB_CREATE | DB_THREAD | DB_READ_UNCOMMITTED, 0) != 0)
+    {
+        free(seqpath);
+        store->db->close(store->db, 0);
+        txn->abort(txn);
+        free(store);
+        return NULL;
+    }
+    free(seqpath);
+    store->db->associate(store->db, txn, store->seq_db, seqindex, 0);
+    if (db_sequence_create(&store->seq, store->db, 0) != 0)
+    {
+        store->seq_db->close(store->seq_db, 0);
+        store->db->close(store->db, 0);
+        txn->abort(txn);
+        free(store);
+        return NULL;
+    }
+    store->seq->initial_value(store->seq, 1);
+    seq_name[0] = '\0';
+    seq_name[1] = 'S';
+    seq_name[2] = 'E';
+    seq_name[3] = 'Q';
+    seq_key.data = seq_name;
+    seq_key.size = 4;
+    seq_key.ulen = 4;
+    seq_key.flags = DB_DBT_USERMEM;
+    if (store->seq->open(store->seq, txn, &seq_key, DB_CREATE | DB_THREAD) != 0)
+    {
+        store->seq_db->close(store->seq_db, 0);
+        store->db->close(store->db, 0);
+        txn->abort(txn);
+        free(store);
+        return NULL;        
     }
     txn->commit(txn, 0);
     return store;
@@ -203,8 +269,8 @@ LAStorageObjectGetResult la_storage_get(LAStorageObjectStore *store, const char 
     {
         *obj = (LAStorageObject *) malloc(sizeof(LAStorageObject));
         (*obj)->key = strdup(key);
-        (*obj)->rev_data = db_value.data;
-        (*obj)->data_length = (uint32_t) (db_value.size - strlen((const char*) (*obj)->rev_data) - 1);
+        (*obj)->header = db_value.data;
+        (*obj)->data_length = (uint32_t) (db_value.size - strlen((const char*) (*obj)->header->rev_data) - 1);
     }
     
     return LAStorageObjectGetSuccess;
@@ -266,9 +332,9 @@ LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char 
     db_key.ulen = (u_int32_t) strlen(obj->key);
     db_key.flags = DB_DBT_USERMEM;
     
-    db_value_read.data = header.rev;
-    db_value_read.ulen = MAX_REVISION_LEN;
-    db_value_read.dlen = MAX_REVISION_LEN;
+    db_value_read.data = &header;
+    db_value_read.ulen = sizeof(struct ObjectHeader);
+    db_value_read.dlen = sizeof(struct ObjectHeader);
     db_value_read.doff = 0;
     db_value_read.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     
@@ -295,9 +361,13 @@ LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char 
         }
     }
     
+    db_seq_t seq;
+    store->seq->get(store->seq, txn, 1, &seq, 0);
+    obj->header->seq = seq;
+    
     db_value_write.size = (u_int32_t) la_storage_object_total_size(obj);
     db_value_write.ulen = (u_int32_t) la_storage_object_total_size(obj);
-    db_value_write.data = obj->rev_data;
+    db_value_write.data = obj->header;
     db_value_write.flags = DB_DBT_USERMEM;
     
     debug("putting { size: %u, ulen: %u, data: %s, flags: %x }\n", db_value_write.size,
@@ -312,36 +382,67 @@ LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char 
     return LAStorageObjectPutSuccess;
 }
 
-LAStorageObjectIterator *la_storage_iterator_open(LAStorageObjectStore *store)
+uint64_t la_storage_lastseq(LAStorageObjectStore *store)
 {
+    DB_SEQUENCE_STAT *stat;
+    db_seq_t seq;
+    store->seq->stat(store->seq, &stat, 0);
+    seq = stat->st_current;
+    free(stat);
+    return seq;
+}
+
+LAStorageObjectIterator *la_storage_iterator_open(LAStorageObjectStore *store, uint64_t since)
+{
+    DBT seq_key, seq_value;
+    seq_key.data = &since;
+    seq_key.size = sizeof(uint64_t);
+    seq_key.flags = DB_DBT_USERMEM;
+    seq_value.data = NULL;
+    seq_value.ulen = 0;
+    seq_value.dlen = 0;
+    seq_value.doff = 0;
+    seq_value.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     LAStorageObjectIterator *it = (LAStorageObjectIterator *) malloc(sizeof(struct LAStorageObjectIterator));
     if (it == NULL)
         return NULL;
     it->store = store;
-    if (store->db->cursor(store->db, NULL, &it->cursor, DB_TXN_SNAPSHOT) != 0)
+    if (store->db->cursor(store->seq_db, NULL, &it->cursor, DB_TXN_SNAPSHOT) != 0)
     {
         free(it);
         return NULL;
+    }
+    if (since > 0)
+    {
+        if (it->cursor->get(it->cursor, &seq_key, &seq_value, DB_SET) != 0)
+        {
+            it->cursor->close(it->cursor);
+            free(it);
+            return NULL;
+        }
     }
     return it;
 }
 
 LAStorageObjectIteratorResult la_storage_iterator_next(LAStorageObjectIterator *it, LAStorageObject **obj)
 {
+    DBT db_pkey;
     DBT db_key;
     DBT db_value;
     int result;
     
+    memset(&db_pkey, 0, sizeof(DBT));
     memset(&db_key, 0, sizeof(DBT));
     memset(&db_value, 0, sizeof(DBT));
     
+    db_pkey.flags = DB_DBT_MALLOC;
     db_key.flags = DB_DBT_MALLOC;
     if (obj != NULL)
         db_value.flags = DB_DBT_MALLOC;
     else
         db_value.flags = DB_DBT_USERMEM;
     
-    result = it->cursor->get(it->cursor, &db_key, &db_value, DB_NEXT);
+    result = it->cursor->pget(it->cursor, &db_key, &db_pkey, &db_value, DB_NEXT);
     if (result != 0)
     {
         if (result == DB_NOTFOUND)
@@ -349,6 +450,7 @@ LAStorageObjectIteratorResult la_storage_iterator_next(LAStorageObjectIterator *
         return LAStorageObjectIteratorError;
     }
     
+    free(db_key.data);
     if (obj != NULL)
     {
         if (strnlen(db_value.data, min(db_value.size, MAX_REVISION_LEN + 1) > MAX_REVISION_LEN))
@@ -356,13 +458,13 @@ LAStorageObjectIteratorResult la_storage_iterator_next(LAStorageObjectIterator *
         *obj = (LAStorageObject *) malloc(sizeof(LAStorageObject));
         if (*obj == NULL)
             return LAStorageObjectIteratorError;
-        (*obj)->key = keycpy(db_key.data, db_key.size);
+        (*obj)->key = keycpy(db_pkey.data, db_pkey.size);
         if ((*obj)->key == NULL)
         {
             free(*obj);
             return LAStorageObjectIteratorError;
         }
-        (*obj)->rev_data = db_value.data;
+        (*obj)->header = db_value.data;
         (*obj)->data_length = (uint32_t) (db_value.size - strlen(db_value.data) - 1);
     }
     
@@ -377,6 +479,8 @@ void la_storage_iterator_close(LAStorageObjectIterator *it)
 
 void la_storage_close(LAStorageObjectStore *store)
 {
+    store->seq->close(store->seq, 0);
+    store->seq_db->close(store->seq_db, 0);
     store->db->close(store->db, 0);
     free(store);
 }
