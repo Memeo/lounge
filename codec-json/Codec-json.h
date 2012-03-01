@@ -9,6 +9,7 @@
 #ifndef LoungeAct_Codec_json_h
 #define LoungeAct_Codec_json_h
 
+#include <jansson.h>
 
 
 #endif
