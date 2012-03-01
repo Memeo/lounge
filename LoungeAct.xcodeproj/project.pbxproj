@@ -7,6 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7035F95B14FEF9EB00A69A82 /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
+		7054ADD014FED7B600B2D3B6 /* libjansson.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7054ADCF14FED7B600B2D3B6 /* libjansson.4.dylib */; };
+		7054ADD214FED80E00B2D3B6 /* libdb-5.3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7054ADD114FED80E00B2D3B6 /* libdb-5.3.dylib */; };
+		7054ADD714FEE0D900B2D3B6 /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
+		7054ADD814FEE0D900B2D3B6 /* libLoungeAct-storage-bdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */; };
+		7054ADD914FEE0D900B2D3B6 /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
+		7054ADDC14FEE0EF00B2D3B6 /* LoungeAct.h in Headers */ = {isa = PBXBuildFile; fileRef = 7054ADD414FEDEA800B2D3B6 /* LoungeAct.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		7054ADDE14FEE17D00B2D3B6 /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = 7054ADDD14FEE17D00B2D3B6 /* api.c */; };
 		7066428514FC555900CFFCD0 /* ObjectStore-sqlite.c in Sources */ = {isa = PBXBuildFile; fileRef = 7066427C14FC552900CFFCD0 /* ObjectStore-sqlite.c */; };
 		7066428614FC555900CFFCD0 /* ObjectStore-common.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */; };
 		7066429214FD524B00CFFCD0 /* stringutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 7066428914FD520700CFFCD0 /* stringutils.c */; };
@@ -15,13 +23,15 @@
 		706642A814FD554E00CFFCD0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642A714FD554E00CFFCD0 /* libsqlite3.dylib */; };
 		706642B114FD55AA00CFFCD0 /* ObjectStore-BDB.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1740C14F6F9EF00F278CA /* ObjectStore-BDB.c */; };
 		706642B214FD55AA00CFFCD0 /* ObjectStore-common.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */; };
-		706642B314FD55BB00CFFCD0 /* libdb.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F1741814F6FC9A00F278CA /* libdb.a */; };
+		70B1F7B514FECD3B00A9E488 /* codec-json.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B1F7AB14FECC4C00A9E488 /* codec-json.c */; };
 		70B5C24A14FD698900FE9330 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
 		70B5C25914FD699400FE9330 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
 		70B5C26214FD699C00FE9330 /* storagetest.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B5C24014FD68D100FE9330 /* storagetest.c */; };
 		70B5C26314FD699D00FE9330 /* storagetest.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B5C24014FD68D100FE9330 /* storagetest.c */; };
 		70B5C26614FD69B600FE9330 /* libLoungeAct-storage-bdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */; };
 		70B5C26914FD69C800FE9330 /* libLoungeAct-storage-sqlite.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428114FC554700CFFCD0 /* libLoungeAct-storage-sqlite.dylib */; };
+		70B5C26D14FEB24300FE9330 /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B5C26C14FEB24300FE9330 /* buffer.h */; };
+		70B5C26F14FEB2DB00FE9330 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B5C26E14FEB2DB00FE9330 /* buffer.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,21 +49,28 @@
 			remoteGlobalIDString = 701133C914FC3A3100EC4AAC;
 			remoteInfo = "jansson Build";
 		};
-		7066429414FD54AC00CFFCD0 /* PBXContainerItemProxy */ = {
+		7035F95814FEF9E400A69A82 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 7066428D14FD524600CFFCD0;
 			remoteInfo = "LoungeAct-utils";
 		};
-		706642A114FD550900CFFCD0 /* PBXContainerItemProxy */ = {
+		7054ADD514FEE0CF00B2D3B6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 7066428014FC554700CFFCD0;
-			remoteInfo = "LoungeAct-storage-sqlite";
+			remoteGlobalIDString = 70B1F7B014FECD1300A9E488;
+			remoteInfo = "LoungeAct-codec-json";
 		};
-		706642A314FD550900CFFCD0 /* PBXContainerItemProxy */ = {
+		7054ADDA14FEE0DF00B2D3B6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7066428D14FD524600CFFCD0;
+			remoteInfo = "LoungeAct-utils";
+		};
+		7066429414FD54AC00CFFCD0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
 			proxyType = 1;
@@ -410,7 +427,10 @@
 		7011356114FC3C6900EC4AAC /* output */ = {isa = PBXFileReference; lastKnownFileType = text; path = output; sourceTree = "<group>"; };
 		7011356314FC3C6900EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = text; path = input; sourceTree = "<group>"; };
 		7011356414FC3C6900EC4AAC /* output */ = {isa = PBXFileReference; lastKnownFileType = text; path = output; sourceTree = "<group>"; };
-		7066427A14FC54FE00CFFCD0 /* libjansson.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libjansson.a; path = "jansson-2.3-install/lib/libjansson.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7054ADCF14FED7B600B2D3B6 /* libjansson.4.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libjansson.4.dylib; path = "jansson-2.3-install/lib/libjansson.4.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7054ADD114FED80E00B2D3B6 /* libdb-5.3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = "libdb-5.3.dylib"; path = "db-5.3.15/lib/libdb-5.3.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7054ADD414FEDEA800B2D3B6 /* LoungeAct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoungeAct.h; sourceTree = "<group>"; };
+		7054ADDD14FEE17D00B2D3B6 /* api.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = api.c; sourceTree = "<group>"; };
 		7066427C14FC552900CFFCD0 /* ObjectStore-sqlite.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "ObjectStore-sqlite.c"; sourceTree = "<group>"; };
 		7066428114FC554700CFFCD0 /* libLoungeAct-storage-sqlite.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-storage-sqlite.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7066428814FD519100CFFCD0 /* stringutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stringutils.h; sourceTree = "<group>"; };
@@ -418,10 +438,15 @@
 		7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-utils.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		706642A714FD554E00CFFCD0 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-storage-bdb.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B1F7AB14FECC4C00A9E488 /* codec-json.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "codec-json.c"; sourceTree = "<group>"; };
+		70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-codec-json.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B5C24014FD68D100FE9330 /* storagetest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = storagetest.c; sourceTree = "<group>"; };
 		70B5C24614FD698900FE9330 /* storagetest-bdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "storagetest-bdb"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B5C24914FD698900FE9330 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		70B5C25714FD699400FE9330 /* storagetest-sqlite */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "storagetest-sqlite"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B5C26B14FDB13500FE9330 /* Codec-json.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Codec-json.h"; sourceTree = "<group>"; };
+		70B5C26C14FEB24300FE9330 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
+		70B5C26E14FEB2DB00FE9330 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
 		70F14E6114F5944B00F278CA /* libLoungeAct.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libLoungeAct.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		70F14E8514F5C60400F278CA /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
 		70F14E8F14F6F14700F278CA /* Android.mk */ = {isa = PBXFileReference; lastKnownFileType = text; path = Android.mk; sourceTree = "<group>"; };
@@ -9645,7 +9670,6 @@
 		70F173F114F6F17D00F278CA /* showerror.stp */ = {isa = PBXFileReference; lastKnownFileType = text; path = showerror.stp; sourceTree = "<group>"; };
 		70F1740214F6F5B800F278CA /* ObjectStore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjectStore.h; sourceTree = "<group>"; };
 		70F1740C14F6F9EF00F278CA /* ObjectStore-BDB.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ObjectStore-BDB.c"; sourceTree = "<group>"; };
-		70F1741814F6FC9A00F278CA /* libdb.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libdb.a; path = "db-5.3.15/lib/libdb.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ObjectStore-common.c"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -9670,7 +9694,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				706642B314FD55BB00CFFCD0 /* libdb.a in Frameworks */,
+				7035F95B14FEF9EB00A69A82 /* libLoungeAct-utils.dylib in Frameworks */,
+				7054ADD214FED80E00B2D3B6 /* libdb-5.3.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70B1F7AE14FECD1300A9E488 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7054ADD014FED7B600B2D3B6 /* libjansson.4.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9696,6 +9729,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7054ADD714FEE0D900B2D3B6 /* libLoungeAct-codec-json.dylib in Frameworks */,
+				7054ADD814FEE0D900B2D3B6 /* libLoungeAct-storage-bdb.dylib in Frameworks */,
+				7054ADD914FEE0D900B2D3B6 /* libLoungeAct-utils.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10889,11 +10925,23 @@
 			path = "sqlite-storage";
 			sourceTree = "<group>";
 		};
+		7054ADD314FEDE5800B2D3B6 /* API */ = {
+			isa = PBXGroup;
+			children = (
+				7054ADD414FEDEA800B2D3B6 /* LoungeAct.h */,
+				7054ADDD14FEE17D00B2D3B6 /* api.c */,
+			);
+			name = API;
+			path = api;
+			sourceTree = "<group>";
+		};
 		7066428714FD510900CFFCD0 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
 				7066428814FD519100CFFCD0 /* stringutils.h */,
 				7066428914FD520700CFFCD0 /* stringutils.c */,
+				70B5C26C14FEB24300FE9330 /* buffer.h */,
+				70B5C26E14FEB2DB00FE9330 /* buffer.c */,
 			);
 			name = Utils;
 			path = utils;
@@ -10916,22 +10964,34 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		70B5C26A14FDB0FF00FE9330 /* Codec-json */ = {
+			isa = PBXGroup;
+			children = (
+				70B5C26B14FDB13500FE9330 /* Codec-json.h */,
+				70B1F7AB14FECC4C00A9E488 /* codec-json.c */,
+			);
+			name = "Codec-json";
+			path = "codec-json";
+			sourceTree = "<group>";
+		};
 		70F14E5614F5944900F278CA = {
 			isa = PBXGroup;
 			children = (
+				7054ADD314FEDE5800B2D3B6 /* API */,
+				7054ADD114FED80E00B2D3B6 /* libdb-5.3.dylib */,
+				7054ADCF14FED7B600B2D3B6 /* libjansson.4.dylib */,
+				7011321314FC362F00EC4AAC /* Codec */,
+				70B5C26A14FDB0FF00FE9330 /* Codec-json */,
 				706642A714FD554E00CFFCD0 /* libsqlite3.dylib */,
 				7066428714FD510900CFFCD0 /* Utils */,
 				7011356714FC435E00EC4AAC /* SQLite Storage Driver */,
 				701133D514FC3C6800EC4AAC /* jansson-2.3 */,
-				7011321314FC362F00EC4AAC /* Codec */,
-				70F1740314F6F99300F278CA /* BerkeleyDB Driver */,
+				70F1740314F6F99300F278CA /* BerkeleyDB Storage Driver */,
 				70F1740114F6F57800F278CA /* Storage */,
 				70F14E8D14F6F14700F278CA /* db-5.3.15 */,
 				70F14E8514F5C60400F278CA /* libcrypto.dylib */,
 				70B5C24814FD698900FE9330 /* Frameworks */,
 				70F14E6214F5944B00F278CA /* Products */,
-				70F1741814F6FC9A00F278CA /* libdb.a */,
-				7066427A14FC54FE00CFFCD0 /* libjansson.a */,
 			);
 			sourceTree = "<group>";
 		};
@@ -10944,6 +11004,7 @@
 				706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */,
 				70B5C24614FD698900FE9330 /* storagetest-bdb */,
 				70B5C25714FD699400FE9330 /* storagetest-sqlite */,
+				70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -23009,12 +23070,12 @@
 			path = storage;
 			sourceTree = "<group>";
 		};
-		70F1740314F6F99300F278CA /* BerkeleyDB Driver */ = {
+		70F1740314F6F99300F278CA /* BerkeleyDB Storage Driver */ = {
 			isa = PBXGroup;
 			children = (
 				70F1740C14F6F9EF00F278CA /* ObjectStore-BDB.c */,
 			);
-			name = "BerkeleyDB Driver";
+			name = "BerkeleyDB Storage Driver";
 			path = "bdb-storage";
 			sourceTree = "<group>";
 		};
@@ -23033,6 +23094,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7066429314FD525500CFFCD0 /* stringutils.h in Headers */,
+				70B5C26D14FEB24300FE9330 /* buffer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23043,10 +23105,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		70B1F7AF14FECD1300A9E488 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70F14E5F14F5944B00F278CA /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7054ADDC14FEE0EF00B2D3B6 /* LoungeAct.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23190,10 +23260,28 @@
 			buildRules = (
 			);
 			dependencies = (
+				7035F95914FEF9E400A69A82 /* PBXTargetDependency */,
 			);
 			name = "LoungeAct-storage-bdb";
 			productName = "LoungeAct-storage-bdb";
 			productReference = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70B1F7B214FECD1400A9E488 /* Build configuration list for PBXNativeTarget "LoungeAct-codec-json" */;
+			buildPhases = (
+				70B1F7AD14FECD1300A9E488 /* Sources */,
+				70B1F7AE14FECD1300A9E488 /* Frameworks */,
+				70B1F7AF14FECD1300A9E488 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "LoungeAct-codec-json";
+			productName = "LoungeAct-codec-json";
+			productReference = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
 		70B5C24514FD698900FE9330 /* storagetest-bdb */ = {
@@ -23243,9 +23331,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				7054ADDB14FEE0DF00B2D3B6 /* PBXTargetDependency */,
+				7054ADD614FEE0CF00B2D3B6 /* PBXTargetDependency */,
 				706642B514FD55D500CFFCD0 /* PBXTargetDependency */,
-				706642A214FD550900CFFCD0 /* PBXTargetDependency */,
-				706642A414FD550900CFFCD0 /* PBXTargetDependency */,
 			);
 			name = LoungeAct;
 			productName = LoungeAct;
@@ -23285,6 +23373,7 @@
 				706642AC14FD55A000CFFCD0 /* LoungeAct-storage-bdb */,
 				70B5C24514FD698900FE9330 /* storagetest-bdb */,
 				70B5C25614FD699400FE9330 /* storagetest-sqlite */,
+				70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */,
 			);
 		};
 /* End PBXProject section */
@@ -23304,6 +23393,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7066429214FD524B00CFFCD0 /* stringutils.c in Sources */,
+				70B5C26F14FEB2DB00FE9330 /* buffer.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23313,6 +23403,14 @@
 			files = (
 				706642B114FD55AA00CFFCD0 /* ObjectStore-BDB.c in Sources */,
 				706642B214FD55AA00CFFCD0 /* ObjectStore-common.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70B1F7AD14FECD1300A9E488 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70B1F7B514FECD3B00A9E488 /* codec-json.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23336,6 +23434,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7054ADDE14FEE17D00B2D3B6 /* api.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23352,20 +23451,25 @@
 			target = 701133C914FC3A3100EC4AAC /* jansson Build */;
 			targetProxy = 701133D314FC3A8E00EC4AAC /* PBXContainerItemProxy */;
 		};
+		7035F95914FEF9E400A69A82 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
+			targetProxy = 7035F95814FEF9E400A69A82 /* PBXContainerItemProxy */;
+		};
+		7054ADD614FEE0CF00B2D3B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */;
+			targetProxy = 7054ADD514FEE0CF00B2D3B6 /* PBXContainerItemProxy */;
+		};
+		7054ADDB14FEE0DF00B2D3B6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
+			targetProxy = 7054ADDA14FEE0DF00B2D3B6 /* PBXContainerItemProxy */;
+		};
 		7066429514FD54AD00CFFCD0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
 			targetProxy = 7066429414FD54AC00CFFCD0 /* PBXContainerItemProxy */;
-		};
-		706642A214FD550900CFFCD0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7066428014FC554700CFFCD0 /* LoungeAct-storage-sqlite */;
-			targetProxy = 706642A114FD550900CFFCD0 /* PBXContainerItemProxy */;
-		};
-		706642A414FD550900CFFCD0 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
-			targetProxy = 706642A314FD550900CFFCD0 /* PBXContainerItemProxy */;
 		};
 		706642B514FD55D500CFFCD0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -23495,7 +23599,10 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/db-5.3.15/include";
-				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/db-5.3.15/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)/db-5.3.15/lib",
+					"\"$(SRCROOT)/../../Library/Developer/Xcode/DerivedData/LoungeAct-hiwbfamibjtzqyekubhwduhmpjfi/Build/Products/Debug/db-5.3.15/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -23505,7 +23612,36 @@
 			buildSettings = {
 				EXECUTABLE_PREFIX = lib;
 				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/db-5.3.15/include";
-				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/db-5.3.15/lib";
+				LIBRARY_SEARCH_PATHS = (
+					"$(BUILT_PRODUCTS_DIR)/db-5.3.15/lib",
+					"\"$(SRCROOT)/../../Library/Developer/Xcode/DerivedData/LoungeAct-hiwbfamibjtzqyekubhwduhmpjfi/Build/Products/Debug/db-5.3.15/lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		70B1F7B314FECD1400A9E488 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/include";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../Library/Developer/Xcode/DerivedData/LoungeAct-hiwbfamibjtzqyekubhwduhmpjfi/Build/Products/Debug/jansson-2.3-install/lib\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		70B1F7B414FECD1400A9E488 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/include";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../Library/Developer/Xcode/DerivedData/LoungeAct-hiwbfamibjtzqyekubhwduhmpjfi/Build/Products/Debug/jansson-2.3-install/lib\"",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -23727,6 +23863,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		70B1F7B214FECD1400A9E488 /* Build configuration list for PBXNativeTarget "LoungeAct-codec-json" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70B1F7B314FECD1400A9E488 /* Debug */,
+				70B1F7B414FECD1400A9E488 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		70B5C25014FD698900FE9330 /* Build configuration list for PBXNativeTarget "storagetest-bdb" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -23734,6 +23879,7 @@
 				70B5C25214FD698900FE9330 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70B5C25F14FD699400FE9330 /* Build configuration list for PBXNativeTarget "storagetest-sqlite" */ = {
 			isa = XCConfigurationList;
@@ -23742,6 +23888,7 @@
 				70B5C26114FD699400FE9330 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70F14E5B14F5944A00F278CA /* Build configuration list for PBXProject "LoungeAct" */ = {
 			isa = XCConfigurationList;
