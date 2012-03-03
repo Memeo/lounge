@@ -9,7 +9,9 @@
 #ifndef LoungeAct_Codec_h
 #define LoungeAct_Codec_h
 
-#include "../Storage/ObjectStore.h"
+#include <sys/types.h>
+#include <stdarg.h>
+#include <stdio.h>
 
 /*
  * This API borrows much from the jansson API, which is the
@@ -33,16 +35,17 @@ typedef enum
     LA_CODEC_NULL
 } la_codec_type;
 
-int la_codec_typeof(la_codec_value_t *value);
-int la_codec_is_object(la_codec_value_t *value);
-int la_codec_is_array(la_codec_value_t *value);
-int la_codec_is_integer(la_codec_value_t *value);
-int la_codec_is_real(la_codec_value_t *value);
-int la_codec_is_true(la_codec_value_t *value);
-int la_codec_is_false(la_codec_value_t *value);
-int la_codec_is_null(la_codec_value_t *value);
-int la_codec_is_number(la_codec_value_t *value);
-int la_codec_is_boolean(la_codec_value_t *value);
+int la_codec_typeof(const la_codec_value_t *value);
+int la_codec_is_object(const la_codec_value_t *value);
+int la_codec_is_array(const la_codec_value_t *value);
+int la_codec_is_string(const la_codec_value_t *value);
+int la_codec_is_integer(const la_codec_value_t *value);
+int la_codec_is_real(const la_codec_value_t *value);
+int la_codec_is_true(const la_codec_value_t *value);
+int la_codec_is_false(const la_codec_value_t *value);
+int la_codec_is_null(const la_codec_value_t *value);
+int la_codec_is_number(const la_codec_value_t *value);
+int la_codec_is_boolean(const la_codec_value_t *value);
 
 la_codec_value_t *la_codec_object(void);
 la_codec_value_t *la_codec_array(void);
