@@ -39,22 +39,22 @@ struct ObjectHeader
     char rev[MAX_REVISION_LEN + 1];
 };
 
-struct LAStorageEnvironment
+struct la_storage_env
 {
     DB_ENV *env;
 };
 
-struct LAStorageObjectStore
+struct la_storage_object_store
 {
-    LAStorageEnvironment *env;
+    la_storage_env *env;
     DB *db;
     DB *seq_db;
     DB_SEQUENCE *seq;
 };
 
-struct LAStorageObjectIterator
+struct la_storage_object_iterator
 {
-    LAStorageObjectStore *store;
+    la_storage_object_store *store;
     DBC *cursor;
 };
 
@@ -64,11 +64,11 @@ la_storage_driver(void)
     return "BDB";
 }
 
-LAStorageEnvironment *la_storage_open_env(const char *name)
+la_storage_env *la_storage_open_env(const char *name)
 {
     int ret;
     struct stat st;
-    struct LAStorageEnvironment *env = (LAStorageEnvironment *) malloc(sizeof(struct LAStorageEnvironment));
+    struct la_storage_env *env = (la_storage_env *) malloc(sizeof(struct la_storage_env));
     if (env == NULL)
         return NULL;
     if (db_env_create(&env->env, 0) != 0)
@@ -112,7 +112,7 @@ LAStorageEnvironment *la_storage_open_env(const char *name)
     return env;
 }
 
-void la_storage_close_env(LAStorageEnvironment *env)
+void la_storage_close_env(la_storage_env *env)
 {
     env->env->close(env->env, 0);
     free(env);
@@ -122,15 +122,15 @@ static int seqindex(DB *secondary, const DBT *key, const DBT *value, DBT *result
 {
     if (((char *) key->data)[0] == '\0')
         return DB_DONOTINDEX;
-    LAStorageObjectHeader *header = key->data;
+    la_storage_object_header *header = key->data;
     result->data = &header->seq;
     result->size = sizeof(uint64_t);
     return 0;
 }
 
-LAStorageObjectStore *la_storage_open(LAStorageEnvironment *env, const char *path)
+la_storage_object_store *la_storage_open(la_storage_env *env, const char *path)
 {
-    LAStorageObjectStore *store = (LAStorageObjectStore *) malloc(sizeof(struct LAStorageObjectStore));
+    la_storage_object_store *store = (la_storage_object_store *) malloc(sizeof(struct la_storage_object_store));
     DB_TXN *txn;
     char *seqpath;
     DBT seq_key;
@@ -215,7 +215,7 @@ LAStorageObjectStore *la_storage_open(LAStorageEnvironment *env, const char *pat
  * @param rev The revision to match when getting the object (if null, get the latest rev).
  * @param obj The object to .
  */
-LAStorageObjectGetResult la_storage_get(LAStorageObjectStore *store, const char *key, const char *rev, LAStorageObject **obj)
+la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const char *rev, la_storage_object **obj)
 {
     struct ObjectHeader header;
     DBT db_key;
@@ -249,34 +249,34 @@ LAStorageObjectGetResult la_storage_get(LAStorageObjectStore *store, const char 
     if (result != 0)
     {
         if (result == DB_NOTFOUND)
-            return LAStorageObjectGetNotFound;
-        return LAStorageObjectGetInternalError;
+            return LA_STORAGE_OBJECT_GET_NOT_FOUND;
+        return LA_STORAGE_OBJECT_GET_ERROR;
     }
     
     if (strnlen(db_value.data, min(MAX_REVISION_LEN + 1, db_value.size)) > MAX_REVISION_LEN)
     {
         if (obj != NULL)
             free(db_value.data);
-        return LAStorageObjectGetInternalError;
+        return LA_STORAGE_OBJECT_GET_ERROR;
     }
     
     debug("got { size: %u, data: %s }\n", db_value.size, db_value.data);
     
     if (rev != NULL && strcmp(rev, db_value.data) != 0)
-        return LAStorageObjectGetRevisionNotFound;
+        return LA_STORAGE_OBJECT_GET_NOT_FOUND;
     
     if (obj != NULL)
     {
-        *obj = (LAStorageObject *) malloc(sizeof(LAStorageObject));
+        *obj = (la_storage_object *) malloc(sizeof(la_storage_object));
         (*obj)->key = strdup(key);
         (*obj)->header = db_value.data;
-        (*obj)->data_length = (uint32_t) (db_value.size - strlen((const char*) (*obj)->header->rev_data) - 1);
+        (*obj)->data_length = (uint32_t) (db_value.size - strlen((const char*) (*obj)->header->rev_data) - 1 - sizeof(struct la_storage_object_header));
     }
     
-    return LAStorageObjectGetSuccess;
+    return LA_STORAGE_OBJECT_GET_OK;
 }
 
-LAStorageObjectGetResult la_storage_get_rev(LAStorageObjectStore *store, const char *key, char *rev, size_t maxlen)
+la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, char *rev, size_t maxlen)
 {
     char header[MAX_REVISION_LEN];
     DBT db_key;
@@ -299,8 +299,8 @@ LAStorageObjectGetResult la_storage_get_rev(LAStorageObjectStore *store, const c
     if (result != 0)
     {
         if (result == DB_NOTFOUND)
-            return LAStorageObjectGetNotFound;
-        return LAStorageObjectGetInternalError;
+            return LA_STORAGE_OBJECT_GET_NOT_FOUND;
+        return LA_STORAGE_OBJECT_GET_ERROR;
     }
     
     debug("got { size: %u, data: '%s' (%s) }\n", db_value.size, db_value.data, header);
@@ -309,13 +309,13 @@ LAStorageObjectGetResult la_storage_get_rev(LAStorageObjectStore *store, const c
         strncpy(rev, header, maxlen);
     }
 
-    return LAStorageObjectGetSuccess;
+    return LA_STORAGE_OBJECT_GET_OK;
 }
 
 /**
  * Put an object into the store.
  */
-LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char *rev, LAStorageObject *obj)
+la_storage_object_put_result la_storage_put(la_storage_object_store *store, const char *rev, la_storage_object *obj)
 {
     DB_TXN *txn;
     struct ObjectHeader header;
@@ -339,15 +339,15 @@ LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char 
     db_value_read.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     
     if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
-        return LAStorageObjectPutInternalError;
+        return LA_STORAGE_OBJECT_PUT_ERROR;
     
     result = store->db->get(store->db, txn, &db_key, &db_value_read, DB_RMW);
     if (result != 0 && result != DB_NOTFOUND)
     {
         txn->abort(txn);
         if (result == DB_LOCK_NOTGRANTED)
-            return LAStorageObjectPutConflict;
-        return LAStorageObjectPutInternalError;
+            return LA_STORAGE_OBJECT_PUT_CONFLICT;
+        return LA_STORAGE_OBJECT_PUT_ERROR;
     }
     
     if (result != DB_NOTFOUND)
@@ -357,7 +357,7 @@ LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char 
         if (strcmp(rev, header.rev) != 0)
         {
             txn->abort(txn);
-            return LAStorageObjectPutConflict;
+            return LA_STORAGE_OBJECT_PUT_CONFLICT;
         }
     }
     
@@ -376,13 +376,13 @@ LAStorageObjectPutResult la_storage_put(LAStorageObjectStore *store, const char 
     if (result != 0)
     {
         txn->abort(txn);
-        return LAStorageObjectPutInternalError;
+        return LA_STORAGE_OBJECT_PUT_ERROR;
     }
     txn->commit(txn, 0);
-    return LAStorageObjectPutSuccess;
+    return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
-uint64_t la_storage_lastseq(LAStorageObjectStore *store)
+uint64_t la_storage_lastseq(la_storage_object_store *store)
 {
     DB_SEQUENCE_STAT *stat;
     db_seq_t seq;
@@ -392,7 +392,7 @@ uint64_t la_storage_lastseq(LAStorageObjectStore *store)
     return seq;
 }
 
-LAStorageObjectIterator *la_storage_iterator_open(LAStorageObjectStore *store, uint64_t since)
+la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *store, uint64_t since)
 {
     DBT seq_key, seq_value;
     seq_key.data = &since;
@@ -403,7 +403,7 @@ LAStorageObjectIterator *la_storage_iterator_open(LAStorageObjectStore *store, u
     seq_value.dlen = 0;
     seq_value.doff = 0;
     seq_value.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
-    LAStorageObjectIterator *it = (LAStorageObjectIterator *) malloc(sizeof(struct LAStorageObjectIterator));
+    la_storage_object_iterator *it = (la_storage_object_iterator *) malloc(sizeof(struct la_storage_object_iterator));
     if (it == NULL)
         return NULL;
     it->store = store;
@@ -424,7 +424,7 @@ LAStorageObjectIterator *la_storage_iterator_open(LAStorageObjectStore *store, u
     return it;
 }
 
-LAStorageObjectIteratorResult la_storage_iterator_next(LAStorageObjectIterator *it, LAStorageObject **obj)
+la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_iterator *it, la_storage_object **obj)
 {
     DBT db_pkey;
     DBT db_key;
@@ -446,38 +446,39 @@ LAStorageObjectIteratorResult la_storage_iterator_next(LAStorageObjectIterator *
     if (result != 0)
     {
         if (result == DB_NOTFOUND)
-            return LAStorageObjectIteratorEnd;
-        return LAStorageObjectIteratorError;
+            return LA_STORAGE_OBJECT_ITERATOR_END;
+        return LA_STORAGE_OBJECT_ITERATOR_ERROR;
     }
     
     free(db_key.data);
     if (obj != NULL)
     {
         if (strnlen(db_value.data, min(db_value.size, MAX_REVISION_LEN + 1) > MAX_REVISION_LEN))
-            return LAStorageObjectIteratorError;
-        *obj = (LAStorageObject *) malloc(sizeof(LAStorageObject));
+            return LA_STORAGE_OBJECT_ITERATOR_ERROR;
+        *obj = (la_storage_object *) malloc(sizeof(la_storage_object));
         if (*obj == NULL)
-            return LAStorageObjectIteratorError;
+            return LA_STORAGE_OBJECT_ITERATOR_ERROR;
         (*obj)->key = keycpy(db_pkey.data, db_pkey.size);
         if ((*obj)->key == NULL)
         {
             free(*obj);
-            return LAStorageObjectIteratorError;
+            return LA_STORAGE_OBJECT_ITERATOR_ERROR;
         }
         (*obj)->header = db_value.data;
-        (*obj)->data_length = (uint32_t) (db_value.size - strlen(db_value.data) - 1);
+        (*obj)->data_length = (uint32_t) (db_value.size - sizeof(struct la_storage_object_header) 
+                                          - strlen(db_value.data) - 1);
     }
     
-    return LAStorageObjectIteratorGotNext;
+    return LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT;
 }
 
-void la_storage_iterator_close(LAStorageObjectIterator *it)
+void la_storage_iterator_close(la_storage_object_iterator *it)
 {
     it->cursor->close(it->cursor);
     free(it);
 }
 
-void la_storage_close(LAStorageObjectStore *store)
+void la_storage_close(la_storage_object_store *store)
 {
     store->seq->close(store->seq, 0);
     store->seq_db->close(store->seq_db, 0);
