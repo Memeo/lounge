@@ -24,7 +24,7 @@ const char *la_codec_name(void)
     return "JSON";
 }
 
-int la_codec_typeof(la_codec_value_t *value)
+int la_codec_typeof(const la_codec_value_t *value)
 {
     switch (json_typeof((json_t *) value))
     {
@@ -40,47 +40,52 @@ int la_codec_typeof(la_codec_value_t *value)
     return -1;
 }
 
-int la_codec_is_object(la_codec_value_t *value)
+int la_codec_is_object(const la_codec_value_t *value)
 {
     return json_is_object((json_t *) value);
 }
 
-int la_codec_is_array(la_codec_value_t *value)
+int la_codec_is_array(const la_codec_value_t *value)
 {
     return json_is_array((json_t *) value);
 }
 
-int la_codec_is_integer(la_codec_value_t *value)
+int la_codec_is_string(const la_codec_value_t *value)
+{
+    return json_is_string((json_t *) value);
+}
+
+int la_codec_is_integer(const la_codec_value_t *value)
 {
     return json_is_integer((json_t *) value);
 }
 
-int la_codec_is_real(la_codec_value_t *value)
+int la_codec_is_real(const la_codec_value_t *value)
 {
     return json_is_real((json_t *) value);
 }
 
-int la_codec_is_true(la_codec_value_t *value)
+int la_codec_is_true(const la_codec_value_t *value)
 {
     return json_is_true((json_t *) value);
 }
 
-int la_codec_is_false(la_codec_value_t *value)
+int la_codec_is_false(const la_codec_value_t *value)
 {
     return json_is_false((json_t *) value);
 }
 
-int la_codec_is_null(la_codec_value_t *value)
+int la_codec_is_null(const la_codec_value_t *value)
 {
     return json_is_null((json_t *) value);
 }
 
-int la_codec_is_number(la_codec_value_t *value)
+int la_codec_is_number(const la_codec_value_t *value)
 {
     return json_is_number((json_t *) value);
 }
 
-int la_codec_is_boolean(la_codec_value_t *value)
+int la_codec_is_boolean(const la_codec_value_t *value)
 {
     return json_is_boolean((json_t *) value);
 }
@@ -430,4 +435,9 @@ int la_codec_dump_file(const la_codec_value_t *json, const char *path, size_t fl
 int la_codec_dump_callback(const la_codec_value_t *json, la_codec_dump_callback_t callback, void *data, size_t flags)
 {
     return json_dump_callback((const json_t *) json, callback, data, flags);
+}
+
+la_codec_value_t *la_codec_object(void)
+{
+    return (la_codec_value_t *) json_object();
 }
