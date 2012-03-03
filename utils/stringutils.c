@@ -48,3 +48,30 @@ string_append(const char *prefix, const char *suffix)
     strcat(buf, suffix);
     return buf;
 }
+
+#define hexify(nybble) (((nybble) < 10) ? ('0' + (nybble)) : ('a' + ((nybble) - 10)))
+
+int
+string_randhex(char *str, size_t len)
+{
+    FILE *urandom = fopen("/dev/urandom", "r");
+    unsigned char b;
+    
+    if (urandom == NULL)
+        return -1;
+    
+    for (int i = 0; i < len; i += 2)
+    {
+        if (fread(&b, 1, 1, urandom) != 1)
+        {
+            fclose(urandom);
+            return -1;
+        }
+        str[i] = hexify((b >> 4) & 0xf);
+        if (i + 1 < len)
+            str[i + 1] = hexify(b & 0xf);
+    }
+    fclose(urandom);
+    str[len] = '\0';
+    return 0;
+}

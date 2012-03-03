@@ -11,6 +11,10 @@
 #include <errno.h>
 #include "buffer.h"
 
+#define MIN_ALLOC 1024
+#define __la_buffer_max(a,b) ((a) > (b) ? (a) : (b))
+#define __cap(n) __la_buffer_max(n, MIN_ALLOC)
+
 struct la_buffer
 {
     void *ptr;
@@ -23,6 +27,7 @@ la_buffer_t *la_buffer_new(size_t capacity)
     la_buffer_t *buffer = (la_buffer_t *) malloc(sizeof(struct la_buffer));
     if (buffer == NULL)
         return NULL;
+    capacity = __cap(capacity);
     buffer->ptr = malloc(capacity);
     if (buffer->ptr == NULL)
     {
@@ -96,6 +101,8 @@ int la_buffer_ensure_capacity(la_buffer_t *buffer, size_t capacity)
 {
     if (buffer->capacity < capacity)
     {
+        size_t delta = __cap(capacity - buffer->capacity);
+        capacity = buffer->capacity + delta;
         void *p = realloc(buffer->ptr, capacity);
         if (p == NULL)
             return -1;
