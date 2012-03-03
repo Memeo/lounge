@@ -12,11 +12,11 @@
 
 #include "ObjectStore.h"
 
-LAStorageObject *
+la_storage_object *
 la_storage_create_object(const char *key, const char *rev, const unsigned char *data, uint32_t length)
 {
     size_t revlen = strlen(rev);
-    LAStorageObject *obj = (LAStorageObject *) malloc(sizeof(struct LAStorageObject));
+    la_storage_object *obj = (la_storage_object *) malloc(sizeof(struct la_storage_object));
     if (obj == NULL)
         return NULL;
     obj->key = strdup(key);
@@ -25,7 +25,7 @@ la_storage_create_object(const char *key, const char *rev, const unsigned char *
         free(obj);
         return NULL;
     }
-    obj->header = malloc(sizeof(struct LAStorageObjectHeader) + revlen + length + 1);
+    obj->header = malloc(sizeof(struct la_storage_object) + revlen + length + 1);
     if (obj->header == NULL)
     {
         free(obj->key);
@@ -37,11 +37,11 @@ la_storage_create_object(const char *key, const char *rev, const unsigned char *
     memcpy(obj->header->rev_data, rev, revlen + 1);
     memcpy(la_storage_object_get_data(obj), (const char *) data, length);
     obj->data_length = length;
-    return (LAStorageObject *) obj;
+    return (la_storage_object *) obj;
 }
 
 void
-la_storage_destroy_object(LAStorageObject *object)
+la_storage_destroy_object(la_storage_object *object)
 {
     free(object->key);
     free(object->header);
