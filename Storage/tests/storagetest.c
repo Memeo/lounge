@@ -115,6 +115,18 @@ int main(int argc, char **argv)
         return 1;
     }
     printf("OK\n");
+    printf("checking if got object contents the same... ");
+    if (getObject->data_length != strlen(data))
+    {
+        printf("data length %d vs %d", getObject->data_length, strlen(data));
+        return -1;
+    }
+    if (memcmp(la_storage_object_get_data(getObject), data, strlen(data)) != 0)
+    {
+        printf("data mismatch");
+        return -1;
+    }
+    printf("OK\n");
     la_storage_destroy_object(getObject);
 
     char revbuf[256];
