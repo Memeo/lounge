@@ -20,6 +20,7 @@
 		70581C63150049C0002C560F /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
 		70581C64150049C0002C560F /* libLoungeAct-storage-bdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */; };
 		70581C6715004E34002C560F /* libLoungeAct.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F14E6114F5944B00F278CA /* libLoungeAct.dylib */; };
+		705E8FAB1502C66800FCE571 /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
 		7066428514FC555900CFFCD0 /* ObjectStore-sqlite.c in Sources */ = {isa = PBXBuildFile; fileRef = 7066427C14FC552900CFFCD0 /* ObjectStore-sqlite.c */; };
 		7066428614FC555900CFFCD0 /* ObjectStore-common.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */; };
 		7066429214FD524B00CFFCD0 /* stringutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 7066428914FD520700CFFCD0 /* stringutils.c */; };
@@ -28,6 +29,15 @@
 		706642A814FD554E00CFFCD0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642A714FD554E00CFFCD0 /* libsqlite3.dylib */; };
 		706642B114FD55AA00CFFCD0 /* ObjectStore-BDB.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1740C14F6F9EF00F278CA /* ObjectStore-BDB.c */; };
 		706642B214FD55AA00CFFCD0 /* ObjectStore-common.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */; };
+		709D9EAD1502885A00650F4B /* hexdump.h in Headers */ = {isa = PBXBuildFile; fileRef = 709D9EAC1502885A00650F4B /* hexdump.h */; };
+		709D9EB0150288BF00650F4B /* hexdump.c in Sources */ = {isa = PBXBuildFile; fileRef = 709D9EAF150288BF00650F4B /* hexdump.c */; };
+		709D9EB8150295A700650F4B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 709D9EB7150295A700650F4B /* Foundation.framework */; };
+		709D9ED1150295F500650F4B /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
+		709D9ED2150295F500650F4B /* libLoungeAct-storage-sqlite.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428114FC554700CFFCD0 /* libLoungeAct-storage-sqlite.dylib */; };
+		709D9ED3150295F500650F4B /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
+		709D9ED61502960700650F4B /* libLoungeAct-sqlite.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 709D9EC7150295CA00650F4B /* libLoungeAct-sqlite.dylib */; };
+		709D9ED71502961D00650F4B /* apitest.c in Sources */ = {isa = PBXBuildFile; fileRef = 70581C4D15004935002C560F /* apitest.c */; };
+		709D9ED81502BEA800650F4B /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = 7054ADDD14FEE17D00B2D3B6 /* api.c */; };
 		70B1F7B514FECD3B00A9E488 /* codec-json.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B1F7AB14FECC4C00A9E488 /* codec-json.c */; };
 		70B5C24A14FD698900FE9330 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
 		70B5C25914FD699400FE9330 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
@@ -110,6 +120,34 @@
 			remoteGlobalIDString = 706642AC14FD55A000CFFCD0;
 			remoteInfo = "LoungeAct-storage-bdb";
 		};
+		709D9ECB150295E900650F4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7066428014FC554700CFFCD0;
+			remoteInfo = "LoungeAct-storage-sqlite";
+		};
+		709D9ECD150295E900650F4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7066428D14FD524600CFFCD0;
+			remoteInfo = "LoungeAct-utils";
+		};
+		709D9ECF150295E900650F4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70B1F7B014FECD1300A9E488;
+			remoteInfo = "LoungeAct-codec-json";
+		};
+		709D9ED41502960100650F4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 709D9EC6150295CA00650F4B;
+			remoteInfo = "LoungeAct-sqlite";
+		};
 		70B5C26414FD69AC00FE9330 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
@@ -142,6 +180,15 @@
 
 /* Begin PBXCopyFilesBuildPhase section */
 		70581C5115004982002C560F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		709D9EB3150295A700650F4B /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = /usr/share/man/man1/;
@@ -297,10 +344,10 @@
 		7011347014FC3C6800EC4AAC /* error */ = {isa = PBXFileReference; lastKnownFileType = text; path = error; sourceTree = "<group>"; };
 		7011347114FC3C6800EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = text; path = input; sourceTree = "<group>"; };
 		7011347314FC3C6800EC4AAC /* error */ = {isa = PBXFileReference; lastKnownFileType = text; path = error; sourceTree = "<group>"; };
-		7011347414FC3C6800EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = file; path = input; sourceTree = "<group>"; };
+		7011347414FC3C6800EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = text; path = input; sourceTree = "<group>"; };
 		7011347514FC3C6800EC4AAC /* nostrip */ = {isa = PBXFileReference; lastKnownFileType = text; path = nostrip; sourceTree = "<group>"; };
 		7011347714FC3C6800EC4AAC /* error */ = {isa = PBXFileReference; lastKnownFileType = text; path = error; sourceTree = "<group>"; };
-		7011347814FC3C6800EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = file; path = input; sourceTree = "<group>"; };
+		7011347814FC3C6800EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = text; path = input; sourceTree = "<group>"; };
 		7011347914FC3C6800EC4AAC /* nostrip */ = {isa = PBXFileReference; lastKnownFileType = text; path = nostrip; sourceTree = "<group>"; };
 		7011347B14FC3C6800EC4AAC /* error */ = {isa = PBXFileReference; lastKnownFileType = text; path = error; sourceTree = "<group>"; };
 		7011347C14FC3C6800EC4AAC /* input */ = {isa = PBXFileReference; lastKnownFileType = text; path = input; sourceTree = "<group>"; };
@@ -475,6 +522,11 @@
 		7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-utils.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		706642A714FD554E00CFFCD0 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-storage-bdb.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		709D9EAC1502885A00650F4B /* hexdump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hexdump.h; sourceTree = "<group>"; };
+		709D9EAF150288BF00650F4B /* hexdump.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hexdump.c; sourceTree = "<group>"; };
+		709D9EB5150295A700650F4B /* apitest-sqlite-json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "apitest-sqlite-json"; sourceTree = BUILT_PRODUCTS_DIR; };
+		709D9EB7150295A700650F4B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		709D9EC7150295CA00650F4B /* libLoungeAct-sqlite.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-sqlite.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B1F7AB14FECC4C00A9E488 /* codec-json.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "codec-json.c"; sourceTree = "<group>"; };
 		70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-codec-json.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B5C24014FD68D100FE9330 /* storagetest.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = storagetest.c; sourceTree = "<group>"; };
@@ -9747,6 +9799,26 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		709D9EB2150295A700650F4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				705E8FAB1502C66800FCE571 /* libLoungeAct-codec-json.dylib in Frameworks */,
+				709D9ED61502960700650F4B /* libLoungeAct-sqlite.dylib in Frameworks */,
+				709D9EB8150295A700650F4B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		709D9EC4150295CA00650F4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				709D9ED1150295F500650F4B /* libLoungeAct-codec-json.dylib in Frameworks */,
+				709D9ED2150295F500650F4B /* libLoungeAct-storage-sqlite.dylib in Frameworks */,
+				709D9ED3150295F500650F4B /* libLoungeAct-utils.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70B1F7AE14FECD1300A9E488 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -10999,6 +11071,8 @@
 				7066428914FD520700CFFCD0 /* stringutils.c */,
 				70B5C26C14FEB24300FE9330 /* buffer.h */,
 				70B5C26E14FEB2DB00FE9330 /* buffer.c */,
+				709D9EAC1502885A00650F4B /* hexdump.h */,
+				709D9EAF150288BF00650F4B /* hexdump.c */,
 			);
 			name = Utils;
 			path = utils;
@@ -11017,6 +11091,7 @@
 			isa = PBXGroup;
 			children = (
 				70B5C24914FD698900FE9330 /* CoreFoundation.framework */,
+				709D9EB7150295A700650F4B /* Foundation.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -11063,6 +11138,8 @@
 				70B5C25714FD699400FE9330 /* storagetest-sqlite */,
 				70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */,
 				70581C5315004982002C560F /* apitest-bdb-json */,
+				709D9EB5150295A700650F4B /* apitest-sqlite-json */,
+				709D9EC7150295CA00650F4B /* libLoungeAct-sqlite.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -23153,10 +23230,18 @@
 			files = (
 				7066429314FD525500CFFCD0 /* stringutils.h in Headers */,
 				70B5C26D14FEB24300FE9330 /* buffer.h in Headers */,
+				709D9EAD1502885A00650F4B /* hexdump.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		706642AB14FD55A000CFFCD0 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		709D9EC5150295CA00650F4B /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -23345,6 +23430,44 @@
 			productReference = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		709D9EB4150295A700650F4B /* apitest-sqlite-json */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 709D9EC0150295A700650F4B /* Build configuration list for PBXNativeTarget "apitest-sqlite-json" */;
+			buildPhases = (
+				709D9EB1150295A700650F4B /* Sources */,
+				709D9EB2150295A700650F4B /* Frameworks */,
+				709D9EB3150295A700650F4B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				709D9ED51502960100650F4B /* PBXTargetDependency */,
+			);
+			name = "apitest-sqlite-json";
+			productName = "apitest-sqlite-json";
+			productReference = 709D9EB5150295A700650F4B /* apitest-sqlite-json */;
+			productType = "com.apple.product-type.tool";
+		};
+		709D9EC6150295CA00650F4B /* LoungeAct-sqlite */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 709D9EC8150295CB00650F4B /* Build configuration list for PBXNativeTarget "LoungeAct-sqlite" */;
+			buildPhases = (
+				709D9EC3150295CA00650F4B /* Sources */,
+				709D9EC4150295CA00650F4B /* Frameworks */,
+				709D9EC5150295CA00650F4B /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				709D9ECC150295E900650F4B /* PBXTargetDependency */,
+				709D9ECE150295E900650F4B /* PBXTargetDependency */,
+				709D9ED0150295E900650F4B /* PBXTargetDependency */,
+			);
+			name = "LoungeAct-sqlite";
+			productName = "LoungeAct-sqlite";
+			productReference = 709D9EC7150295CA00650F4B /* libLoungeAct-sqlite.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70B1F7B214FECD1400A9E488 /* Build configuration list for PBXNativeTarget "LoungeAct-codec-json" */;
@@ -23453,6 +23576,8 @@
 				70B5C25614FD699400FE9330 /* storagetest-sqlite */,
 				70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */,
 				70581C5215004982002C560F /* apitest-bdb-json */,
+				709D9EB4150295A700650F4B /* apitest-sqlite-json */,
+				709D9EC6150295CA00650F4B /* LoungeAct-sqlite */,
 			);
 		};
 /* End PBXProject section */
@@ -23481,6 +23606,7 @@
 			files = (
 				7066429214FD524B00CFFCD0 /* stringutils.c in Sources */,
 				70B5C26F14FEB2DB00FE9330 /* buffer.c in Sources */,
+				709D9EB0150288BF00650F4B /* hexdump.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23490,6 +23616,22 @@
 			files = (
 				706642B114FD55AA00CFFCD0 /* ObjectStore-BDB.c in Sources */,
 				706642B214FD55AA00CFFCD0 /* ObjectStore-common.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		709D9EB1150295A700650F4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				709D9ED71502961D00650F4B /* apitest.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		709D9EC3150295CA00650F4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				709D9ED81502BEA800650F4B /* api.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -23577,6 +23719,26 @@
 			isa = PBXTargetDependency;
 			target = 706642AC14FD55A000CFFCD0 /* LoungeAct-storage-bdb */;
 			targetProxy = 706642B414FD55D500CFFCD0 /* PBXContainerItemProxy */;
+		};
+		709D9ECC150295E900650F4B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428014FC554700CFFCD0 /* LoungeAct-storage-sqlite */;
+			targetProxy = 709D9ECB150295E900650F4B /* PBXContainerItemProxy */;
+		};
+		709D9ECE150295E900650F4B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
+			targetProxy = 709D9ECD150295E900650F4B /* PBXContainerItemProxy */;
+		};
+		709D9ED0150295E900650F4B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */;
+			targetProxy = 709D9ECF150295E900650F4B /* PBXContainerItemProxy */;
+		};
+		709D9ED51502960100650F4B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 709D9EC6150295CA00650F4B /* LoungeAct-sqlite */;
+			targetProxy = 709D9ED41502960100650F4B /* PBXContainerItemProxy */;
 		};
 		70B5C26514FD69AC00FE9330 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -23743,6 +23905,52 @@
 					"\"$(SRCROOT)/../../Library/Developer/Xcode/DerivedData/LoungeAct-hiwbfamibjtzqyekubhwduhmpjfi/Build/Products/Debug/db-5.3.15/lib\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		709D9EC1150295A700650F4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "apitest-sqlite-json/apitest-sqlite-json-Prefix.pch";
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		709D9EC2150295A700650F4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "apitest-sqlite-json/apitest-sqlite-json-Prefix.pch";
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		709D9EC9150295CB00650F4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = .;
+				LIBRARY_SEARCH_PATHS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/lib";
+			};
+			name = Debug;
+		};
+		709D9ECA150295CB00650F4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = .;
+				LIBRARY_SEARCH_PATHS = "";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				USER_HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/lib";
 			};
 			name = Release;
 		};
@@ -23981,6 +24189,7 @@
 				70581C5D15004982002C560F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7066428214FC554700CFFCD0 /* Build configuration list for PBXNativeTarget "LoungeAct-storage-sqlite" */ = {
 			isa = XCConfigurationList;
@@ -24005,6 +24214,24 @@
 			buildConfigurations = (
 				706642AF14FD55A000CFFCD0 /* Debug */,
 				706642B014FD55A000CFFCD0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		709D9EC0150295A700650F4B /* Build configuration list for PBXNativeTarget "apitest-sqlite-json" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				709D9EC1150295A700650F4B /* Debug */,
+				709D9EC2150295A700650F4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		709D9EC8150295CB00650F4B /* Build configuration list for PBXNativeTarget "LoungeAct-sqlite" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				709D9EC9150295CB00650F4B /* Debug */,
+				709D9ECA150295CB00650F4B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
