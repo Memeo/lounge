@@ -62,7 +62,7 @@ mymap(la_codec_value_t *value, void *baton)
     if (!la_codec_is_object(value))
         return NULL;
     mapme = la_codec_object_get(value, "mapme");
-    if (mapme == NULL || la_codec_is_integer(mapme))
+    if (mapme == NULL || !la_codec_is_integer(mapme))
         return NULL;
     printf("%lld ", la_codec_integer_value(mapme));
     return la_codec_incref(mapme);
@@ -211,16 +211,17 @@ int main(int argc, char **argv)
     la_view_iterator_t *it = la_db_view(db, mymap, myreduce, NULL);
     if (it == NULL) FAIL("creating iterator");
     la_view_iterator_result iter;
+    memset(&error, 0, sizeof(la_codec_error_t));
     while ((iter = la_view_iterator_next(it, &value, &error)) == LA_VIEW_ITERATOR_GOT_NEXT)
     {
-        if (!la_codec_is_integer(value)) FAIL("didn't get an integer");
+        if (!la_codec_is_integer(value)) FAIL("didn't get an integer %d", la_codec_typeof(value));
         printf("%lld ", la_codec_integer_value(value));
         la_codec_decref(value);
     }
     if (iter != LA_VIEW_ITERATOR_END)
-        FAIL(" (%d)", iter);
+        FAIL(" (%d) %s", iter, error.text);
     if (!la_codec_is_integer(value))
-        FAIL(" didn't get reduced integer");
+        FAIL(" didn't get reduced integer %d", la_codec_typeof(value));
     printf("reduced:%lld ", la_codec_integer_value(value));
     if (la_codec_integer_value(value) != 1 + 2 + 3)
         FAIL(" reduced value incorrect");
