@@ -9,6 +9,9 @@
 #ifndef LoungeAct_hexdump_h
 #define LoungeAct_hexdump_h
 
+#include <stdio.h>
 
+void la_hexdump(const char *buf, size_t len);
+void la_fhexdump(FILE *out, const char *buf, size_t len);
 
 #endif
