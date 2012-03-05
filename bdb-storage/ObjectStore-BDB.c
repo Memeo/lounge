@@ -15,6 +15,7 @@
 #include <db.h>
 #include "../Storage/ObjectStore.h"
 #include "../Utils/stringutils.h"
+#include "../Utils/hexdump.h"
 
 #define min(a,b) ((a) < (b) ? (a) : (b))
 
@@ -260,7 +261,7 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
         return LA_STORAGE_OBJECT_GET_ERROR;
     }
     
-    debug("got { size: %u, data: %s }\n", db_value.size, db_value.data);
+    debug("got { size: %u, data: %s }\n", db_value.size, (char *) db_value.data);
     
     if (rev != NULL && strcmp(rev, db_value.data) != 0)
         return LA_STORAGE_OBJECT_GET_NOT_FOUND;
@@ -271,6 +272,10 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
         (*obj)->key = strdup(key);
         (*obj)->header = db_value.data;
         (*obj)->data_length = (uint32_t) (db_value.size - strlen((const char*) (*obj)->header->rev_data) - 1 - sizeof(struct la_storage_object_header));
+#if DEBUG
+        printf("got %u bytes\n", (*obj)->data_length);
+        la_hexdump(la_storage_object_get_data((*obj)), (*obj)->data_length);
+#endif
     }
     
     return LA_STORAGE_OBJECT_GET_OK;
@@ -322,6 +327,11 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     DBT db_key;
     DBT db_value_read, db_value_write;
     int result;
+    
+#if DEBUG
+    printf("putting %u bytes:\n", obj->data_length);
+    la_hexdump(la_storage_object_get_data(obj), obj->data_length);
+#endif
     
     memset(&db_key, 0, sizeof(DBT));
     memset(&db_value_read, 0, sizeof(DBT));
@@ -466,7 +476,11 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
         }
         (*obj)->header = db_value.data;
         (*obj)->data_length = (uint32_t) (db_value.size - sizeof(struct la_storage_object_header) 
-                                          - strlen(db_value.data) - 1);
+                                          - strlen((*obj)->header->rev_data) - 1);
+#if DEBUG
+        printf("got %u bytes\n", (*obj)->data_length);
+        la_hexdump(la_storage_object_get_data((*obj)), (*obj)->data_length);
+#endif
     }
     
     return LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT;
