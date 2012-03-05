@@ -34,6 +34,7 @@ la_buffer_t *la_buffer_new(size_t capacity)
         free(buffer);
         return NULL;
     }
+    memset(buffer->ptr, 0xaa, capacity);
     buffer->size = 0;
     buffer->capacity = capacity;
     return buffer;
