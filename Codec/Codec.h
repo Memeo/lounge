@@ -158,4 +158,6 @@ int la_codec_dumpf(const la_codec_value_t *json, FILE *output, size_t flags);
 int la_codec_dump_file(const la_codec_value_t *json, const char *path, size_t flags);
 int la_codec_dump_callback(const la_codec_value_t *json, la_codec_dump_callback_t callback, void *data, size_t flags);
 
+la_codec_value_t *la_codec_from_json(json_t *json);
+
 #endif
