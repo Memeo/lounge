@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 Memeo, Inc. All rights reserved.
 //
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -61,6 +62,21 @@ size_t la_buffer_get(la_buffer_t *buffer, size_t offset, void *data, size_t leng
         length = buffer->size - offset;
     memcpy(data, buffer->ptr + offset, length);
     return length;
+}
+
+int la_buffer_remove(la_buffer_t *buffer, size_t offset, size_t length)
+{
+    size_t remain_offset, remain_length;
+    if (offset >= buffer->size || offset + length >= buffer->size)
+    {
+        return -1;
+    }
+    remain_offset = offset + length;
+    remain_length = buffer->size - remain_offset;
+    if (remain_length > 0)
+        memmove(buffer->ptr + offset, buffer->ptr + remain_offset, remain_length);
+    buffer->size -= length;
+    return 0;
 }
 
 int la_buffer_append(la_buffer_t *buffer, const void *data, size_t length)
@@ -135,6 +151,37 @@ int la_buffer_truncate(la_buffer_t *buffer, size_t newsize)
     }
     buffer->size = newsize;
     return 0;
+}
+
+int la_buffer_appendf(la_buffer_t *buffer, const char *fmt, ...)
+{
+    int ret;
+    va_list ap;
+    va_start(ap, fmt);
+    ret = la_buffer_vappendf(buffer, fmt, ap);
+    va_end(ap);
+    return ret;
+}
+
+int la_buffer_vappendf(la_buffer_t *buffer, const char *fmt, va_list ap)
+{
+    size_t remaining = buffer->capacity - buffer->size;
+    int needed = vsnprintf(NULL, 0, fmt, ap);
+    int added = 0;
+    if (la_buffer_ensure_capacity(buffer, buffer->size + needed + 1) != 0)
+        return -1;
+    remaining = buffer->capacity - buffer->size;
+    added = vsnprintf(buffer->ptr + buffer->size, remaining, fmt, ap);
+    buffer->size += added;
+    return 0;
+}
+
+char *la_buffer_string(la_buffer_t *buffer)
+{
+    char *str = malloc(buffer->size + 1);
+    la_buffer_get(buffer, 0, str, buffer->size);
+    str[buffer->size] = '\0';
+    return str;
 }
 
 void la_buffer_destroy(la_buffer_t *buffer)
