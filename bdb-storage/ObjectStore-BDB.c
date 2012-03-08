@@ -36,7 +36,7 @@ keycpy(char *key, u_int32_t len)
 
 struct ObjectHeader
 {
-    uint64_t seq;
+    la_storage_object_header head;
     char rev[MAX_REVISION_LEN + 1];
 };
 
@@ -369,12 +369,15 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
             txn->abort(txn);
             return LA_STORAGE_OBJECT_PUT_CONFLICT;
         }
+        obj->header->doc_seq = header.head.doc_seq + 1;
     }
+    else
+        obj->header->doc_seq = 0;
     
     db_seq_t seq;
     store->seq->get(store->seq, txn, 1, &seq, 0);
     obj->header->seq = seq;
-    
+
     db_value_write.size = (u_int32_t) la_storage_object_total_size(obj);
     db_value_write.ulen = (u_int32_t) la_storage_object_total_size(obj);
     db_value_write.data = obj->header;
@@ -382,13 +385,14 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     
     debug("putting { size: %u, ulen: %u, data: %s, flags: %x }\n", db_value_write.size,
           db_value_write.ulen, db_value_write.data, db_value_write.flags);
+    
     result = store->db->put(store->db, txn, &db_key, &db_value_write, 0);
     if (result != 0)
     {
         txn->abort(txn);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
-    txn->commit(txn, 0);
+    txn->commit(txn, DB_TXN_SYNC);
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 

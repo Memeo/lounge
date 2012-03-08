@@ -19,7 +19,20 @@ typedef struct la_storage_object_iterator la_storage_object_iterator;
 
 typedef struct la_storage_object_header
 {
+    /**
+     * The overall update sequence for the database.
+     */
     uint64_t seq;
+    
+    /**
+     * The update sequence for this document.
+     */
+    uint64_t doc_seq;
+
+    /**
+     * The revision string (up to 255 characters, null terminated),
+     * followed by the object value.
+     */
     unsigned char rev_data[];
 } la_storage_object_header;
 
