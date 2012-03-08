@@ -49,6 +49,17 @@
 		70B5C26F14FEB2DB00FE9330 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B5C26E14FEB2DB00FE9330 /* buffer.c */; };
 		70FA8BA91505745600FA62CB /* pull.c in Sources */ = {isa = PBXBuildFile; fileRef = 70FA8BA0150573C400FA62CB /* pull.c */; };
 		70FA8BAA15059B5300FA62CB /* libjansson.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7054ADCF14FED7B600B2D3B6 /* libjansson.4.dylib */; };
+		70FA8BBD15083D8500FA62CB /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
+		70FA8BC015083D8500FA62CB /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 70FA8BBF15083D8500FA62CB /* main.c */; };
+		70FA8BC215083D8500FA62CB /* jansson_test.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 70FA8BC115083D8500FA62CB /* jansson_test.1 */; };
+		70FA8BC615083EA300FA62CB /* libjansson.4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7054ADCF14FED7B600B2D3B6 /* libjansson.4.dylib */; };
+		70FA8BCF1508427A00FA62CB /* revgen.c in Sources */ = {isa = PBXBuildFile; fileRef = 70FA8BB61508233700FA62CB /* revgen.c */; };
+		70FD5891150850B500A5930D /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; settings = {ATTRIBUTES = (Weak, ); }; };
+		70FD58A01508511A00A5930D /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
+		70FD58A51508511A00A5930D /* revgen_couch_test.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 70FD58A41508511A00A5930D /* revgen_couch_test.1 */; };
+		70FD58AB1508512D00A5930D /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
+		70FD58AC1508512D00A5930D /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
+		70FD58AD150853E200A5930D /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 70FD58A21508511A00A5930D /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -178,6 +189,20 @@
 			remoteGlobalIDString = 70F173F214F6F1A400F278CA;
 			remoteInfo = "BerkeleyDB Build";
 		};
+		70FD588E150850A100A5930D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70B1F7B014FECD1300A9E488;
+			remoteInfo = "LoungeAct-codec-json";
+		};
+		70FD58A91508512300A5930D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70FA8BCA1508427300FA62CB;
+			remoteInfo = "LoungeAct-revgen-couchdb";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -214,6 +239,26 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		70FA8BB915083D8500FA62CB /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				70FA8BC215083D8500FA62CB /* jansson_test.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		70FD589C1508511A00A5930D /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				70FD58A51508511A00A5930D /* revgen_couch_test.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -9765,6 +9810,15 @@
 		70FA8B9F15056D7500FA62CB /* pull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pull.h; sourceTree = "<group>"; };
 		70FA8BA0150573C400FA62CB /* pull.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pull.c; sourceTree = "<group>"; };
 		70FA8BA51505744F00FA62CB /* libLoungeAct-pull-bdb-json.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-pull-bdb-json.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70FA8BB415081CB100FA62CB /* revgen.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = revgen.h; sourceTree = "<group>"; };
+		70FA8BB61508233700FA62CB /* revgen.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = revgen.c; sourceTree = "<group>"; };
+		70FA8BBB15083D8500FA62CB /* jansson-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "jansson-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70FA8BBF15083D8500FA62CB /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		70FA8BC115083D8500FA62CB /* jansson_test.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = jansson_test.1; sourceTree = "<group>"; };
+		70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-revgen-couchdb.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70FD589E1508511A00A5930D /* revgen-couch-test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "revgen-couch-test"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70FD58A21508511A00A5930D /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		70FD58A41508511A00A5930D /* revgen_couch_test.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = revgen_couch_test.1; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -9865,6 +9919,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				70FA8BAA15059B5300FA62CB /* libjansson.4.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70FA8BB815083D8500FA62CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FA8BBD15083D8500FA62CB /* CoreFoundation.framework in Frameworks */,
+				70FA8BC615083EA300FA62CB /* libjansson.4.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70FA8BC81508427300FA62CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FD5891150850B500A5930D /* libLoungeAct-codec-json.dylib in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70FD589B1508511A00A5930D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FD58AB1508512D00A5930D /* libLoungeAct-codec-json.dylib in Frameworks */,
+				70FD58AC1508512D00A5930D /* libLoungeAct-revgen-couchdb.dylib in Frameworks */,
+				70FD58A01508511A00A5930D /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11122,6 +11203,8 @@
 		70F14E5614F5944900F278CA = {
 			isa = PBXGroup;
 			children = (
+				70FA8BB51508231100FA62CB /* Couch RevGen */,
+				70FA8BB315081C8400FA62CB /* Revision Generator */,
 				70FA8B9E15056D0100FA62CB /* Pull */,
 				7054ADD314FEDE5800B2D3B6 /* API */,
 				7054ADD114FED80E00B2D3B6 /* libdb-5.3.dylib */,
@@ -11136,6 +11219,8 @@
 				70F1740114F6F57800F278CA /* Storage */,
 				70F14E8D14F6F14700F278CA /* db-5.3.15 */,
 				70F14E8514F5C60400F278CA /* libcrypto.dylib */,
+				70FA8BBE15083D8500FA62CB /* jansson-test */,
+				70FD58A11508511A00A5930D /* revgen-couch-test */,
 				70B5C24814FD698900FE9330 /* Frameworks */,
 				70F14E6214F5944B00F278CA /* Products */,
 			);
@@ -11155,6 +11240,9 @@
 				709D9EB5150295A700650F4B /* apitest-sqlite-json */,
 				709D9EC7150295CA00650F4B /* libLoungeAct-sqlite.dylib */,
 				70FA8BA51505744F00FA62CB /* libLoungeAct-pull-bdb-json.dylib */,
+				70FA8BBB15083D8500FA62CB /* jansson-test */,
+				70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */,
+				70FD589E1508511A00A5930D /* revgen-couch-test */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -23239,6 +23327,42 @@
 			path = pull;
 			sourceTree = "<group>";
 		};
+		70FA8BB315081C8400FA62CB /* Revision Generator */ = {
+			isa = PBXGroup;
+			children = (
+				70FA8BB415081CB100FA62CB /* revgen.h */,
+			);
+			name = "Revision Generator";
+			path = revgen;
+			sourceTree = "<group>";
+		};
+		70FA8BB51508231100FA62CB /* Couch RevGen */ = {
+			isa = PBXGroup;
+			children = (
+				70FA8BB61508233700FA62CB /* revgen.c */,
+			);
+			name = "Couch RevGen";
+			path = "revgen-couch";
+			sourceTree = "<group>";
+		};
+		70FA8BBE15083D8500FA62CB /* jansson-test */ = {
+			isa = PBXGroup;
+			children = (
+				70FA8BBF15083D8500FA62CB /* main.c */,
+				70FA8BC115083D8500FA62CB /* jansson_test.1 */,
+			);
+			path = "jansson-test";
+			sourceTree = "<group>";
+		};
+		70FD58A11508511A00A5930D /* revgen-couch-test */ = {
+			isa = PBXGroup;
+			children = (
+				70FD58A21508511A00A5930D /* main.c */,
+				70FD58A41508511A00A5930D /* revgen_couch_test.1 */,
+			);
+			path = "revgen-couch-test";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -23289,6 +23413,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		70FA8BA31505744F00FA62CB /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70FA8BC91508427300FA62CB /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -23590,6 +23721,59 @@
 			productReference = 70FA8BA51505744F00FA62CB /* libLoungeAct-pull-bdb-json.dylib */;
 			productType = "com.apple.product-type.library.dynamic";
 		};
+		70FA8BBA15083D8500FA62CB /* jansson-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70FA8BC315083D8500FA62CB /* Build configuration list for PBXNativeTarget "jansson-test" */;
+			buildPhases = (
+				70FA8BB715083D8500FA62CB /* Sources */,
+				70FA8BB815083D8500FA62CB /* Frameworks */,
+				70FA8BB915083D8500FA62CB /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "jansson-test";
+			productName = "jansson-test";
+			productReference = 70FA8BBB15083D8500FA62CB /* jansson-test */;
+			productType = "com.apple.product-type.tool";
+		};
+		70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70FA8BCC1508427300FA62CB /* Build configuration list for PBXNativeTarget "LoungeAct-revgen-couchdb" */;
+			buildPhases = (
+				70FA8BC71508427300FA62CB /* Sources */,
+				70FA8BC81508427300FA62CB /* Frameworks */,
+				70FA8BC91508427300FA62CB /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70FD588F150850A100A5930D /* PBXTargetDependency */,
+			);
+			name = "LoungeAct-revgen-couchdb";
+			productName = "LoungeAct-revgen-couchdb";
+			productReference = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
+		70FD589D1508511A00A5930D /* revgen-couch-test */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70FD58A61508511A00A5930D /* Build configuration list for PBXNativeTarget "revgen-couch-test" */;
+			buildPhases = (
+				70FD589A1508511A00A5930D /* Sources */,
+				70FD589B1508511A00A5930D /* Frameworks */,
+				70FD589C1508511A00A5930D /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70FD58AA1508512300A5930D /* PBXTargetDependency */,
+			);
+			name = "revgen-couch-test";
+			productName = "revgen-couch-test";
+			productReference = 70FD589E1508511A00A5930D /* revgen-couch-test */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -23628,6 +23812,9 @@
 				709D9EB4150295A700650F4B /* apitest-sqlite-json */,
 				709D9EC6150295CA00650F4B /* LoungeAct-sqlite */,
 				70FA8BA41505744F00FA62CB /* LoungeAct-pull-bdb-json */,
+				70FA8BBA15083D8500FA62CB /* jansson-test */,
+				70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */,
+				70FD589D1508511A00A5930D /* revgen-couch-test */,
 			);
 		};
 /* End PBXProject section */
@@ -23725,6 +23912,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		70FA8BB715083D8500FA62CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FA8BC015083D8500FA62CB /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70FA8BC71508427300FA62CB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FA8BCF1508427A00FA62CB /* revgen.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70FD589A1508511A00A5930D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70FD58AD150853E200A5930D /* main.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -23817,6 +24028,16 @@
 			isa = PBXTargetDependency;
 			target = 70F173F214F6F1A400F278CA /* BerkeleyDB Build */;
 			targetProxy = 70F1741214F6FA9800F278CA /* PBXContainerItemProxy */;
+		};
+		70FD588F150850A100A5930D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */;
+			targetProxy = 70FD588E150850A100A5930D /* PBXContainerItemProxy */;
+		};
+		70FD58AA1508512300A5930D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */;
+			targetProxy = 70FD58A91508512300A5930D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -24236,6 +24457,58 @@
 			};
 			name = Release;
 		};
+		70FA8BC415083D8500FA62CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/include";
+				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/lib";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		70FA8BC515083D8500FA62CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/include";
+				LIBRARY_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)/jansson-2.3-install/lib";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		70FA8BCD1508427300FA62CB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		70FA8BCE1508427300FA62CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		70FD58A71508511A00A5930D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		70FD58A81508511A00A5930D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -24397,6 +24670,33 @@
 			buildConfigurations = (
 				70FA8BA71505744F00FA62CB /* Debug */,
 				70FA8BA81505744F00FA62CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70FA8BC315083D8500FA62CB /* Build configuration list for PBXNativeTarget "jansson-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70FA8BC415083D8500FA62CB /* Debug */,
+				70FA8BC515083D8500FA62CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70FA8BCC1508427300FA62CB /* Build configuration list for PBXNativeTarget "LoungeAct-revgen-couchdb" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70FA8BCD1508427300FA62CB /* Debug */,
+				70FA8BCE1508427300FA62CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		70FD58A61508511A00A5930D /* Build configuration list for PBXNativeTarget "revgen-couch-test" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70FD58A71508511A00A5930D /* Debug */,
+				70FD58A81508511A00A5930D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
