@@ -30,8 +30,10 @@ static const char *initsql = "BEGIN TRANSACTION; "
 "INSERT OR IGNORE INTO meta VALUES ( 'meta', 1 ); "
 "CREATE TABLE IF NOT EXISTS docs ( "
 "  id TEXT UNIQUE PRIMARY KEY NOT NULL,"
-"  rev TEXT NOT NULL,"
+"  rev BLOB NOT NULL,"
+"  oldrevs BLOB NOT NULL,"
 "  seq INTEGER NOT NULL,"
+"  doc_seq INTEGER NOT NULL,"
 "  doc BLOB NOT NULL );"
 "CREATE TRIGGER IF NOT EXISTS onupdate AFTER UPDATE ON docs BEGIN"
 "  UPDATE meta SET seq = seq + 1 WHERE id = 'meta'; "
@@ -51,6 +53,7 @@ static const char *rollback = "ROLLBACK";
 static const char *getbyid = "SELECT * FROM docs WHERE id = ?;";
 static const char *getbyidrev = "SELECT * FROM docs WHERE id = ? AND rev = ?;";
 static const char *getrev = "SELECT rev FROM docs WHERE id = ?;";
+static const char *getmeta = "SELECT rev, oldrevs, seq, doc_seq FROM docs WHERE id = ?";
 static const char *getall = "SELECT * FROM docs;";
 static const char *getsince = "SELECT * FROM docs WHERE seq >= ?";
 static const char *putdoc = "INSERT OR REPLACE INTO docs VALUES (?, ?, ?, ?);";
@@ -151,7 +154,7 @@ la_storage_object_store *la_storage_open(la_storage_env *env, const char *name)
     return store;
 }
 
-la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const char *rev, la_storage_object **obj)
+la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const la_storage_rev_t *rev, la_storage_object **obj)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -168,7 +171,7 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
         sqlite3_finalize(stmt);
         return LA_STORAGE_OBJECT_GET_ERROR;
     }
-    if (rev != NULL && sqlite3_bind_text(stmt, 2, rev, (int) strlen(rev), SQLITE_TRANSIENT) != SQLITE_OK)
+    if (rev != NULL && sqlite3_bind_blob(stmt, 2, rev, sizeof(la_storage_rev_t), SQLITE_TRANSIENT) != SQLITE_OK)
     {
         sqlite3_finalize(stmt);
         return LA_STORAGE_OBJECT_GET_ERROR;
@@ -178,11 +181,19 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
     {
         if (obj != NULL)
         {
-            *obj = la_storage_create_object((const char *) sqlite3_column_text(stmt, 0),
-                                           (const char *) sqlite3_column_text(stmt, 1),
-                                           sqlite3_column_blob(stmt, 3), 
-                                           sqlite3_column_bytes(stmt, 3));
-            (*obj)->header->seq = sqlite3_column_int64(stmt, 2);
+            la_storage_rev_t *rev = (la_storage_rev_t *) sqlite3_column_blob(stmt, 1);
+            la_storage_rev_t *oldrev = (la_storage_rev_t *) sqlite3_column_blob(stmt, 2);
+            size_t oldrev_count = sqlite3_column_bytes(stmt, 2);
+            *obj = malloc(sizeof(la_storage_object));
+            (*obj)->key = strdup((const char *) sqlite3_column_text(stmt, 0));
+            (*obj)->data_length = sqlite3_column_bytes(stmt, 5);
+            (*obj)->header = malloc(sizeof(la_storage_object_header) + (oldrev_count * sizeof(la_storage_rev_t)) + (*obj)->data_length);
+            (*obj)->header->seq = sqlite3_column_int64(stmt, 3);
+            (*obj)->header->doc_seq = sqlite3_column_int64(stmt, 4);
+            (*obj)->header->rev_count = oldrev_count;
+            memcpy(&(*obj)->header->rev, rev, sizeof(la_storage_rev_t));
+            memcpy((*obj)->header->revs_data, oldrev, oldrev_count * sizeof(la_storage_rev_t));
+            memcpy(la_storage_object_get_data(*obj), sqlite3_column_blob(stmt, 5), (*obj)->data_length);
         }
         sqlite3_finalize(stmt);
         return LA_STORAGE_OBJECT_GET_OK;
@@ -196,7 +207,7 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_GET_ERROR;
 }
 
-la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, char *rev, const size_t maxlen)
+la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, la_storage_rev_t *rev)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -213,7 +224,7 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     {
         if (rev != NULL)
         {
-            strncpy(rev, (const char *) sqlite3_column_text(stmt, 0), maxlen);
+            memcpy(rev, sqlite3_column_blob(stmt, 0), sizeof(la_storage_rev_t));
         }
         sqlite3_finalize(stmt);
         return LA_STORAGE_OBJECT_GET_OK;
@@ -227,11 +238,11 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_GET_ERROR;
 }
 
-la_storage_object_put_result la_storage_put(la_storage_object_store *store, const char *rev, la_storage_object *obj)
+la_storage_object_put_result la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
 {
     sqlite3_stmt *stmt;
     int ret;
-    uint64_t seq;
+    uint64_t seq, doc_seq;
     
     sqlite3_exec(store->db, begintxn, NULL, NULL, NULL);
     
@@ -246,7 +257,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     seq = sqlite3_column_int64(stmt, 0);
     sqlite3_finalize(stmt);
         
-    if (sqlite3_prepare(store->db, getrev, (int) strlen(getrev), &stmt, NULL) != SQLITE_OK)
+    if (sqlite3_prepare(store->db, getmeta, (int) strlen(getmeta), &stmt, NULL) != SQLITE_OK)
     {
         sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
         return LA_STORAGE_OBJECT_PUT_ERROR;
@@ -260,13 +271,16 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     ret = sqlite3_step(stmt);
     if (ret == SQLITE_ROW)
     {
-        const char *r = (const char *) sqlite3_column_text(stmt, 0);
-        if (rev == NULL || strcmp(rev, r) != 0)
+        la_storage_rev_t *r = (la_storage_rev_t *) sqlite3_column_blob(stmt, 0);
+        if (rev == NULL || memcmp(rev, r, sizeof(la_storage_rev_t)) != 0)
         {
             sqlite3_finalize(stmt);
             sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
             return LA_STORAGE_OBJECT_PUT_CONFLICT;
         }
+        obj->header->doc_seq = sqlite3_column_int64(stmt, 3);
+        int oldrev_count = sqlite3_column_bytes(stmt, 1) / sizeof(la_storage_rev_t);
+        
     }
     else if (ret != SQLITE_DONE)
     {

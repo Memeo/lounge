@@ -36,7 +36,7 @@ void la_fhexdump(FILE *out, const char *buf, size_t len)
             if (j == 8)
                 fputc(' ', out);
             if (i + j < len)
-                fprintf(out, "%02x ", (int) buf[i+j]);
+                fprintf(out, "%02x ", (unsigned int) buf[i+j] & 0xFF);
             else
                 fprintf(out, "   ");
         }

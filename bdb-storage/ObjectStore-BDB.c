@@ -34,12 +34,6 @@ keycpy(char *key, u_int32_t len)
     return ret;
 }
 
-struct ObjectHeader
-{
-    la_storage_object_header head;
-    char rev[MAX_REVISION_LEN + 1];
-};
-
 struct la_storage_env
 {
     DB_ENV *env;
@@ -216,14 +210,14 @@ la_storage_object_store *la_storage_open(la_storage_env *env, const char *path)
  * @param rev The revision to match when getting the object (if null, get the latest rev).
  * @param obj The object to .
  */
-la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const char *rev, la_storage_object **obj)
+la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const la_storage_rev_t *rev, la_storage_object **obj)
 {
-    struct ObjectHeader header;
+    la_storage_object_header header;
     DBT db_key;
     DBT db_value;
     int result;
     
-    memset(&header, 0, sizeof(struct ObjectHeader));
+    memset(&header, 0, sizeof(la_storage_object_header));
     
     db_key.data = (void *) key;
     db_key.size = (u_int32_t) strlen(key);
@@ -239,9 +233,9 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
     }
     else
     {
-        db_value.data = header.rev;
-        db_value.ulen = MAX_REVISION_LEN;
-        db_value.dlen = MAX_REVISION_LEN;
+        db_value.data = &header;
+        db_value.ulen = sizeof(la_storage_object_header);
+        db_value.dlen = sizeof(la_storage_object_header);
         db_value.doff = 0;
         db_value.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     }
@@ -254,16 +248,9 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
         return LA_STORAGE_OBJECT_GET_ERROR;
     }
     
-    if (strnlen(db_value.data, min(MAX_REVISION_LEN + 1, db_value.size)) > MAX_REVISION_LEN)
-    {
-        if (obj != NULL)
-            free(db_value.data);
-        return LA_STORAGE_OBJECT_GET_ERROR;
-    }
-    
     debug("got { size: %u, data: %s }\n", db_value.size, (char *) db_value.data);
     
-    if (rev != NULL && strcmp(rev, db_value.data) != 0)
+    if (rev != NULL && memcmp(rev, &header.rev, sizeof(la_storage_rev_t)) != 0)
         return LA_STORAGE_OBJECT_GET_NOT_FOUND;
     
     if (obj != NULL)
@@ -271,7 +258,7 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
         *obj = (la_storage_object *) malloc(sizeof(la_storage_object));
         (*obj)->key = strdup(key);
         (*obj)->header = db_value.data;
-        (*obj)->data_length = (uint32_t) (db_value.size - strlen((const char*) (*obj)->header->rev_data) - 1 - sizeof(struct la_storage_object_header));
+        (*obj)->data_length = (uint32_t) (db_value.size - ((*obj)->header->rev_count * sizeof(la_storage_rev_t)) - sizeof(struct la_storage_object_header));
 #if DEBUG
         printf("got %u bytes\n", (*obj)->data_length);
         la_hexdump(la_storage_object_get_data((*obj)), (*obj)->data_length);
@@ -281,22 +268,22 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_GET_OK;
 }
 
-la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, char *rev, size_t maxlen)
+la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, la_storage_rev_t *rev)
 {
-    char header[MAX_REVISION_LEN];
+    la_storage_object_header header;
     DBT db_key;
     DBT db_value;
     int result;
     
-    memset(header, 0, MAX_REVISION_LEN);
+    memset(&header, 0, sizeof(header));
     db_key.data = (void *) key;
     db_key.size = (u_int32_t) strlen(key);
     db_key.ulen = (u_int32_t) strlen(key);
     db_key.flags = DB_DBT_USERMEM;
     
-    db_value.data = header;
-    db_value.ulen = MAX_REVISION_LEN;
-    db_value.dlen = MAX_REVISION_LEN;
+    db_value.data = &header;
+    db_value.ulen = sizeof(header);
+    db_value.dlen = sizeof(header);
     db_value.doff = 0;
     db_value.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
 
@@ -308,10 +295,10 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
         return LA_STORAGE_OBJECT_GET_ERROR;
     }
     
-    debug("got { size: %u, data: '%s' (%s) }\n", db_value.size, db_value.data, header);
+    debug("got { size: %u, data: '%s' }\n", db_value.size, db_value.data);
     if (rev != NULL)
     {
-        strncpy(rev, header, maxlen);
+        memcpy(rev, &header.rev, sizeof(la_storage_rev_t));
     }
 
     return LA_STORAGE_OBJECT_GET_OK;
@@ -320,10 +307,10 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
 /**
  * Put an object into the store.
  */
-la_storage_object_put_result la_storage_put(la_storage_object_store *store, const char *rev, la_storage_object *obj)
+la_storage_object_put_result la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
 {
     DB_TXN *txn;
-    struct ObjectHeader header;
+    la_storage_object_header header;
     DBT db_key;
     DBT db_value_read, db_value_write;
     int result;
@@ -343,8 +330,8 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     db_key.flags = DB_DBT_USERMEM;
     
     db_value_read.data = &header;
-    db_value_read.ulen = sizeof(struct ObjectHeader);
-    db_value_read.dlen = sizeof(struct ObjectHeader);
+    db_value_read.ulen = sizeof(la_storage_object_header);
+    db_value_read.dlen = sizeof(la_storage_object_header);
     db_value_read.doff = 0;
     db_value_read.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     
@@ -363,16 +350,35 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     if (result != DB_NOTFOUND)
     {
         debug("data size: %d, data: %s\n", db_value_read.size, db_value_read.data);
-        debug("compare rev:%s header.rev:%s\n", rev, header.rev);
-        if (strcmp(rev, header.rev) != 0)
+        if (rev == NULL || memcmp(rev, &header.rev, sizeof(la_storage_rev_t)) != 0)
         {
             txn->abort(txn);
             return LA_STORAGE_OBJECT_PUT_CONFLICT;
         }
-        obj->header->doc_seq = header.head.doc_seq + 1;
+        obj->header->doc_seq = header.doc_seq + 1;
+        if (header.rev_count < LA_OBJECT_MAX_REVISION_COUNT)
+        {
+            obj->header = realloc(obj->header, la_storage_object_total_size(obj) + sizeof(la_storage_rev_t));
+            // If we added a revision, move the object data up to make room.
+            memmove(la_storage_object_get_data(obj) + sizeof(la_storage_rev_t), la_storage_object_get_data(obj), obj->data_length);
+            obj->header->rev_count = header.rev_count + 1;
+        }
+        // Move the rev_count-1 previous revisons over...
+        memmove(obj->header->revs_data + sizeof(la_storage_rev_t), obj->header->revs_data, sizeof(la_storage_rev_t) * (obj->header->rev_count - 1));
+        // Copy the previous revision in.
+        memcpy(obj->header->revs_data, &header.rev, sizeof(la_storage_rev_t));
+#if DEBUG
+        printf("After moving data and revisions:\nOld revisions:\n");
+        la_hexdump(obj->header->revs_data, obj->header->rev_count * sizeof(la_storage_rev_t));
+        printf("data:\n");
+        la_hexdump(la_storage_object_get_data(obj), obj->data_length);
+#endif
     }
     else
+    {
         obj->header->doc_seq = 0;
+        obj->header->rev_count = 0;
+    }
     
     db_seq_t seq;
     store->seq->get(store->seq, txn, 1, &seq, 0);
@@ -467,8 +473,6 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
     free(db_key.data);
     if (obj != NULL)
     {
-        if (strnlen(db_value.data, min(db_value.size, MAX_REVISION_LEN + 1) > MAX_REVISION_LEN))
-            return LA_STORAGE_OBJECT_ITERATOR_ERROR;
         *obj = (la_storage_object *) malloc(sizeof(la_storage_object));
         if (*obj == NULL)
             return LA_STORAGE_OBJECT_ITERATOR_ERROR;
@@ -480,7 +484,7 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
         }
         (*obj)->header = db_value.data;
         (*obj)->data_length = (uint32_t) (db_value.size - sizeof(struct la_storage_object_header) 
-                                          - strlen((*obj)->header->rev_data) - 1);
+                                          - (sizeof(la_storage_rev_t) * (*obj)->header->rev_count));
 #if DEBUG
         printf("got %u bytes\n", (*obj)->data_length);
         la_hexdump(la_storage_object_get_data((*obj)), (*obj)->data_length);
