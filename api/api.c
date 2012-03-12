@@ -94,11 +94,13 @@ static int is_tombstone(la_codec_value_t *doc)
     return la_codec_is_true(val);
 }
 
-la_db_get_result la_db_get(la_db_t *db, const char *key, const char *rev, la_codec_value_t **value, la_codec_error_t *error)
+la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec_value_t **value,
+                           la_rev_t *current_rev, la_codec_error_t *error)
 {
     la_codec_value_t *v;
     la_storage_object *object;
-    la_storage_object_get_result result = la_storage_get(db->store, key, rev, &object);
+    la_storage_rev_t *srev = rev ? &rev->rev : NULL;
+    la_storage_object_get_result result = la_storage_get(db->store, key, srev, &object);
     const char *object_data = NULL;
 
     if (result != LA_STORAGE_OBJECT_GET_OK)
@@ -107,8 +109,15 @@ la_db_get_result la_db_get(la_db_t *db, const char *key, const char *rev, la_cod
             return LA_DB_GET_NOT_FOUND;
         return LA_DB_GET_ERROR;
     }
+    if (object->header->deleted)
+        return LA_DB_GET_NOT_FOUND;
     object_data = (const char *) la_storage_object_get_data(object);
     v = la_codec_loadb(object_data, object->data_length, 0, error);
+    if (current_rev != NULL)
+    {
+        current_rev->seq = object->header->doc_seq;
+        memcpy(&current_rev->rev, &object->header->rev, sizeof(la_storage_rev_t));
+    }            
     la_storage_destroy_object(object);
     if (v == NULL)
         return LA_DB_GET_ERROR;
@@ -139,7 +148,8 @@ static int accumulate(const char *str, size_t size, void *data)
     return 0;
 }
 
-static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const char *oldrev, const la_codec_value_t *doc, char *newrev, int is_delete)
+static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_t *oldrev, const la_codec_value_t *doc,
+                                     la_rev_t *newrev, int is_delete)
 {
     SHA1_CTX sha;
     unsigned char digest[SHA1_DIGEST_LENGTH];
@@ -149,6 +159,7 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const char *o
     la_buffer_t *buffer;
     la_codec_value_t *putdoc;
     la_storage_object_put_result result;
+    la_rev_t nextrev;
     
     if (!la_codec_is_object(doc) || (!is_delete && la_codec_object_get(doc, LA_API_DELETED_NAME) != NULL))
     {
@@ -175,27 +186,10 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const char *o
             key = la_codec_string_value(id);
         }
     }
-    
-    la_codec_object_set_new(putdoc, LA_API_KEY_NAME, la_codec_string(key));
-    SHA1_Init(&sha);
-    if (la_codec_dump_callback(putdoc, hashdoc, &sha, 0) != 0)
-    {
-        la_codec_decref(putdoc);
-        return LA_DB_PUT_ERROR;
-    }
-    SHA1_Final(digest, &sha);
-    
-    snprintf(rev, LA_API_MAX_REVLEN, "%llu-%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x%02x",
-             la_storage_lastseq(db->store),
-             digest[ 0], digest[ 1], digest[ 2], digest[ 3],
-             digest[ 4], digest[ 5], digest[ 6], digest[ 7],
-             digest[ 8], digest[ 9], digest[10], digest[11],
-             digest[12], digest[13], digest[14], digest[15],
-             digest[16], digest[17], digest[18], digest[19]);
-    la_codec_object_set_new(putdoc, LA_API_REV_NAME, la_codec_string(rev));
-    if (newrev != NULL)
-        strncpy(newrev, rev, LA_API_MAX_REVLEN);
 
+    la_revgen(putdoc, oldrev ? oldrev->seq : 1, oldrev ? &oldrev->rev : NULL, is_delete, &nextrev.rev);
+    la_codec_object_set_new(putdoc, LA_API_KEY_NAME, la_codec_string(key));
+    
     buffer = la_buffer_new(256);
     if (la_codec_dump_callback(putdoc, accumulate, buffer, 0) != 0)
     {
@@ -205,7 +199,7 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const char *o
     }
     la_codec_decref(putdoc);
     
-    object = la_storage_create_object(key, rev, la_buffer_data(buffer), (uint32_t) la_buffer_size(buffer));
+    object = la_storage_create_object(key, nextrev.rev, la_buffer_data(buffer), (uint32_t) la_buffer_size(buffer));
     if (object == NULL)
     {
         la_buffer_destroy(buffer);
@@ -213,7 +207,12 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const char *o
     }
     la_buffer_destroy(buffer);
     
-    result = la_storage_put(db->store, oldrev, object);
+    object->header->deleted = is_delete;
+    result = la_storage_put(db->store, oldrev ? &oldrev->rev : NULL, object);
+    nextrev.seq = object->header->doc_seq;
+    if (newrev != NULL)
+        memcpy(newrev, &nextrev, sizeof(la_rev_t));
+    la_storage_destroy_object(object);
     if (result == LA_STORAGE_OBJECT_PUT_ERROR)
         return LA_DB_PUT_ERROR;
     if (result == LA_STORAGE_OBJECT_PUT_CONFLICT)
@@ -221,19 +220,18 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const char *o
     return LA_DB_PUT_OK;
 }
 
-la_db_put_result la_db_put(la_db_t *db, const char *key, const char *rev, const la_codec_value_t *doc, char *newrev)
+la_db_put_result la_db_put(la_db_t *db, const char *key, const la_rev_t *rev, const la_codec_value_t *doc, la_rev_t *newrev)
 {
     return do_la_db_put(db, key, rev, doc, newrev, 0);
 }
 
-la_db_delete_result la_db_delete(la_db_t *db, const char *key, const char *rev)
+la_db_delete_result la_db_delete(la_db_t *db, const char *key, const la_rev_t *rev)
 {
     la_codec_value_t *doc = la_codec_object();
     la_db_put_result result;
     
     if (doc == NULL)
         return LA_DB_DELETE_ERROR;
-    la_codec_object_set_new(doc, LA_API_DELETED_NAME, la_codec_true());
     result = do_la_db_put(db, key, rev, doc, NULL, 1);
     la_codec_decref(doc);
     if (result == LA_DB_PUT_CONFLICT)

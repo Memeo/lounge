@@ -11,9 +11,16 @@
 
 #include <stdint.h>
 #include <Codec/Codec.h>
+#include <Storage/ObjectStore.h>
+
+typedef struct la_rev
+{
+    uint64_t seq;
+    la_storage_rev_t rev;
+} la_rev_t;
 
 typedef int (*la_revgen_generator)(const la_codec_value_t *value,
-                                   uint64_t start, uint64_t rev,
+                                   uint64_t old_start, la_rev_t *old_rev,
                                    int is_delete, char *buffer, size_t len);
 
 /**
@@ -34,8 +41,14 @@ typedef int (*la_revgen_generator)(const la_codec_value_t *value,
  *  A negative value is returned on error. The value written to the buffer
  *  is NOT null terminated.
  */
-int la_revgen(const la_codec_value_t *value, uint64_t start,
-              const char *rev, size_t revlen, int is_delete,
-              char *buffer, size_t len);
+int la_revgen(const la_codec_value_t *value, uint64_t old_start,
+              la_storage_rev_t *oldrev, int is_delete,
+              la_storage_rev_t *rev);
+
+int la_rev_scan(const char *str, la_rev_t *rev);
+
+int la_rev_print(const la_rev_t rev, char *buffer, size_t size);
+
+const char *la_rev_string(const la_rev_t rev);
 
 #endif

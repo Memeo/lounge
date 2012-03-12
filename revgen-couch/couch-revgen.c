@@ -227,8 +227,8 @@ static char hx(unsigned char c)
     return 'a' + (c - 10);
 }
 
-int la_revgen(const la_codec_value_t *value, uint64_t start, const char *rev, size_t revlen,
-              int is_delete, char *buffer, size_t len)
+int la_revgen(const la_codec_value_t *value, uint64_t old_start, la_storage_rev_t *oldrev,
+              int is_delete, la_storage_rev_t *rev)
 {
     MD5_CTX md5;
     unsigned char digest[MD5_DIGEST_LENGTH];
@@ -248,11 +248,11 @@ int la_revgen(const la_codec_value_t *value, uint64_t start, const char *rev, si
     else
         MD5_Update(&md5, _FALSE, sizeof(_FALSE));
     
-    start_value = la_codec_integer(start);
+    start_value = la_codec_integer(old_start);
     hash_value(start_value, &md5);
     la_codec_decref(start_value);
     
-    if (rev == NULL)
+    if (oldrev == NULL)
     {
         unsigned char c = 0;
         MD5_Update(&md5, _SMALL_INT, sizeof(_SMALL_INT));
@@ -260,13 +260,13 @@ int la_revgen(const la_codec_value_t *value, uint64_t start, const char *rev, si
     }
     else
     {
-        unsigned char c[] = { (unsigned char) (revlen >> 24),
-            (unsigned char) (revlen >> 16),
-            (unsigned char) (revlen >>  8),
-            (unsigned char)  revlen };
+        unsigned char c[] = { (unsigned char) (LA_OBJECT_REVISION_LEN >> 24),
+            (unsigned char) (LA_OBJECT_REVISION_LEN >> 16),
+            (unsigned char) (LA_OBJECT_REVISION_LEN >>  8),
+            (unsigned char)  LA_OBJECT_REVISION_LEN };
         MD5_Update(&md5, _BINARY, sizeof(_BINARY));
         MD5_Update(&md5, c, 4);
-        MD5_Update(&md5, rev, (unsigned int) revlen);
+        MD5_Update(&md5, oldrev->rev, LA_OBJECT_REVISION_LEN);
     }
     
     hash_value(value, &md5);
@@ -275,8 +275,8 @@ int la_revgen(const la_codec_value_t *value, uint64_t start, const char *rev, si
     
     MD5_Final(digest, &md5);
     
-    if (buffer)
-        memcpy(buffer, digest, (len < MD5_DIGEST_LENGTH) ? len : MD5_DIGEST_LENGTH);
+    if (rev)
+        memcpy(rev->rev, digest, (LA_OBJECT_REVISION_LEN < MD5_DIGEST_LENGTH) ? LA_OBJECT_REVISION_LEN : MD5_DIGEST_LENGTH);
     
 #if DEBUG
     la_hexdump(la_buffer_data(DEBUG_BUFFER), la_buffer_size(DEBUG_BUFFER));

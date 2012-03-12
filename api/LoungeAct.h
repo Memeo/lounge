@@ -10,6 +10,7 @@
 #define LoungeAct_LoungeAct_h
 
 #include <Codec/Codec.h>
+#include <revgen/revgen.h>
 
 #ifndef LA_API_KEY_NAME
 #define LA_API_KEY_NAME "_id"
@@ -79,9 +80,10 @@ typedef la_codec_value_t *(*la_view_mapfn)(la_codec_value_t *value, void *baton)
 typedef la_codec_value_t *(*la_view_reducefn)(la_codec_value_t *accum, la_codec_value_t *value, void *baton);
 
 la_db_t *la_db_open(la_host_t *host, const char *name);
-la_db_get_result la_db_get(la_db_t *db, const char *key, const char *rev, la_codec_value_t **value, la_codec_error_t *error);
-la_db_put_result la_db_put(la_db_t *db, const char *key, const char *rev, const la_codec_value_t *doc, char *newrev);
-la_db_delete_result la_db_delete(la_db_t *db, const char *key, const char *rev);
+la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec_value_t **value,
+                           la_rev_t *current_rev, la_codec_error_t *error);
+la_db_put_result la_db_put(la_db_t *db, const char *key, const la_rev_t *rev, const la_codec_value_t *doc, la_rev_t *newrev);
+la_db_delete_result la_db_delete(la_db_t *db, const char *key, const la_rev_t *rev);
 la_view_iterator_t *la_db_view(la_db_t *db, la_view_mapfn map, la_view_reducefn reduce, void *baton);
 la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_value_t **value, la_codec_error_t *error);
 void la_view_iterator_close(la_view_iterator_t *it);

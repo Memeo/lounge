@@ -114,7 +114,7 @@ int main(int argc, char **argv)
     
     printf("get on nonexistent... ");
     la_db_get_result get;
-    if ((get = la_db_get(db, "not-there", NULL, &value, &error)) != LA_DB_GET_NOT_FOUND)
+    if ((get = la_db_get(db, "not-there", NULL, &value, NULL, &error)) != LA_DB_GET_NOT_FOUND)
     {
         FAIL(" (%d)", get);
     }
@@ -156,18 +156,18 @@ int main(int argc, char **argv)
     OK();
     
     printf("adding the object... ");
-    char newrev[LA_API_MAX_REVLEN + 1];
+    la_rev_t newrev;
     la_db_put_result put;
-    if ((put = la_db_put(db, "newobject", NULL, value, newrev)) != LA_DB_PUT_OK)
+    if ((put = la_db_put(db, "newobject", NULL, value, &newrev)) != LA_DB_PUT_OK)
     {
         FAIL(" (%d)", put);
     }
-    printf(" revision %s ", newrev);
+    printf(" revision %s ", la_rev_string(newrev));
     OK();
     la_codec_decref(value);
     
     printf("getting the object... ");
-    if ((get = la_db_get(db, "newobject", NULL, &value, &error)) != LA_DB_PUT_OK)
+    if ((get = la_db_get(db, "newobject", NULL, &value, NULL, &error)) != LA_DB_PUT_OK)
     {
         FAIL(" (%d)", get);
     }
@@ -176,14 +176,14 @@ int main(int argc, char **argv)
     
     printf("delete the object... ");
     la_db_delete_result del;
-    if ((del = la_db_delete(db, "newobject", newrev)) != LA_DB_DELETE_OK)
+    if ((del = la_db_delete(db, "newobject", &newrev)) != LA_DB_DELETE_OK)
     {
         FAIL(" (%d)", del);
     }
     OK();
     
     printf("get the deleted object... ");
-    if ((get = la_db_get(db, "newobject", NULL, &value, &error)) != LA_DB_GET_NOT_FOUND)
+    if ((get = la_db_get(db, "newobject", NULL, &value, NULL, &error)) != LA_DB_GET_NOT_FOUND)
     {
         FAIL(" (%d)", get);
     }
@@ -193,17 +193,17 @@ int main(int argc, char **argv)
     value = la_codec_object();
     if (value == NULL) FAIL0();
     if (la_codec_object_set_new(value, "mapme", la_codec_integer(1)) != 0) FAIL0();
-    if ((put = la_db_put(db, "one", NULL, value, newrev)) != LA_DB_PUT_OK) FAIL(" (%d)", put);
+    if ((put = la_db_put(db, "one", NULL, value, &newrev)) != LA_DB_PUT_OK) FAIL(" (%d)", put);
     la_codec_decref(value);
     value = la_codec_object();
     if (value == NULL) FAIL0();
     if (la_codec_object_set_new(value, "mapme", la_codec_integer(2)) != 0) FAIL0();
-    if ((put = la_db_put(db, "two", NULL, value, newrev)) != LA_DB_PUT_OK) FAIL(" (%d)", put);
+    if ((put = la_db_put(db, "two", NULL, value, &newrev)) != LA_DB_PUT_OK) FAIL(" (%d)", put);
     la_codec_decref(value);
     value = la_codec_object();
     if (value == NULL) FAIL0();
     if (la_codec_object_set_new(value, "mapme", la_codec_integer(3)) != 0) FAIL0();
-    if ((put = la_db_put(db, "three", NULL, value, newrev)) != LA_DB_PUT_OK) FAIL(" (%d)", put);
+    if ((put = la_db_put(db, "three", NULL, value, &newrev)) != LA_DB_PUT_OK) FAIL(" (%d)", put);
     la_codec_decref(value);
     OK();
     
@@ -214,6 +214,7 @@ int main(int argc, char **argv)
     memset(&error, 0, sizeof(la_codec_error_t));
     while ((iter = la_view_iterator_next(it, &value, &error)) == LA_VIEW_ITERATOR_GOT_NEXT)
     {
+        if (value == NULL) continue;
         if (!la_codec_is_integer(value)) FAIL("didn't get an integer %d", la_codec_typeof(value));
         printf("%lld ", la_codec_integer_value(value));
         la_codec_decref(value);

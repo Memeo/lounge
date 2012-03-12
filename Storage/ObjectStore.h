@@ -39,6 +39,11 @@ typedef struct la_storage_object_header
      * The update sequence for this document.
      */
     uint64_t doc_seq;
+    
+    /**
+     * Boolean for deleted revisions.
+     */
+    uint8_t deleted:1;
 
     /**
      * The number of historical revisions that follow.

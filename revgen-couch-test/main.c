@@ -9,26 +9,31 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include "../revgen/revgen.h"
 #include "../Codec/Codec.h"
+#include "../utils/hexdump.h"
 
 #define die(fmt,args...) do { fprintf(stderr, fmt, ##args); exit(1); } while(0)
 
 int main (int argc, const char * argv[])
 {
-    char rev[16];
+    la_storage_rev_t rev;
     la_codec_error_t error;
     la_codec_value_t *value = la_codec_object();
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
+    la_revgen(value, 0, NULL, 0, &rev);
     const char test_empty_rev[] = { 150,122,0,223,245,224,42,221,65,129,145,56,171,179,40,77 };
-    if (memcmp(rev, test_empty_rev, 16) != 0)
+    if (memcmp(rev.rev, test_empty_rev, 16) != 0)
+    {
+        la_hexdump(rev.rev, LA_OBJECT_REVISION_LEN);
+        la_hexdump(test_empty_rev, LA_OBJECT_REVISION_LEN);
         die("FAIL empty new first object\n");
+    }
     la_codec_decref(value);
     
     value = la_codec_loads("{\"int1\":1,\"int2\":1234}", 0, &error);
     if (!value)
         die("parse int test: %s\n", error.text);
     const char test_int_rev[] = { 0xf1, 0x9d, 0x26, 0xc1, 0xb4, 0xd6, 0xdc, 0x3a, 0x4a, 0x84, 0x3d, 0xe6, 0x9e, 0x36, 0xac, 0x47 };
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_int_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_int_rev, 16) != 0)
         die("FAIL int new object\n");
     la_codec_decref(value);
     
@@ -36,8 +41,8 @@ int main (int argc, const char * argv[])
     if (!value)
         die("parse bool test: %s\n", error.text);
     const char test_bool_rev[] = "\xab\xef\xf4\xc3\xa5\xb7\x45\xd4\x5d\xa2\xb8\x34\xb9\x1a\xac\xf5";
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_bool_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_bool_rev, 16) != 0)
         die("FAIL bool new object\n");
     la_codec_decref(value);
     
@@ -45,8 +50,8 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"s\":\"string\",\"nothing\":\"\"}", 0, &error);
     if (!value)
         die("parse string test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_str_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_str_rev, 16) != 0)
         die("FAIL string new object\n");
     la_codec_decref(value);
     
@@ -54,8 +59,8 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"zero\":0.0,\"pi\":3.14159,\"e\":2.71828183}", 0, &error);
     if (!value)
         die("parse float test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_float_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_float_rev, 16) != 0)
         die("FAIL float new object\n");
     la_codec_decref(value);
 
@@ -63,8 +68,8 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"nada\":null}", 0, &error);
     if (!value)
         die("parse null test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_null_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_null_rev, 16) != 0)
         die("FAIL null new object\n");
     la_codec_decref(value);
     
@@ -72,8 +77,8 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"nada\":[]}", 0, &error);
     if (!value)
         die("parse empty list test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_0list_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_0list_rev, 16) != 0)
         die("FAIL empty list new object\n");
     la_codec_decref(value);
     
@@ -81,8 +86,8 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"list\":[\"this\",\"is\",12345,40.04,true,null]}", 0, &error);
     if (!value)
         die("parse list test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_list_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_list_rev, 16) != 0)
         die("FAIL list new object\n");
     la_codec_decref(value);
     
@@ -90,8 +95,8 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"nada\":{}}", 0, &error);
     if (!value)
         die("parse empty object test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_0object_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_0object_rev, 16) != 0)
         die("FAIL empty object new object\n");
     la_codec_decref(value);
     
@@ -99,10 +104,24 @@ int main (int argc, const char * argv[])
     value = la_codec_loads("{\"object\":{\"int\":1234,\"float\":3.14159,\"string\":\"Hello, World!\",\"boolean\":true,\"nada\":null,\"array\":[\"a\"],\"obj\":{\"foo\":\"bar\"}}}", LA_CODEC_PRESERVE_ORDER, &error);
     if (!value)
         die("parse object test: %s\n", error.text);
-    la_revgen(value, 0, NULL, 0, 0, rev, sizeof(rev));
-    if (memcmp(rev, test_object_rev, 16) != 0)
+    la_revgen(value, 0, NULL, 0, &rev);
+    if (memcmp(rev.rev, test_object_rev, 16) != 0)
         die("FAIL object new object\n");
     la_codec_decref(value);
+    
+    const char *revstr = "1234-deadbeefdeadbeefdeadbeefdeadbeef";
+    la_rev_t scanrev;
+    la_rev_t testrev = { 1234, { 0xde, 0xad, 0xbe, 0xef, 0xde, 0xad, 0xbe, 0xef, 0xde, 0xad, 0xbe, 0xef, 0xde, 0xad, 0xbe, 0xef, } };
+    printf("%p\n", revstr);
+    if (la_rev_scan(revstr, &scanrev) != 0)
+        die("FAIL scan rev\n");
+    printf("%p\n", revstr);
+    if (memcmp(&scanrev, &testrev, sizeof(la_rev_t)) != 0)
+        die("FAIL scanned rev equality\n");
+    char buf[100];
+    la_rev_print(testrev, buf, 100);
+    if (strcmp(revstr, buf) != 0)
+        die("FAIL print rev\n");
     
     printf("OK\n");
     return 0;

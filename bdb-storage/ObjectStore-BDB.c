@@ -376,7 +376,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     }
     else
     {
-        obj->header->doc_seq = 0;
+        obj->header->doc_seq = 1;
         obj->header->rev_count = 0;
     }
     
