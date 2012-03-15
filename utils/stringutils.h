@@ -12,5 +12,6 @@
 char *string_join(const char *sep, char * const *parts, size_t length);
 char *string_append(const char *prefix, const char *suffix);
 int string_randhex(char *buf, size_t len);
+int string_unhex(const char *str, unsigned char *buf, size_t size);
 
 #endif

@@ -52,20 +52,20 @@ void cleanup(void)
         la_host_close(host);
 }
 
-la_codec_value_t *
-mymap(la_codec_value_t *value, void *baton);
-la_codec_value_t *
-mymap(la_codec_value_t *value, void *baton)
+void
+mymap(la_codec_value_t *value, la_view_state_t *state, void *baton);
+void
+mymap(la_codec_value_t *value, la_view_state_t *state, void *baton)
 {
     la_codec_value_t *mapme;
     printf("mymap ");
     if (!la_codec_is_object(value))
-        return NULL;
+        return;
     mapme = la_codec_object_get(value, "mapme");
     if (mapme == NULL || !la_codec_is_integer(mapme))
-        return NULL;
+        return;
     printf("%lld ", la_codec_integer_value(mapme));
-    return la_codec_incref(mapme);
+    state->emit(state, mapme);
 }
 
 la_codec_value_t *
@@ -74,12 +74,16 @@ la_codec_value_t *
 myreduce(la_codec_value_t *accum, la_codec_value_t *value, void *baton)
 {
     la_codec_int_t i;
-    printf("myreduce ");
+    printf("myreduce %p ", accum);
     if (!la_codec_is_integer(value))
         return NULL;
     i = la_codec_integer_value(value);
+    printf("value:%lld ", i);
     if (accum != NULL && la_codec_is_integer(accum))
+    {
+        printf("accum:%lld ", la_codec_integer_value(accum));
         i += la_codec_integer_value(accum);
+    }
     printf("%lld ", i);
     return la_codec_integer(i);
 }
@@ -208,7 +212,7 @@ int main(int argc, char **argv)
     OK();
     
     printf("map/reduce objects... ");
-    la_view_iterator_t *it = la_db_view(db, mymap, myreduce, NULL);
+    la_view_iterator_t *it = la_db_view(db, mymap, myreduce, NULL, NULL);
     if (it == NULL) FAIL("creating iterator");
     la_view_iterator_result iter;
     memset(&error, 0, sizeof(la_codec_error_t));

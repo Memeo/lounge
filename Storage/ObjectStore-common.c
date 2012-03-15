@@ -25,7 +25,7 @@ la_storage_create_object(const char *key, const la_storage_rev_t rev, const unsi
         free(obj);
         return NULL;
     }
-    total_len = sizeof(struct la_storage_object_header) + length;
+    total_len = sizeof(struct la_storage_object_header) + length /*+ (revcount * sizeof(la_storage_rev_t))*/;
     obj->header = malloc(total_len);
     if (obj->header == NULL)
     {
@@ -35,6 +35,8 @@ la_storage_create_object(const char *key, const la_storage_rev_t rev, const unsi
     }
     memset(obj->header, 0, total_len);
     memcpy(&obj->header->rev, &rev, LA_OBJECT_REVISION_LEN);
+    //if (revs != NULL)
+    //    memcpy(obj->header->revs_data, revs, revcount * sizeof(la_storage_rev_t));
     memcpy(la_storage_object_get_data(obj), (const char *) data, length);
     obj->data_length = length;
     return (la_storage_object *) obj;

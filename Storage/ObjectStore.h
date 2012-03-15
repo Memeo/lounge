@@ -143,6 +143,8 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
  */
 la_storage_object_get_result la_storage_get_all_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t *revcount);
 
+la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t revcount);
+
 /**
  * Put an object into the store.
  *

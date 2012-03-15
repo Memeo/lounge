@@ -73,7 +73,10 @@ int main(int argc, char **argv)
     printf("OK\n");
     printf("creating an object...");
     const char *data = "{\"name\":\"newobject\"}";
-    la_storage_object *object = la_storage_create_object("newobject", "1", (const unsigned char *) data, (uint32_t) strlen(data));
+    la_storage_rev_t one;
+    memset(&one, 0, sizeof(la_storage_rev_t));
+    one.rev[15] = 1;
+    la_storage_object *object = la_storage_create_object("newobject", one, (const unsigned char *) data, (uint32_t) strlen(data));
     if (object == NULL)
     {
         printf("FAIL\n");
@@ -91,7 +94,7 @@ int main(int argc, char **argv)
     printf("OK\n");
 
     printf("probing for object not there (2)... ");
-    if ((get = la_storage_get_rev(store, "not_there", NULL, 0)) != LA_STORAGE_OBJECT_GET_NOT_FOUND)
+    if ((get = la_storage_get_rev(store, "not_there", NULL)) != LA_STORAGE_OBJECT_GET_NOT_FOUND)
     {
         printf("FAIL (%d)\n", get);
         return 1;
@@ -129,11 +132,10 @@ int main(int argc, char **argv)
     printf("OK\n");
     la_storage_destroy_object(getObject);
 
-    char revbuf[256];
-    revbuf[0] = '\0';
+    la_storage_rev_t revbuf;
     printf("probing for added object (2)... ");
-    if ((get = la_storage_get_rev(store, "newobject", revbuf, 255)) != LA_STORAGE_OBJECT_GET_OK
-        && strcmp(revbuf, "1") != 0)
+    if ((get = la_storage_get_rev(store, "newobject", &revbuf)) != LA_STORAGE_OBJECT_GET_OK
+        && memcmp(&revbuf, &one, sizeof(la_storage_rev_t)) != 0)
     {
         printf("FAIL (%d)\n", get);
         return 1;
@@ -141,7 +143,9 @@ int main(int argc, char **argv)
     printf("OK\n");
     
     printf("adding conflicting...");
-    if ((put = la_storage_put(store, "0", object)) != LA_STORAGE_OBJECT_PUT_CONFLICT)
+    la_storage_rev_t zero;
+    memset(&zero, 0, sizeof(la_storage_rev_t));
+    if ((put = la_storage_put(store, &zero, object)) != LA_STORAGE_OBJECT_PUT_CONFLICT)
     {
         printf("FAIL (%d)\n", put);
         return 1;
@@ -151,7 +155,10 @@ int main(int argc, char **argv)
     la_storage_destroy_object(object);
     
     printf("creating another object... ");
-    object = la_storage_create_object("newobject", "2", (const unsigned char *) data, (uint32_t) strlen(data));
+    la_storage_rev_t two;
+    memset(&two, 0, sizeof(la_storage_rev_t));
+    two.rev[15] = 2;
+    object = la_storage_create_object("newobject", two, (const unsigned char *) data, (uint32_t) strlen(data));
     if (object == NULL)
     {
         printf("FAIL\n");
@@ -160,7 +167,7 @@ int main(int argc, char **argv)
     printf("OK\n");
     
     printf("overwriting an object... ");
-    if ((put = la_storage_put(store, "1", object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
+    if ((put = la_storage_put(store, &one, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
         return 1;
@@ -169,7 +176,7 @@ int main(int argc, char **argv)
     
     printf("putting more objects... ");
     la_storage_destroy_object(object);
-    object = la_storage_create_object("object1", "1", "abcd", 4);
+    object = la_storage_create_object("object1", one, "abcd", 4);
     if ((put = la_storage_put(store, NULL, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
@@ -177,7 +184,7 @@ int main(int argc, char **argv)
     }
     printf("OK ");
     la_storage_destroy_object(object);
-    object = la_storage_create_object("object2", "1", "abcd", 4);
+    object = la_storage_create_object("object2", one, "abcd", 4);
     if ((put = la_storage_put(store, NULL, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
@@ -185,7 +192,7 @@ int main(int argc, char **argv)
     }
     printf("OK ");
     la_storage_destroy_object(object);
-    object = la_storage_create_object("object3", "1", "abcd", 4);
+    object = la_storage_create_object("object3", one, "abcd", 4);
     if ((put = la_storage_put(store, NULL, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
@@ -200,7 +207,7 @@ int main(int argc, char **argv)
         ret = la_storage_iterator_next(it, &object);
         if (ret == LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT)
         {
-            printf("%s(%llu, %s) ", object->key, object->header->seq, object->header->rev_data);
+            printf("%s(%llu, %s) ", object->key, object->header->seq, la_storage_object_get_data(object));
             la_storage_destroy_object(object);
         }
     } while (ret == LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT);

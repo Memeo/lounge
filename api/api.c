@@ -43,6 +43,7 @@ struct la_view_iterator
     la_view_reducefn reduce;
     la_codec_value_t *accum;
     void *baton;
+    la_codec_value_t *mapped;
 };
 
 la_host_t *la_host_open(const char *hosthome)
@@ -241,7 +242,15 @@ la_db_delete_result la_db_delete(la_db_t *db, const char *key, const la_rev_t *r
     return LA_DB_DELETE_ERROR;
 }
 
-la_view_iterator_t *la_db_view(la_db_t *db, la_view_mapfn map, la_view_reducefn reduce, void *baton)
+static void _do_map_emit(la_view_state_t *state, la_codec_value_t *value)
+{
+    if (value != NULL)
+    {
+        la_codec_array_append(state->iterator->mapped, value);
+    }
+}
+
+la_view_iterator_t *la_db_view(la_db_t *db, la_view_mapfn map, la_view_reducefn reduce, la_view_rereducefn rereduce, void *baton)
 {
     la_view_iterator_t *it = (la_view_iterator_t *) malloc(sizeof(struct la_view_iterator));
     if (it == NULL)
@@ -257,6 +266,7 @@ la_view_iterator_t *la_db_view(la_db_t *db, la_view_mapfn map, la_view_reducefn 
     it->reduce = reduce;
     it->baton = baton;
     it->accum = NULL;
+    it->mapped = la_codec_array();
     return it;
 }
 
@@ -264,11 +274,12 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
 {
     la_storage_object *object = NULL;
     la_storage_object_iterator_result result;
-    la_codec_value_t *parsed, *mapped;
+    la_codec_value_t *parsed = NULL, *mapped;
+    la_view_state_t mapstate = { it, _do_map_emit };
     
     if (value != NULL)
         *value = NULL;
-    while (1)
+    while (la_codec_array_size(it->mapped) == 0 && parsed == NULL)
     {
         result = la_storage_iterator_next(it->it, &object);
     
@@ -283,6 +294,11 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
             }
             return LA_VIEW_ITERATOR_END;
         }
+        if (object->header->deleted)
+        {
+            la_storage_destroy_object(object);
+            continue;
+        }
         parsed = la_codec_loadb((const char *) la_storage_object_get_data(object), object->data_length, 0, error);
         la_storage_destroy_object(object);
         if (parsed == NULL)
@@ -290,23 +306,27 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
             return LA_VIEW_ITERATOR_ERROR;
         }
 
-        if (!is_tombstone(parsed))
-            break;
-        la_codec_decref(parsed);
+        if (it->map != NULL)
+        {
+            it->map(parsed, &mapstate, it->baton);
+            la_codec_decref(parsed);
+        }
+        else
+        {
+            la_codec_array_append(it->mapped, parsed);
+        }
     }
     
-    mapped = parsed;
-    
-    if (it->map != NULL)
-    {
-        mapped = it->map(parsed, it->baton);
-        la_codec_decref(parsed);
-    }
-    
+    if (la_codec_array_size(it->mapped) == 0)
+        return LA_VIEW_ITERATOR_ERROR;
+    mapped = la_codec_array_get(it->mapped, 0);
+    la_codec_incref(mapped);
+    la_codec_array_remove(it->mapped, 0);
     if (it->reduce != NULL)
     {
         la_codec_value_t *next = it->reduce(it->accum, mapped, it->baton);
-        la_codec_decref(it->accum);
+        if (it->accum != NULL)
+            la_codec_decref(it->accum);
         it->accum = next;
     }
     

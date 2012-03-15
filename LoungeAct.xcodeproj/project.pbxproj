@@ -63,6 +63,7 @@
 		70B5C26914FD69C800FE9330 /* libLoungeAct-storage-sqlite.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428114FC554700CFFCD0 /* libLoungeAct-storage-sqlite.dylib */; };
 		70B5C26D14FEB24300FE9330 /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B5C26C14FEB24300FE9330 /* buffer.h */; };
 		70B5C26F14FEB2DB00FE9330 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B5C26E14FEB2DB00FE9330 /* buffer.c */; };
+		70C2AC59150E9B8C00968F2C /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 70C2AC58150E9B8C00968F2C /* utils.h */; };
 		70DD58D4150B1573005AB1CA /* revgen.c in Sources */ = {isa = PBXBuildFile; fileRef = 70DD58D2150B1573005AB1CA /* revgen.c */; };
 		70DD58D8150B28A2005AB1CA /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
 		70DD58DB150D3E81005AB1CA /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
@@ -1039,6 +1040,7 @@
 		70B5C26B14FDB13500FE9330 /* Codec-json.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Codec-json.h"; sourceTree = "<group>"; };
 		70B5C26C14FEB24300FE9330 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
 		70B5C26E14FEB2DB00FE9330 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
+		70C2AC58150E9B8C00968F2C /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
 		70DD58D2150B1573005AB1CA /* revgen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = revgen.c; sourceTree = "<group>"; };
 		70F14E6114F5944B00F278CA /* libLoungeAct.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libLoungeAct.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		70F14E8514F5C60400F278CA /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
@@ -13043,6 +13045,7 @@
 				70B5C26E14FEB2DB00FE9330 /* buffer.c */,
 				709D9EAC1502885A00650F4B /* hexdump.h */,
 				709D9EAF150288BF00650F4B /* hexdump.c */,
+				70C2AC58150E9B8C00968F2C /* utils.h */,
 			);
 			name = Utils;
 			path = utils;
@@ -25271,6 +25274,7 @@
 				7066429314FD525500CFFCD0 /* stringutils.h in Headers */,
 				70B5C26D14FEB24300FE9330 /* buffer.h in Headers */,
 				709D9EAD1502885A00650F4B /* hexdump.h in Headers */,
+				70C2AC59150E9B8C00968F2C /* utils.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

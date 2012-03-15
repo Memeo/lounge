@@ -16,6 +16,7 @@
 #include "../Storage/ObjectStore.h"
 #include "../Utils/stringutils.h"
 #include "../Utils/hexdump.h"
+#include "../utils/utils.h"
 
 #define min(a,b) ((a) < (b) ? (a) : (b))
 
@@ -117,9 +118,31 @@ static int seqindex(DB *secondary, const DBT *key, const DBT *value, DBT *result
 {
     if (((char *) key->data)[0] == '\0')
         return DB_DONOTINDEX;
-    la_storage_object_header *header = key->data;
+#if DEBUG
+    printf("seqindex\n");
+    la_hexdump(value->data, value->size);
+#endif
+    la_storage_object_header *header = value->data;
     result->data = &header->seq;
     result->size = sizeof(uint64_t);
+    return 0;
+}
+
+static int compare_seq(DB *db, const DBT *key1, const DBT *key2)
+{
+    uint64_t seq1, seq2;
+
+    if (key1->size > key2->size)
+        return 1;
+    if (key1->size < key2->size)
+        return -1;
+    
+    seq1 = * ((uint64_t *) key1->data);
+    seq2 = * ((uint64_t *) key2->data);
+    if (seq1 < seq2)
+        return -1;
+    if (seq1 > seq2)
+        return 1;
     return 0;
 }
 
@@ -157,6 +180,13 @@ la_storage_object_store *la_storage_open(la_storage_env *env, const char *path)
     }
     seqpath = string_append(path, ".seq");
     if (seqpath == NULL)
+    {
+        store->db->close(store->db, 0);
+        txn->abort(txn);
+        free(store);
+        return NULL;
+    }
+    if (store->seq_db->set_bt_compare(store->seq_db, compare_seq) != 0)
     {
         store->db->close(store->db, 0);
         txn->abort(txn);
@@ -302,6 +332,71 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     }
 
     return LA_STORAGE_OBJECT_GET_OK;
+}
+
+la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t revcount)
+{
+    DB_TXN *txn;
+    DBT db_key;
+    DBT db_value;
+    int result;
+    la_storage_object object;
+    int shift;
+    
+    revcount = la_min(revcount, LA_OBJECT_MAX_REVISION_COUNT);
+    memset(&db_key, 0, sizeof(DBT));
+    memset(&db_value, 0, sizeof(DBT));
+    
+    db_key.data = key;
+    db_key.size = strlen(key);
+    db_key.ulen = strlen(key);
+    db_key.flags = DB_DBT_USERMEM;
+    
+    db_value.data = NULL;
+    db_value.ulen = 0;
+    db_value.flags = DB_DBT_MALLOC;
+    
+    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    
+    result = store->db->get(store->db, txn, &db_key, &db_value, DB_RMW);
+    if (result != 0)
+    {
+        txn->abort(txn);
+        if (result == DB_LOCK_NOTGRANTED)
+            return LA_STORAGE_OBJECT_PUT_CONFLICT;
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+
+    object.header = (la_storage_object_header *) db_value.data;
+    object.data_length = db_value.size - sizeof(la_storage_object_header) - (object.header->rev_count * sizeof(la_storage_rev_t));
+    shift = revcount - object.header->rev_count;
+    if (shift > 0)
+    {
+        object.header = realloc(object.header, db_value.size + shift);
+        if (object.header == NULL)
+        {
+            free(object.header);
+            return LA_STORAGE_OBJECT_PUT_ERROR;
+        }
+    }
+    memmove(la_storage_object_get_data(&object) + shift, la_storage_object_get_data(&object), object.data_length);
+    memcpy(object.header->revs_data, revs, revcount * sizeof(la_storage_rev_t));
+
+    db_value.data = object.header;
+    db_value.size = db_value.size + shift;
+    db_value.ulen = db_value.size;
+    db_value.flags = DB_DBT_USERMEM;
+    
+    result = store->db->put(store->db, txn, &db_key, &db_value, 0);
+    free(db_value.data);
+    if (result != 0)
+    {
+        txn->abort(txn);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    txn->commit(txn, 0);
+    return 0;
 }
 
 /**
@@ -470,6 +565,8 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
         return LA_STORAGE_OBJECT_ITERATOR_ERROR;
     }
     
+    printf("cursor key:\n");
+    la_hexdump(db_key.data, db_key.size);
     free(db_key.data);
     if (obj != NULL)
     {

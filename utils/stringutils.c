@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "stringutils.h"
 
@@ -74,4 +75,38 @@ string_randhex(char *str, size_t len)
     fclose(urandom);
     str[len] = '\0';
     return 0;
+}
+
+int 
+string_unhex(const char *str, unsigned char *buf, size_t size)
+{
+    int i, j;
+    int len = strlen(str);
+    int count = 0;
+    unsigned char *ret = malloc(len / 2);
+    if (ret == NULL)
+        return NULL;
+    memset(ret, 0, len * 2 + 1);
+    for (i = 0, j = 0; i < len - 1; i += 2, j++)
+    {
+        char c1 = tolower(str[i]);
+        char c2 = tolower(str[i+1]);
+        unsigned char v;
+        if (c1 >= '0' && c1 <= '9')
+            v = (c1 - '0') << 4;
+        else if (c1 >= 'a' && c1 <= 'f')
+            v = ((c1 - 'a') + 10) << 4;
+        else
+            break;
+        if (c2 >= '0' && c2 <= '9')
+            v |= (c2 - '0');
+        else if (c2 >= 'a' && c2 <= 'f')
+            v |= (c2 - 'a') + 10;
+        else
+            break;
+        count++;
+        if (j < size)
+            buf[j] = v;
+    }
+    return count;
 }

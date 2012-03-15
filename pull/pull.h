@@ -40,8 +40,7 @@ typedef struct la_pull_params
 } la_pull_params_t;
 
 la_pull_t *la_pull_create(la_db_t *db, la_pull_params_t *params);
-int la_pull_start(la_pull_t *pull);
-int la_pull_pause(la_pull_t *pull);
+int la_pull_run(la_pull_t *pull);
 void la_pull_destroy(la_pull_t *pull);
 
 #endif

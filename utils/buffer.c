@@ -21,6 +21,7 @@ struct la_buffer
     void *ptr;
     size_t size;
     size_t capacity;
+    int ptr_owned;
 };
 
 la_buffer_t *la_buffer_new(size_t capacity)
@@ -38,6 +39,19 @@ la_buffer_t *la_buffer_new(size_t capacity)
     memset(buffer->ptr, 0xaa, capacity);
     buffer->size = 0;
     buffer->capacity = capacity;
+    buffer->ptr_owned = 1;
+    return buffer;
+}
+
+la_buffer_t *la_buffer_wrap(void *ptr, size_t capacity, size_t size)
+{
+    la_buffer_t *buffer = (la_buffer_t *) malloc(sizeof(struct la_buffer));
+    if (buffer == NULL)
+        return NULL;
+    buffer->ptr = ptr;
+    buffer->capacity = capacity;
+    buffer->size = size;
+    buffer->ptr_owned = 0;
     return buffer;
 }
 
@@ -56,7 +70,16 @@ void *la_buffer_data(const la_buffer_t *buffer)
     return buffer->ptr;
 }
 
-size_t la_buffer_get(la_buffer_t *buffer, size_t offset, void *data, size_t length)
+void *la_buffer_copy(const la_buffer_t *buffer)
+{
+    void *ptr = malloc(buffer->size);
+    if (ptr == NULL)
+        return NULL;
+    la_buffer_get(buffer, 0, ptr, buffer->size);
+    return ptr;
+}
+
+size_t la_buffer_get(const la_buffer_t *buffer, size_t offset, void *data, size_t length)
 {
     if (length > buffer->size - offset)
         length = buffer->size - offset;
@@ -69,6 +92,7 @@ int la_buffer_remove(la_buffer_t *buffer, size_t offset, size_t length)
     size_t remain_offset, remain_length;
     if (offset >= buffer->size || offset + length >= buffer->size)
     {
+        errno = EINVAL;
         return -1;
     }
     remain_offset = offset + length;
@@ -114,10 +138,31 @@ int la_buffer_overwrite(la_buffer_t *buffer, size_t index, const void *data, siz
     return 0;
 }
 
+int la_buffer_move(la_buffer_t *buffer, size_t index, size_t newindex, size_t length)
+{
+    if (index + length > buffer->size || newindex > buffer->size)
+    {
+        errno = EINVAL;
+        return -1;
+    }
+    if (newindex + length > buffer->capacity)
+        if (la_buffer_ensure_capacity(buffer, newindex + length) != 0)
+            return -1;
+    memmove(buffer->ptr + newindex, buffer->ptr + index, length);
+    if (buffer->size < newindex + length)
+        buffer->size = newindex + length;
+    return 0;
+}
+
 int la_buffer_ensure_capacity(la_buffer_t *buffer, size_t capacity)
 {
     if (buffer->capacity < capacity)
     {
+        if (!buffer->ptr_owned)
+        {
+            errno = EINVAL;
+            return -1;
+        }
         size_t delta = __cap(capacity - buffer->capacity);
         capacity = buffer->capacity + delta;
         void *p = realloc(buffer->ptr, capacity);
@@ -131,9 +176,14 @@ int la_buffer_ensure_capacity(la_buffer_t *buffer, size_t capacity)
 
 int la_buffer_compact(la_buffer_t *buffer)
 {
+    if (!buffer->ptr_owned)
+        return 0;
     if (buffer->capacity > buffer->size)
     {
-        void *p = realloc(buffer->ptr, buffer->size);
+        size_t newsize = buffer->size;
+        if (newsize == 0)
+            newsize = MIN_ALLOC;
+        void *p = realloc(buffer->ptr, newsize);
         if (p == NULL)
             return -1;
         buffer->ptr = p;
@@ -186,6 +236,7 @@ char *la_buffer_string(la_buffer_t *buffer)
 
 void la_buffer_destroy(la_buffer_t *buffer)
 {
-    free(buffer->ptr);
+    if (buffer->ptr_owned)
+        free(buffer->ptr);
     free(buffer);
 }
