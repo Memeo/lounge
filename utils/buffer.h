@@ -73,6 +73,4 @@ int la_buffer_vappendf(la_buffer_t *buffer, const char *fmt, va_list ap);
 
 char *la_buffer_string(la_buffer_t *buffer);
 
-#define la_buffer_clear(buf) la_buffer_truncate(buf, 0)
-
 #endif

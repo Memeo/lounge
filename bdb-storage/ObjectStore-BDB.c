@@ -497,6 +497,34 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
+la_storage_object_put_result la_storage_replace(la_storage_object_store *store, la_storage_object *obj)
+{
+    DB_TXN *txn;
+    la_storage_object_header header;
+    DBT db_key;
+    DBT db_value;
+    int result;
+
+    memset(&db_key, 0, sizeof(DBT));
+    memset(&db_value, 0, sizeof(DBT));
+    
+    db_key.data = obj->key;
+    db_key.size = db_key.ulen = strlen(obj->key);
+    db_key.flags = DB_DBT_USERMEM;
+    
+    db_value.data = obj->header;
+    db_value.size = db_value.ulen = obj->data_length;
+    db_value.flags = DB_DBT_USERMEM;
+    
+    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    
+    if (store->db->put(store->db, txn, &db_key, &db_value, 0) != 0)
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    
+    return LA_STORAGE_OBJECT_PUT_SUCCESS;
+}
+
 uint64_t la_storage_lastseq(la_storage_object_store *store)
 {
     DB_SEQUENCE_STAT *stat;

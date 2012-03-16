@@ -103,7 +103,9 @@ typedef la_storage_object *(*la_storage_view_rereduce)(la_storage_object **accum
 
 const char *la_storage_driver(void);
 
-la_storage_object *la_storage_create_object(const char *key, const la_storage_rev_t rev, const unsigned char *data, uint32_t length);
+la_storage_object *la_storage_create_object(const char *key, const la_storage_rev_t rev,
+                                            const unsigned char *data, uint32_t length,
+                                            const la_storage_rev_t *revs, size_t revcount);
 void la_storage_destroy_object(la_storage_object *object);
 
 int la_storage_object_get_all_revs(const la_storage_object *object, la_storage_rev_t **revs);
@@ -149,10 +151,16 @@ la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store,
  * Put an object into the store.
  *
  * @param store The object store handle.
- * @param rev The revision of the previous version, or NULL if you believe you are creating an new object.
+ * @param rev The revision of the previous version, or NULL if you believe you are creating a new object.
  * @param obj The object to put.
  */
 la_storage_object_put_result la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj);
+
+/**
+ * Insert the given document and revisions into the DB, replacing
+ * existing values without checking for conflicts.
+ */
+la_storage_object_put_result la_storage_replace(la_storage_object_store *store, la_storage_object *obj);
 
 uint64_t la_storage_lastseq(la_storage_object_store *store);
 

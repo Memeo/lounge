@@ -28,7 +28,21 @@ struct la_pull
     char *url;
     char sep;
     char *last_seq;
+    la_pull_conflict_resolver resolver;
+    void *resolver_baton;
 };
+
+la_codec_value_t *la_pull_conflict_resolver_mine(const char *key, const la_codec_value_t *mine,
+                                                 const la_codec_value_t *theirs, void *baton)
+{
+    return mine;
+}
+
+la_codec_value_t *la_pull_conflict_resolver_theirs(const char *key, const la_codec_value_t *mine,
+                                                   const la_codec_value_t *theirs, void *baton)
+{
+    return thiers;
+}
 
 static size_t pull_write_cb(void *ptr, size_t size, size_t nmemb, void *baton)
 {
@@ -142,6 +156,10 @@ la_pull_t *la_pull_create(la_db_t *db, la_pull_params_t *params)
         }
     }
     puller->options = params->options;
+    puller->resolver = params->resolver;
+    if (puller->resolver == NULL)
+        puller->resolver = la_pull_conflict_resolver_mine;
+    puller->resolver_baton = params->baton;
     
     return puller;
 }
@@ -270,6 +288,8 @@ int la_pull_run(la_pull_t *puller)
                 json_decref(object);
                 continue;
             }
+            json_incref(_revisions);
+            json_object_del(object, "_revisions");
             
             json_t *_revisions_ids = json_object_get(_revisions, "ids");
         }

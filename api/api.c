@@ -152,9 +152,6 @@ static int accumulate(const char *str, size_t size, void *data)
 static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_t *oldrev, const la_codec_value_t *doc,
                                      la_rev_t *newrev, int is_delete)
 {
-    SHA1_CTX sha;
-    unsigned char digest[SHA1_DIGEST_LENGTH];
-    char rev[LA_API_MAX_REVLEN + 1];
     char uuidkey[65];
     la_storage_object *object;
     la_buffer_t *buffer;
@@ -188,7 +185,7 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_
         }
     }
 
-    la_revgen(putdoc, oldrev ? oldrev->seq : 1, oldrev ? &oldrev->rev : NULL, is_delete, &nextrev.rev);
+    la_revgen(putdoc, oldrev ? oldrev->seq : 0, oldrev ? &oldrev->rev : NULL, is_delete, &nextrev.rev);
     la_codec_object_set_new(putdoc, LA_API_KEY_NAME, la_codec_string(key));
     
     buffer = la_buffer_new(256);
@@ -200,7 +197,7 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_
     }
     la_codec_decref(putdoc);
     
-    object = la_storage_create_object(key, nextrev.rev, la_buffer_data(buffer), (uint32_t) la_buffer_size(buffer));
+    object = la_storage_create_object(key, nextrev.rev, la_buffer_data(buffer), (uint32_t) la_buffer_size(buffer), NULL, 0);
     if (object == NULL)
     {
         la_buffer_destroy(buffer);
@@ -240,6 +237,62 @@ la_db_delete_result la_db_delete(la_db_t *db, const char *key, const la_rev_t *r
     if (result == LA_DB_PUT_OK)
         return LA_DB_DELETE_OK;
     return LA_DB_DELETE_ERROR;
+}
+
+la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev, const la_codec_value_t *doc,
+                               const la_rev_t *oldrevs, size_t revcount)
+{
+    la_buffer_t *buffer;
+    la_codec_value_t *copy;
+    la_storage_object *obj;
+    la_storage_rev_t *_oldrevs = NULL;
+    int i;
+    
+    if (key == NULL || rev == NULL || doc == NULL || !la_codec_is_object(doc))
+        return LA_DB_PUT_INVALID_ARG;
+    
+    buffer = la_buffer_new(1024);
+    if (buffer == NULL)
+        return LA_DB_PUT_ERROR;
+    copy = la_codec_copy(doc);
+    if (copy == NULL)
+    {
+        la_buffer_destroy(buffer);
+        return LA_DB_PUT_ERROR;
+    }
+    
+    la_codec_object_del(copy, LA_API_KEY_NAME);
+    la_codec_object_del(copy, LA_API_REV_NAME);
+    la_codec_object_del(copy, LA_API_DELETED_NAME);
+    if (la_codec_dump_callback(copy, accumulate, buffer, 0) != 0)
+    {
+        la_codec_decref(copy);
+        la_buffer_destroy(buffer);
+        return LA_DB_PUT_ERROR;
+    }
+    la_codec_decref(copy);
+    
+    if (oldrevs != NULL && revcount > 0)
+    {
+        _oldrevs = (la_storage_rev_t *) malloc(revcount * sizeof(la_storage_rev_t));
+        if (_oldrevs == NULL)
+        {
+            la_buffer_destroy(buffer);
+        }
+        for (i = 0; i < revcount; i++)
+            memcpy(&_oldrevs[i], &oldrevs[i].rev, sizeof(la_storage_rev_t));
+    }
+    
+    obj = la_storage_create_object(key, rev->rev, la_buffer_data(buffer), la_buffer_size(buffer),
+                                   _oldrevs, revcount);
+    la_buffer_destroy(buffer);
+    if (_oldrevs != NULL)
+        free(_oldrevs);
+    if (obj == NULL)
+        return LA_DB_PUT_ERROR;
+    la_storage_destroy_object(obj);
+    
+    return LA_DB_PUT_OK;
 }
 
 static void _do_map_emit(la_view_state_t *state, la_codec_value_t *value)

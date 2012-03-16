@@ -76,7 +76,7 @@ int main(int argc, char **argv)
     la_storage_rev_t one;
     memset(&one, 0, sizeof(la_storage_rev_t));
     one.rev[15] = 1;
-    la_storage_object *object = la_storage_create_object("newobject", one, (const unsigned char *) data, (uint32_t) strlen(data));
+    la_storage_object *object = la_storage_create_object("newobject", one, (const unsigned char *) data, (uint32_t) strlen(data), NULL, 0);
     if (object == NULL)
     {
         printf("FAIL\n");
@@ -158,7 +158,7 @@ int main(int argc, char **argv)
     la_storage_rev_t two;
     memset(&two, 0, sizeof(la_storage_rev_t));
     two.rev[15] = 2;
-    object = la_storage_create_object("newobject", two, (const unsigned char *) data, (uint32_t) strlen(data));
+    object = la_storage_create_object("newobject", two, (const unsigned char *) data, (uint32_t) strlen(data), NULL, 0);
     if (object == NULL)
     {
         printf("FAIL\n");
@@ -176,7 +176,7 @@ int main(int argc, char **argv)
     
     printf("putting more objects... ");
     la_storage_destroy_object(object);
-    object = la_storage_create_object("object1", one, "abcd", 4);
+    object = la_storage_create_object("object1", one, "abcd", 4, NULL, 0);
     if ((put = la_storage_put(store, NULL, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
@@ -184,7 +184,7 @@ int main(int argc, char **argv)
     }
     printf("OK ");
     la_storage_destroy_object(object);
-    object = la_storage_create_object("object2", one, "abcd", 4);
+    object = la_storage_create_object("object2", one, "abcd", 4, NULL, 0);
     if ((put = la_storage_put(store, NULL, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
@@ -192,7 +192,7 @@ int main(int argc, char **argv)
     }
     printf("OK ");
     la_storage_destroy_object(object);
-    object = la_storage_create_object("object3", one, "abcd", 4);
+    object = la_storage_create_object("object3", one, "abcd", 4, NULL, 0);
     if ((put = la_storage_put(store, NULL, object)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         printf("FAIL (%d)\n", put);
