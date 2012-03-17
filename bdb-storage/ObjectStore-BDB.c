@@ -334,6 +334,47 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_GET_OK;
 }
 
+int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs)
+{
+    DBT db_key;
+    DBT db_value;
+    int result;
+    struct la_storage_object_header *header;
+    
+    memset(&db_key, 0, sizeof(DBT));
+    memset(&db_value, 0, sizeof(DBT));
+    
+    db_key.data = key;
+    db_key.size = db_key.ulen = strlen(key);
+    db_key.flags = DB_DBT_USERMEM;
+    
+    db_value.data = NULL;
+    db_value.dlen = sizeof(struct la_storage_object_header) + (sizeof(la_storage_rev_t) * LA_OBJECT_MAX_REVISION_COUNT);
+    db_value.flags = DB_DBT_MALLOC | DB_DBT_PARTIAL;
+    
+    result = store->db->get(store->db, NULL, &db_key, &db_value, DB_READ_COMMITTED);
+    if (result != 0)
+        return -1;
+
+    header = db_value.data;
+    if (start != NULL)
+        *start = header->doc_seq;
+    if (revs != NULL)
+    {
+        *revs = malloc(sizeof(la_storage_rev_t) * header->rev_count);
+        if (*revs == NULL)
+        {
+            *revs = NULL;
+        }
+        else
+        {
+            memcpy(*revs, header->revs_data, header->rev_count * sizeof(la_storage_rev_t));
+        }
+    }
+    
+    return header->rev_count;
+}
+
 la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t revcount)
 {
     DB_TXN *txn;
@@ -520,8 +561,12 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
         return LA_STORAGE_OBJECT_PUT_ERROR;
     
     if (store->db->put(store->db, txn, &db_key, &db_value, 0) != 0)
+    {
+        txn->abort(txn);
         return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
     
+    txn->commit(txn, 0);
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 

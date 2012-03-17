@@ -9,6 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "../utils/stringutils.h"
+#include "../utils/utils.h"
 
 #include "ObjectStore.h"
 
@@ -58,3 +60,23 @@ la_storage_object_get_all_revs(const la_storage_object *object, la_storage_rev_t
         *revs = &object->header->rev;
     return object->header->rev_count + 1;
 }
+
+int
+la_storage_scan_rev(const char *str, la_storage_rev_t *rev)
+{
+    return string_unhex(str, rev->rev, LA_OBJECT_REVISION_LEN);
+}
+
+int la_storage_revs_overlap(const la_storage_rev_t *revs1, int count1, const la_storage_rev_t *revs2, int count2)
+{
+    int i;
+    
+    for (i = 0; i < count2 - 1; i++)
+    {
+        if (memcmp(revs1, &revs2[i], sizeof(la_storage_rev_t) * la_min(count1, count2 - i)) == 0)
+            return 1;
+    }
+    
+    return 0;
+}
+

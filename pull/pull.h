@@ -28,15 +28,24 @@ typedef enum
     LA_PULL_CONTINUOUS_WITH_LONGPOLL = (1<<2)
 } la_pull_option_t;
 
+typedef enum
+{
+    LA_PULL_RESOLVE_TAKE_MINE = (1<<0),
+    LA_PULL_RESOLVE_TAKE_THEIRS = (1<<1),
+    LA_PULL_RESOLVE_TAKE_MERGED = (1<<2)
+} la_pull_resolve_result_t;
+
 /**
  * Callback function for doing on-line conflict resolution.
  *
  * @param key The key of the conflicting document.
  * @param mine The version of the document from the local database.
  * @param theirs The version of the document from the remote database.
+ * @param merged Pointer for storing a merged document. This should only
+ *  be set by the callback if it returns LA_PULL_RESOLVE_TAKE_MERGED.
  * @param baton User-specified pointer.
  */
-typedef la_codec_value_t *(*la_pull_conflict_resolver)(const char *key, const la_codec_value_t *mine, const la_codec_value_t *theirs, void *baton);
+typedef la_pull_resolve_result_t (*la_pull_conflict_resolver)(const char *key, const la_codec_value_t *mine, const la_codec_value_t *theirs, la_codec_value_t **merged, void *baton);
 
 /**
  * Conflict resolver that always takes the local revision.

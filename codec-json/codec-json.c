@@ -441,3 +441,10 @@ la_codec_value_t *la_codec_object(void)
 {
     return (la_codec_value_t *) json_object();
 }
+
+la_codec_value_t *la_codec_from_json(void /* json_t */ *json)
+{
+    la_codec_value_t *value = (la_codec_value_t *) json;
+    la_codec_incref(value);
+    return value;
+}

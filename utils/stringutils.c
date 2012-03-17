@@ -81,12 +81,8 @@ int
 string_unhex(const char *str, unsigned char *buf, size_t size)
 {
     int i, j;
-    int len = strlen(str);
+    int len = (int) strlen(str);
     int count = 0;
-    unsigned char *ret = malloc(len / 2);
-    if (ret == NULL)
-        return NULL;
-    memset(ret, 0, len * 2 + 1);
     for (i = 0, j = 0; i < len - 1; i += 2, j++)
     {
         char c1 = tolower(str[i]);

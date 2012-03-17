@@ -64,6 +64,22 @@
 		70B5C26D14FEB24300FE9330 /* buffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B5C26C14FEB24300FE9330 /* buffer.h */; };
 		70B5C26F14FEB2DB00FE9330 /* buffer.c in Sources */ = {isa = PBXBuildFile; fileRef = 70B5C26E14FEB2DB00FE9330 /* buffer.c */; };
 		70C2AC59150E9B8C00968F2C /* utils.h in Headers */ = {isa = PBXBuildFile; fileRef = 70C2AC58150E9B8C00968F2C /* utils.h */; };
+		70C2AC5B1513DC4E00968F2C /* libLoungeAct.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F14E6114F5944B00F278CA /* libLoungeAct.dylib */; };
+		70C2AC641513E26D00968F2C /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
+		70C2AC651513E26D00968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
+		70C2AC661513E26D00968F2C /* libLoungeAct-storage-bdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */; };
+		70C2AC671513E26D00968F2C /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
+		70C2AC6B1513E28500968F2C /* libcurl.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2AC6A1513E28500968F2C /* libcurl.dylib */; };
+		70C2AC721513E42100968F2C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B5C24914FD698900FE9330 /* CoreFoundation.framework */; };
+		70C2AC751513E42100968F2C /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 70C2AC741513E42100968F2C /* main.c */; };
+		70C2AC771513E42100968F2C /* test_pull_bdb_json.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = 70C2AC761513E42100968F2C /* test_pull_bdb_json.1 */; };
+		70C2AC891513F5DF00968F2C /* libjansson.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7056F9D8150AC8B80053FF41 /* libjansson.dylib */; };
+		70C2AC8A1513F5DF00968F2C /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
+		70C2AC8B1513F5DF00968F2C /* libLoungeAct-pull-bdb-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BA51505744F00FA62CB /* libLoungeAct-pull-bdb-json.dylib */; };
+		70C2AC8C1513F5DF00968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
+		70C2AC8D1513F5DF00968F2C /* libLoungeAct-storage-bdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */; };
+		70C2AC8E1513F5DF00968F2C /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
+		70C2AC8F1513F5DF00968F2C /* libLoungeAct.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F14E6114F5944B00F278CA /* libLoungeAct.dylib */; };
 		70DD58D4150B1573005AB1CA /* revgen.c in Sources */ = {isa = PBXBuildFile; fileRef = 70DD58D2150B1573005AB1CA /* revgen.c */; };
 		70DD58D8150B28A2005AB1CA /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
 		70DD58DB150D3E81005AB1CA /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
@@ -203,6 +219,90 @@
 			remoteGlobalIDString = 7066428014FC554700CFFCD0;
 			remoteInfo = "LoungeAct-storage-sqlite";
 		};
+		70C2AC5C1513DC5300968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70F14E6014F5944B00F278CA;
+			remoteInfo = LoungeAct;
+		};
+		70C2AC5E1513E24C00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7066428D14FD524600CFFCD0;
+			remoteInfo = "LoungeAct-utils";
+		};
+		70C2AC601513E25500968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706642AC14FD55A000CFFCD0;
+			remoteInfo = "LoungeAct-storage-bdb";
+		};
+		70C2AC621513E26000968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70B1F7B014FECD1300A9E488;
+			remoteInfo = "LoungeAct-codec-json";
+		};
+		70C2AC681513E27200968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70FA8BCA1508427300FA62CB;
+			remoteInfo = "LoungeAct-revgen-couchdb";
+		};
+		70C2AC7B1513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70F14E6014F5944B00F278CA;
+			remoteInfo = LoungeAct;
+		};
+		70C2AC7D1513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7066428D14FD524600CFFCD0;
+			remoteInfo = "LoungeAct-utils";
+		};
+		70C2AC7F1513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706642AC14FD55A000CFFCD0;
+			remoteInfo = "LoungeAct-storage-bdb";
+		};
+		70C2AC811513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70B1F7B014FECD1300A9E488;
+			remoteInfo = "LoungeAct-codec-json";
+		};
+		70C2AC831513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70FA8BA41505744F00FA62CB;
+			remoteInfo = "LoungeAct-pull-bdb-json";
+		};
+		70C2AC851513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70FA8BCA1508427300FA62CB;
+			remoteInfo = "LoungeAct-revgen-couchdb";
+		};
+		70C2AC871513F5CF00968F2C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7056F9D7150AC8B80053FF41;
+			remoteInfo = jansson;
+		};
 		70DD58D6150B289D005AB1CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
@@ -302,6 +402,16 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		70C2AC6E1513E42100968F2C /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				70C2AC771513E42100968F2C /* test_pull_bdb_json.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
@@ -1041,6 +1151,10 @@
 		70B5C26C14FEB24300FE9330 /* buffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = buffer.h; sourceTree = "<group>"; };
 		70B5C26E14FEB2DB00FE9330 /* buffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = buffer.c; sourceTree = "<group>"; };
 		70C2AC58150E9B8C00968F2C /* utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utils.h; sourceTree = "<group>"; };
+		70C2AC6A1513E28500968F2C /* libcurl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcurl.dylib; path = usr/lib/libcurl.dylib; sourceTree = SDKROOT; };
+		70C2AC701513E42100968F2C /* test-pull-bdb-json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "test-pull-bdb-json"; sourceTree = BUILT_PRODUCTS_DIR; };
+		70C2AC741513E42100968F2C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		70C2AC761513E42100968F2C /* test_pull_bdb_json.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = test_pull_bdb_json.1; sourceTree = "<group>"; };
 		70DD58D2150B1573005AB1CA /* revgen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = revgen.c; sourceTree = "<group>"; };
 		70F14E6114F5944B00F278CA /* libLoungeAct.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = libLoungeAct.dylib; sourceTree = BUILT_PRODUCTS_DIR; };
 		70F14E8514F5C60400F278CA /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libcrypto.dylib; path = usr/lib/libcrypto.dylib; sourceTree = SDKROOT; };
@@ -10371,6 +10485,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		70C2AC6D1513E42100968F2C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70C2AC891513F5DF00968F2C /* libjansson.dylib in Frameworks */,
+				70C2AC8A1513F5DF00968F2C /* libLoungeAct-codec-json.dylib in Frameworks */,
+				70C2AC8B1513F5DF00968F2C /* libLoungeAct-pull-bdb-json.dylib in Frameworks */,
+				70C2AC8C1513F5DF00968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */,
+				70C2AC8D1513F5DF00968F2C /* libLoungeAct-storage-bdb.dylib in Frameworks */,
+				70C2AC8E1513F5DF00968F2C /* libLoungeAct-utils.dylib in Frameworks */,
+				70C2AC8F1513F5DF00968F2C /* libLoungeAct.dylib in Frameworks */,
+				70C2AC721513E42100968F2C /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		70F14E5E14F5944B00F278CA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -10386,6 +10515,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70C2AC6B1513E28500968F2C /* libcurl.dylib in Frameworks */,
+				70C2AC641513E26D00968F2C /* libLoungeAct-codec-json.dylib in Frameworks */,
+				70C2AC651513E26D00968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */,
+				70C2AC661513E26D00968F2C /* libLoungeAct-storage-bdb.dylib in Frameworks */,
+				70C2AC671513E26D00968F2C /* libLoungeAct-utils.dylib in Frameworks */,
+				70C2AC5B1513DC4E00968F2C /* libLoungeAct.dylib in Frameworks */,
 				7056F9EE150AC9940053FF41 /* libjansson.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13079,9 +13214,19 @@
 			path = "codec-json";
 			sourceTree = "<group>";
 		};
+		70C2AC731513E42100968F2C /* test-pull-bdb-json */ = {
+			isa = PBXGroup;
+			children = (
+				70C2AC741513E42100968F2C /* main.c */,
+				70C2AC761513E42100968F2C /* test_pull_bdb_json.1 */,
+			);
+			path = "test-pull-bdb-json";
+			sourceTree = "<group>";
+		};
 		70F14E5614F5944900F278CA = {
 			isa = PBXGroup;
 			children = (
+				70C2AC6A1513E28500968F2C /* libcurl.dylib */,
 				7056F7CC150AC8760053FF41 /* jansson */,
 				70FA8BB51508231100FA62CB /* Couch RevGen */,
 				70FA8BB315081C8400FA62CB /* Revision Generator */,
@@ -13101,6 +13246,7 @@
 				70F14E8514F5C60400F278CA /* libcrypto.dylib */,
 				70FA8BBE15083D8500FA62CB /* jansson-test */,
 				70FD58A11508511A00A5930D /* revgen-couch-test */,
+				70C2AC731513E42100968F2C /* test-pull-bdb-json */,
 				70B5C24814FD698900FE9330 /* Frameworks */,
 				70F14E6214F5944B00F278CA /* Products */,
 			);
@@ -13124,6 +13270,7 @@
 				70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */,
 				70FD589E1508511A00A5930D /* revgen-couch-test */,
 				7056F9D8150AC8B80053FF41 /* libjansson.dylib */,
+				70C2AC701513E42100968F2C /* test-pull-bdb-json */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -25613,6 +25760,30 @@
 			productReference = 70B5C25714FD699400FE9330 /* storagetest-sqlite */;
 			productType = "com.apple.product-type.tool";
 		};
+		70C2AC6F1513E42100968F2C /* test-pull-bdb-json */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 70C2AC781513E42200968F2C /* Build configuration list for PBXNativeTarget "test-pull-bdb-json" */;
+			buildPhases = (
+				70C2AC6C1513E42100968F2C /* Sources */,
+				70C2AC6D1513E42100968F2C /* Frameworks */,
+				70C2AC6E1513E42100968F2C /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				70C2AC7C1513F5CF00968F2C /* PBXTargetDependency */,
+				70C2AC7E1513F5CF00968F2C /* PBXTargetDependency */,
+				70C2AC801513F5CF00968F2C /* PBXTargetDependency */,
+				70C2AC821513F5CF00968F2C /* PBXTargetDependency */,
+				70C2AC841513F5CF00968F2C /* PBXTargetDependency */,
+				70C2AC861513F5CF00968F2C /* PBXTargetDependency */,
+				70C2AC881513F5CF00968F2C /* PBXTargetDependency */,
+			);
+			name = "test-pull-bdb-json";
+			productName = "test-pull-bdb-json";
+			productReference = 70C2AC701513E42100968F2C /* test-pull-bdb-json */;
+			productType = "com.apple.product-type.tool";
+		};
 		70F14E6014F5944B00F278CA /* LoungeAct */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70F14E6514F5944B00F278CA /* Build configuration list for PBXNativeTarget "LoungeAct" */;
@@ -25645,6 +25816,11 @@
 			buildRules = (
 			);
 			dependencies = (
+				70C2AC691513E27200968F2C /* PBXTargetDependency */,
+				70C2AC631513E26000968F2C /* PBXTargetDependency */,
+				70C2AC611513E25500968F2C /* PBXTargetDependency */,
+				70C2AC5F1513E24C00968F2C /* PBXTargetDependency */,
+				70C2AC5D1513DC5300968F2C /* PBXTargetDependency */,
 			);
 			name = "LoungeAct-pull-bdb-json";
 			productName = "LoungeAct-pull-bdb-json";
@@ -25749,6 +25925,7 @@
 				70FD589D1508511A00A5930D /* revgen-couch-test */,
 				70FD58BB150A960800A5930D /* jansson test */,
 				7056F9D7150AC8B80053FF41 /* jansson */,
+				70C2AC6F1513E42100968F2C /* test-pull-bdb-json */,
 			);
 		};
 /* End PBXProject section */
@@ -25844,6 +26021,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				70B5C26314FD699D00FE9330 /* storagetest.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		70C2AC6C1513E42100968F2C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				70C2AC751513E42100968F2C /* main.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -25975,6 +26160,66 @@
 			isa = PBXTargetDependency;
 			target = 7066428014FC554700CFFCD0 /* LoungeAct-storage-sqlite */;
 			targetProxy = 70B5C26714FD69C000FE9330 /* PBXContainerItemProxy */;
+		};
+		70C2AC5D1513DC5300968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70F14E6014F5944B00F278CA /* LoungeAct */;
+			targetProxy = 70C2AC5C1513DC5300968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC5F1513E24C00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
+			targetProxy = 70C2AC5E1513E24C00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC611513E25500968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706642AC14FD55A000CFFCD0 /* LoungeAct-storage-bdb */;
+			targetProxy = 70C2AC601513E25500968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC631513E26000968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */;
+			targetProxy = 70C2AC621513E26000968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC691513E27200968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */;
+			targetProxy = 70C2AC681513E27200968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC7C1513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70F14E6014F5944B00F278CA /* LoungeAct */;
+			targetProxy = 70C2AC7B1513F5CF00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC7E1513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
+			targetProxy = 70C2AC7D1513F5CF00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC801513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706642AC14FD55A000CFFCD0 /* LoungeAct-storage-bdb */;
+			targetProxy = 70C2AC7F1513F5CF00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC821513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */;
+			targetProxy = 70C2AC811513F5CF00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC841513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70FA8BA41505744F00FA62CB /* LoungeAct-pull-bdb-json */;
+			targetProxy = 70C2AC831513F5CF00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC861513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */;
+			targetProxy = 70C2AC851513F5CF00968F2C /* PBXContainerItemProxy */;
+		};
+		70C2AC881513F5CF00968F2C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7056F9D7150AC8B80053FF41 /* jansson */;
+			targetProxy = 70C2AC871513F5CF00968F2C /* PBXContainerItemProxy */;
 		};
 		70DD58D7150B289D005AB1CA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -26289,6 +26534,24 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		70C2AC791513E42200968F2C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				HEADER_SEARCH_PATHS = .;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		70C2AC7A1513E42200968F2C /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				HEADER_SEARCH_PATHS = .;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -26649,6 +26912,14 @@
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
+		};
+		70C2AC781513E42200968F2C /* Build configuration list for PBXNativeTarget "test-pull-bdb-json" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70C2AC791513E42200968F2C /* Debug */,
+				70C2AC7A1513E42200968F2C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		70F14E5B14F5944A00F278CA /* Build configuration list for PBXProject "LoungeAct" */ = {
 			isa = XCConfigurationList;

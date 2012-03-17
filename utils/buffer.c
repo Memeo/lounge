@@ -215,13 +215,18 @@ int la_buffer_appendf(la_buffer_t *buffer, const char *fmt, ...)
 
 int la_buffer_vappendf(la_buffer_t *buffer, const char *fmt, va_list ap)
 {
+    va_list ap2;
     size_t remaining = buffer->capacity - buffer->size;
-    int needed = vsnprintf(NULL, 0, fmt, ap);
+    va_copy(ap2, ap);
+    int needed = vsnprintf(NULL, 0, fmt, ap2);
+    va_end(ap2);
     int added = 0;
     if (la_buffer_ensure_capacity(buffer, buffer->size + needed + 1) != 0)
         return -1;
     remaining = buffer->capacity - buffer->size;
-    added = vsnprintf(buffer->ptr + buffer->size, remaining, fmt, ap);
+    char *p = &((char *) buffer->ptr)[buffer->size]; 
+    *p = '\0';
+    added = vsnprintf(p, remaining, fmt, ap);
     buffer->size += added;
     return 0;
 }

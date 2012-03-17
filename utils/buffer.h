@@ -65,7 +65,7 @@ int la_buffer_truncate(la_buffer_t *buffer, size_t newsize);
 #define la_buffer_clear(buf) do { \
   la_buffer_truncate(buf, 0); \
   la_buffer_compact(buf); \
-while (0)
+} while (0)
 void la_buffer_destroy(la_buffer_t *buffer);
 
 int la_buffer_appendf(la_buffer_t *buffer, const char *fmt, ...);

@@ -134,6 +134,11 @@ la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec
     return LA_DB_GET_OK;
 }
 
+int la_db_get_allrevs(la_db_t *db, const char *key, uint64_t *start, la_storage_rev_t **revs)
+{
+    return la_storage_get_all_revs(db->store, key, start, revs);
+}
+
 static int hashdoc(const char *str, size_t size, void *data)
 {
     SHA1_CTX *ctx = (SHA1_CTX *) data;
@@ -240,7 +245,7 @@ la_db_delete_result la_db_delete(la_db_t *db, const char *key, const la_rev_t *r
 }
 
 la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev, const la_codec_value_t *doc,
-                               const la_rev_t *oldrevs, size_t revcount)
+                               const la_storage_rev_t *oldrevs, size_t revcount)
 {
     la_buffer_t *buffer;
     la_codec_value_t *copy;
@@ -271,25 +276,19 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
         return LA_DB_PUT_ERROR;
     }
     la_codec_decref(copy);
-    
-    if (oldrevs != NULL && revcount > 0)
-    {
-        _oldrevs = (la_storage_rev_t *) malloc(revcount * sizeof(la_storage_rev_t));
-        if (_oldrevs == NULL)
-        {
-            la_buffer_destroy(buffer);
-        }
-        for (i = 0; i < revcount; i++)
-            memcpy(&_oldrevs[i], &oldrevs[i].rev, sizeof(la_storage_rev_t));
-    }
-    
+        
     obj = la_storage_create_object(key, rev->rev, la_buffer_data(buffer), la_buffer_size(buffer),
-                                   _oldrevs, revcount);
+                                   oldrevs, revcount);
     la_buffer_destroy(buffer);
     if (_oldrevs != NULL)
         free(_oldrevs);
     if (obj == NULL)
         return LA_DB_PUT_ERROR;
+    if (la_storage_replace(db->store, obj) != LA_STORAGE_OBJECT_PUT_SUCCESS)
+    {
+        la_storage_destroy_object(obj);
+        return LA_DB_PUT_ERROR;
+    }
     la_storage_destroy_object(obj);
     
     return LA_DB_PUT_OK;

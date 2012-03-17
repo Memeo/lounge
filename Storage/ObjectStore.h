@@ -107,11 +107,26 @@ la_storage_object *la_storage_create_object(const char *key, const la_storage_re
                                             const unsigned char *data, uint32_t length,
                                             const la_storage_rev_t *revs, size_t revcount);
 void la_storage_destroy_object(la_storage_object *object);
+int la_storage_scan_rev(const char *str, la_storage_rev_t *rev);
 
 int la_storage_object_get_all_revs(const la_storage_object *object, la_storage_rev_t **revs);
 
 la_storage_env *la_storage_open_env(const char *name);
 void la_storage_close_env(la_storage_env *env);
+
+/**
+ * Tell if one or more revs starting at revs1 exist in revs2.
+ *
+ * That is, the following scenario returns 1:
+ *           ____ ____ ____ ____
+ *  revs1:  | r4 | r3 | r2 | r1 |
+ *           ____ ____ ____ ____
+ *  revs2:  | r6 | r5 | r4 | r3 |
+ *
+ * In other words, tell if some nonempty subsequence of revs1
+ * exists in revs2.
+ */
+int la_storage_revs_overlap(const la_storage_rev_t *revs1, int count1, const la_storage_rev_t *revs2, int count2);
 
 /**
  * Open an object store.
@@ -143,7 +158,7 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
  * @param revcount Pointer to where to store the revision count.
  * @return A status enum about the get.
  */
-la_storage_object_get_result la_storage_get_all_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t *revcount);
+int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs);
 
 la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t revcount);
 
