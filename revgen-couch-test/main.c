@@ -123,6 +123,14 @@ int main (int argc, const char * argv[])
     if (strcmp(revstr, buf) != 0)
         die("FAIL print rev\n");
     
+    printf("test update object...\n");
+    la_storage_rev_t test_update_rev1 = { 0xee, 0x9f, 0x67, 0x03, 0xbf, 0xe4, 0xe7, 0x14, 0xf2, 0xba, 0x37, 0x89, 0x19, 0xfa, 0x2a, 0x2c };
+    const char *test_update_rev2 = "\x35\x97\x37\x17\x8d\x12\xf1\x4a\x9b\x3c\x7f\xa4\xf7\x1a\x78\x14";
+    value = la_codec_loads("{\"foo\": \"bar\"}", 0, &error);
+    la_revgen(value, 1, &test_update_rev1, 0, &rev);
+    if (memcmp(rev.rev, test_update_rev2, 16) != 0)
+        die("FAIL updated document\n");
+    
     printf("OK\n");
     return 0;
 }

@@ -28,6 +28,9 @@ typedef struct la_storage_env la_storage_env;
 typedef struct la_storage_object_store la_storage_object_store;
 typedef struct la_storage_object_iterator la_storage_object_iterator;
 
+
+#pragma pack(push)
+#pragma pack(1)
 typedef struct la_storage_object_header
 {
     /**
@@ -48,7 +51,7 @@ typedef struct la_storage_object_header
     /**
      * The number of historical revisions that follow.
      */
-    uint16_t rev_count;
+    uint16_t rev_count:15;
     
     /**
      * The current revision of this object.
@@ -61,6 +64,7 @@ typedef struct la_storage_object_header
      */
     unsigned char revs_data[];
 } la_storage_object_header;
+#pragma pack(pop)
 
 typedef struct la_storage_object
 {

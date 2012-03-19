@@ -411,8 +411,7 @@ int la_pull_run(la_pull_t *puller)
                 la_db_put_result putresult = la_db_replace(puller->db, json_string_value(key), &thatrev, value, &remote_revs[1], revslen - 1);
                 if (putresult != LA_DB_PUT_OK)
                 {
-                    debug("failed to add the doc %d\n", putresult
-                          );
+                    debug("failed to add the doc %d\n", putresult);
                 }
                 la_codec_decref(value);
                 json_decref(object);

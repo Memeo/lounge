@@ -279,6 +279,7 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
         
     obj = la_storage_create_object(key, rev->rev, la_buffer_data(buffer), la_buffer_size(buffer),
                                    oldrevs, revcount);
+    obj->header->doc_seq = rev->seq;
     la_buffer_destroy(buffer);
     if (_oldrevs != NULL)
         free(_oldrevs);

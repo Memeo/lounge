@@ -14,6 +14,8 @@ static char _ch(char c)
 {
     if (iscntrl(c) || c == '\n' || c == '\r' || c == '\t')
         return '.';
+    if (!isascii(c))
+        return '.';
     return c;
 }
 

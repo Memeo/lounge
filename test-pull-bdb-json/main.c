@@ -95,6 +95,7 @@ int main(int argc, const char * argv[])
     printf("pulling changes... ");
     if (la_pull_run(puller) != 0)
         FAIL0();
+    la_pull_destroy(puller);
     OK();
     
     la_view_iterator_t *it = la_db_view(db, NULL, NULL, NULL, NULL);
@@ -110,6 +111,13 @@ int main(int argc, const char * argv[])
     } while (itresult == LA_VIEW_ITERATOR_GOT_NEXT);
     if (itresult != LA_VIEW_ITERATOR_END)
         FAIL0();
+    OK();
+    
+    printf("pulling again... ");
+    puller = la_pull_create(db, &params);
+    if (la_pull_run(puller) != 0)
+        FAIL0();
+    la_pull_destroy(puller);
     OK();
     
     return 0;

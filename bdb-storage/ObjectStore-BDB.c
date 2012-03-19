@@ -550,16 +550,20 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     memset(&db_value, 0, sizeof(DBT));
     
     db_key.data = obj->key;
-    db_key.size = db_key.ulen = strlen(obj->key);
+    db_key.size = db_key.ulen = (uint32_t) strlen(obj->key);
     db_key.flags = DB_DBT_USERMEM;
     
     db_value.data = obj->header;
-    db_value.size = db_value.ulen = obj->data_length;
+    db_value.size = db_value.ulen = la_storage_object_total_size(obj);
     db_value.flags = DB_DBT_USERMEM;
     
     if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
-    
+
+    db_seq_t seq;
+    store->seq->get(store->seq, txn, 1, &seq, 0);
+    obj->header->seq = seq;
+
     if (store->db->put(store->db, txn, &db_key, &db_value, 0) != 0)
     {
         txn->abort(txn);
@@ -637,9 +641,11 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
             return LA_STORAGE_OBJECT_ITERATOR_END;
         return LA_STORAGE_OBJECT_ITERATOR_ERROR;
     }
-    
+
+#if DEBUG
     printf("cursor key:\n");
     la_hexdump(db_key.data, db_key.size);
+#endif
     free(db_key.data);
     if (obj != NULL)
     {
@@ -653,6 +659,10 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
             return LA_STORAGE_OBJECT_ITERATOR_ERROR;
         }
         (*obj)->header = db_value.data;
+#if DEBUG
+        printf("got %u bytes from cursor:\n", db_value.size);
+        la_hexdump(db_value.data, db_value.size);
+#endif
         (*obj)->data_length = (uint32_t) (db_value.size - sizeof(struct la_storage_object_header) 
                                           - (sizeof(la_storage_rev_t) * (*obj)->header->rev_count));
 #if DEBUG

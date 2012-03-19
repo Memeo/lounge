@@ -11,6 +11,7 @@
 #include <string.h>
 #include "../utils/stringutils.h"
 #include "../utils/utils.h"
+#include "../utils/hexdump.h"
 
 #include "ObjectStore.h"
 
@@ -39,9 +40,22 @@ la_storage_create_object(const char *key, const la_storage_rev_t rev, const unsi
     memset(obj->header, 0, total_len);
     memcpy(&obj->header->rev, &rev, LA_OBJECT_REVISION_LEN);
     if (revs != NULL)
+    {
+        obj->header->rev_count = revcount;
         memcpy(obj->header->revs_data, revs, revcount * sizeof(la_storage_rev_t));
+    }
+    else
+    {
+        obj->header->rev_count = 0;
+    }
     memcpy(la_storage_object_get_data(obj), (const char *) data, length);
     obj->data_length = length;
+#if DEBUG
+    printf("total_len: %zu (header:%lu, length: %d, revs size: %lu)\n", total_len, sizeof(struct la_storage_object_header),
+           length, revcount * sizeof(la_storage_rev_t));
+    printf("created object (%d revs, %d bytes):\n", obj->header->rev_count, obj->data_length);
+    la_hexdump(obj->header, la_storage_object_total_size(obj));
+#endif
     return (la_storage_object *) obj;
 }
 
