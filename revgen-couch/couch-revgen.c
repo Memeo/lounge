@@ -283,6 +283,7 @@ int la_revgen(const la_codec_value_t *value, uint64_t old_start, la_storage_rev_
     for (int i = 0; i < MD5_DIGEST_LENGTH; i++)
         printf("%02x", digest[i]);
     putchar('\n');
+    la_buffer_destroy(DEBUG_BUFFER);
 #endif
     
     return MD5_DIGEST_LENGTH;

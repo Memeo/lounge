@@ -397,7 +397,7 @@ la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store,
     db_value.ulen = 0;
     db_value.flags = DB_DBT_MALLOC;
     
-    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
+    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
     
     result = store->db->get(store->db, txn, &db_key, &db_value, DB_RMW);
@@ -471,7 +471,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     db_value_read.doff = 0;
     db_value_read.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     
-    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
+    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
     
     result = store->db->get(store->db, txn, &db_key, &db_value_read, DB_RMW);
@@ -534,7 +534,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
         txn->abort(txn);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
-    txn->commit(txn, DB_TXN_SYNC);
+    txn->commit(txn, DB_TXN_NOSYNC);
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
@@ -557,8 +557,12 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     db_value.size = db_value.ulen = obj->data_length;
     db_value.flags = DB_DBT_USERMEM;
     
-    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_SYNC | DB_TXN_NOWAIT) != 0)
+    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
+
+    db_seq_t seq;
+    store->seq->get(store->seq, txn, 1, &seq, 0);
+    obj->header->seq = seq;
     
     if (store->db->put(store->db, txn, &db_key, &db_value, 0) != 0)
     {
@@ -647,6 +651,7 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
         if (*obj == NULL)
             return LA_STORAGE_OBJECT_ITERATOR_ERROR;
         (*obj)->key = keycpy(db_pkey.data, db_pkey.size);
+        free(db_pkey.data);
         if ((*obj)->key == NULL)
         {
             free(*obj);

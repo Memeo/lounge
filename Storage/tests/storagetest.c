@@ -198,17 +198,29 @@ int main(int argc, char **argv)
         printf("FAIL (%d)\n", put);
         return 1;
     }
+    la_storage_destroy_object(object);
     printf("OK\n");
     
     printf("iterating... ");
     la_storage_object_iterator *it = la_storage_iterator_open(store, 0);
     int ret;
+    int i = 0;
     do {
         ret = la_storage_iterator_next(it, &object);
         if (ret == LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT)
         {
             printf("%s(%llu, %s) ", object->key, object->header->seq, la_storage_object_get_data(object));
             la_storage_destroy_object(object);
+            if (i < 4)
+            {
+                char newkey[256];
+                snprintf(newkey, 255, "iter-%d", i++);
+                la_storage_rev_t newrev;
+                memset(&newrev, 0, sizeof(la_storage_rev_t));
+                la_storage_object *newobj = la_storage_create_object(newkey, newrev, "foo", 3, NULL, 0);
+                put = la_storage_put(store, NULL, newobj);
+                la_storage_destroy_object(newobj);
+            }
         }
     } while (ret == LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT);
     la_storage_iterator_close(it);
@@ -216,6 +228,25 @@ int main(int argc, char **argv)
     {
         printf("FAIL\n");
         return 1;
+    }
+    printf("OK\n");
+    
+    printf("stress test... ");
+    for (i = 0; i < 1000; i++)
+    {
+        la_storage_rev_t rev;
+        char buf[256], buf2[256];
+        snprintf(buf, 255, "stress-%d", i);
+        memset(buf2, i % 256, 256);
+        memset(&rev, i % 256, sizeof(la_storage_rev_t));
+        la_storage_object *o = la_storage_create_object(buf, rev, buf2, 256, NULL, 0);
+        put = la_storage_put(store, NULL, o);
+        if (put != LA_STORAGE_OBJECT_PUT_SUCCESS)
+        {
+            printf("FAIL %d\n", put);
+            return 1;
+        }
+        la_storage_destroy_object(o);
     }
     printf("OK\n");
     

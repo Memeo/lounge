@@ -258,6 +258,45 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_GET_ERROR;
 }
 
+int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs)
+{
+    sqlite3_stmt *stmt;
+    int ret;
+    
+    if (sqlite3_prepare(store->db, getmeta, (int) strlen(getmeta), &stmt, NULL) != SQLITE_OK)
+        return LA_STORAGE_OBJECT_GET_ERROR;
+    if (sqlite3_bind_text(stmt, 1, key, (int) strlen(key), SQLITE_TRANSIENT) != SQLITE_OK)
+    {
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_GET_ERROR;
+    }
+    ret = sqlite3_step(stmt);
+    if (ret == SQLITE_ROW)
+    {
+        if (revs != NULL)
+        {
+            la_storage_rev_t *rev = (la_storage_rev_t *) sqlite3_column_blob(stmt, 0);
+            const void *oldrevs = sqlite3_column_blob(stmt, 1);
+            int oldrevs_len = sqlite3_column_bytes(stmt, 1);
+            *revs = (la_storage_rev_t *) malloc(oldrevs_len + sizeof(la_storage_rev_t));
+            if (*revs == NULL)
+            {
+                sqlite3_finalize(stmt);
+                return LA_STORAGE_OBJECT_GET_ERROR;
+            }
+            memcpy(*revs, rev, sizeof(la_storage_rev_t));
+            memcpy((*revs) + sizeof(la_storage_rev_t), oldrevs, oldrevs_len);
+        }
+        if (start != NULL)
+        {
+            *start = sqlite3_column_int64(stmt, 3);
+        }
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_GET_OK;
+    }
+    return LA_STORAGE_OBJECT_GET_NOT_FOUND;
+}
+
 la_storage_object_put_result la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
 {
     sqlite3_stmt *stmt;
@@ -354,7 +393,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
         sqlite3_finalize(stmt);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
-    if (sqlite3_bind_blob(stmt, COLUMN_OLDREVS, obj->header->revs_data, sizeof(la_storage_rev_t) * obj->header->rev_count, SQLITE_TRANSIENT) != SQLITE_OK)
+    if (sqlite3_bind_blob(stmt, COLUMN_OLDREVS, obj->header->revs_data, sizeof(la_storage_rev_t) * (int) obj->header->rev_count, SQLITE_TRANSIENT) != SQLITE_OK)
     {
         sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
         sqlite3_finalize(stmt);
@@ -388,6 +427,70 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     sqlite3_finalize(stmt);
     
     sqlite3_exec(store->db, endtxn, NULL, NULL, NULL);
+    return LA_STORAGE_OBJECT_PUT_SUCCESS;
+}
+
+la_storage_object_put_result la_storage_replace(la_storage_object_store *store, la_storage_object *obj)
+{
+    sqlite3_stmt *stmt;
+    int ret;
+    
+    if (sqlite3_exec(store->db, begintxn, NULL, NULL, NULL) != SQLITE_OK)
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    if (sqlite3_prepare(store->db, putdoc, (int) strlen(putdoc), &stmt, NULL) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_text(stmt, COLUMN_ID, obj->key, (int) strlen(obj->key), SQLITE_TRANSIENT) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_int(stmt, COLUMN_DELETED, obj->header->deleted) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_blob(stmt, COLUMN_REV, &obj->header->rev, sizeof(la_storage_rev_t), SQLITE_TRANSIENT) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_blob(stmt, COLUMN_OLDREVS, obj->header->revs_data, sizeof(la_storage_rev_t) * (int) obj->header->rev_count, SQLITE_TRANSIENT) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_int64(stmt, COLUMN_SEQ, obj->header->seq) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_int64(stmt, COLUMN_DOCSEQ, obj->header->doc_seq) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    if (sqlite3_bind_blob(stmt, COLUMN_DOC, la_storage_object_get_data(obj), obj->data_length, SQLITE_TRANSIENT) != SQLITE_OK)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
+    ret = sqlite3_step(stmt);
+    if (ret != SQLITE_DONE)
+    {
+        sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
+        sqlite3_finalize(stmt);
+        return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 

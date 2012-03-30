@@ -171,11 +171,14 @@ int main(int argc, char **argv)
     la_codec_decref(value);
     
     printf("getting the object... ");
-    if ((get = la_db_get(db, "newobject", NULL, &value, NULL, &error)) != LA_DB_PUT_OK)
+    if ((get = la_db_get(db, "newobject", NULL, &value, NULL, &error)) != LA_DB_GET_OK)
     {
         FAIL(" (%d)", get);
     }
-    printf(" the doc: %s ", la_codec_dumps(value, 0));
+    char *s = la_codec_dumps(value, 0);
+    printf(" the doc: %s ", s);
+    free(s);
+    la_codec_decref(value);
     OK();
     
     printf("delete the object... ");
@@ -230,6 +233,33 @@ int main(int argc, char **argv)
     printf("reduced:%lld ", la_codec_integer_value(value));
     if (la_codec_integer_value(value) != 1 + 2 + 3)
         FAIL(" reduced value incorrect");
+    la_view_iterator_close(it);
     OK();
+    
+    printf("stress test... ");
+    for (int i = 0; i < 1000; i++)
+    {
+        char name[256];
+        snprintf(name, 255, "stress-%d", i);
+        la_codec_value_t *obj = la_codec_object();
+        if (obj == NULL)
+            FAIL("creating object");
+        la_codec_object_set_new(obj, "val", la_codec_integer(i));
+        if ((put = la_db_put(db, name, NULL, obj, NULL)) != LA_DB_PUT_OK)
+            FAIL("(%d)", put);
+        la_codec_decref(obj);
+    }
+    for (int i = 0; i < 1000; i++)
+    {
+        char name[256];
+        snprintf(name, 255, "stress-%d", i);
+        la_codec_value_t *obj;
+        
+        if ((get = la_db_get(db, name, NULL, &obj, NULL, &error)) != LA_DB_GET_OK)
+            FAIL("(%d)", get);
+        la_codec_decref(obj);
+    }
+    OK();
+    
     return 0;
 }

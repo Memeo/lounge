@@ -10,6 +10,7 @@
 #include <string.h>
 #include <curl/curl.h>
 #include <jansson.h>
+#include <ctype.h>
 
 #include "pull.h"
 #include "../utils/buffer.h"
@@ -67,6 +68,29 @@ static size_t pull_write_cb(void *ptr, size_t size, size_t nmemb, void *baton)
     if (la_buffer_append(pull->buffer, ptr, size * nmemb) != 0)
         return CURL_WRITEFUNC_PAUSE;
     return nmemb;
+}
+
+static char *url_encode(const char *s)
+{
+    int len = strlen(s);
+    la_buffer_t *buffer = la_buffer_new(len);
+    char *ret;
+    int i;
+
+    for (i = 0; i < len; i++)
+    {
+        if (s[i] == ' ')
+            la_buffer_append(buffer, "+", 1);
+        else if (isalnum(s[i]) || s[i] == '.' || s[i] == '-' || s[i] == '_' || s[i] == '~')
+            la_buffer_append(buffer, s+i, 1);
+        else
+        {
+            la_buffer_appendf(buffer, "%%%02x", (int) s[i]);
+        }
+    }
+    ret = la_buffer_string(buffer);
+    la_buffer_destroy(buffer);
+    return ret;
 }
 
 static int init_changes_feed(la_pull_t *puller)
@@ -244,7 +268,7 @@ int la_pull_run(la_pull_t *puller)
         la_codec_error_t codec_error;
         la_db_get_result ret;
         la_rev_t rev, thatrev;
-        json_t *key, *changes_array, *change_obj, *revobj;
+        json_t *key, *changes_array, *change_obj, *revobj, *seq;
         json_t *change = json_array_get(results, i);
         if (change == NULL || !json_is_object(change))
             continue;
@@ -252,6 +276,9 @@ int la_pull_run(la_pull_t *puller)
         if (key == NULL || !json_is_string(key))
             continue;
         debug("handling document %s\n", json_string_value(key));
+        seq = json_object_get(change, "seq");
+        if (seq == NULL || (!json_is_integer(seq) && !json_is_string(seq)))
+            continue;
         changes_array = json_object_get(change, "changes");
         if (changes_array == NULL || !json_is_array(changes_array) || json_array_size(changes_array) == 0)
             continue;
@@ -272,8 +299,10 @@ int la_pull_run(la_pull_t *puller)
             // Rev is missing, fetch it.
             la_codec_error_t codec_error;
             la_buffer_t *urlbuf = la_buffer_new(256);
-            la_buffer_appendf(urlbuf, "%s/%s?revs=true&rev=%s", puller->urlbase, json_string_value(key), json_string_value(revobj));
+            char *path = url_encode(json_string_value(key));
+            la_buffer_appendf(urlbuf, "%s/%s?revs=true&rev=%s", puller->urlbase, path, json_string_value(revobj));
             char *url = la_buffer_string(urlbuf);
+            free(path);
             
             debug("fetching %s\n", url);
             la_buffer_destroy(urlbuf);
@@ -326,6 +355,7 @@ int la_pull_run(la_pull_t *puller)
             if (object == NULL || !json_is_object(object))
             {
                 debug("didn't get object back from server %p %d\n", object, object ? json_typeof(object) : -1);
+                debug("%s", json_error.text);
                 continue;
             }
             

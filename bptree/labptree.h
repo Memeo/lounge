@@ -9,6 +9,8 @@
 #ifndef LoungeAct_labptree_h
 #define LoungeAct_labptree_h
 
+typedef struct BPTree BPTree;
+
 
 
 #endif

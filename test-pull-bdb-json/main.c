@@ -82,7 +82,7 @@ int main(int argc, const char * argv[])
     OK();
     
     la_pull_params_t params;
-    params.dbname = "loungeact";
+    params.dbname = "library-53b825ecc2fd4f85afd2b93cc4da7739";
     params.filter = NULL;
     params.host = "localhost";
     params.port = 5984;

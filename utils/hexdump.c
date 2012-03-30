@@ -12,9 +12,9 @@
 
 static char _ch(char c)
 {
-    if (iscntrl(c) || c == '\n' || c == '\r' || c == '\t')
-        return '.';
-    return c;
+    if (isgraph(c))
+        return c;
+    return '.';
 }
 
 void la_hexdump(const char *buf, size_t len)

@@ -9,6 +9,6 @@
 #ifndef LoungeAct_config_h
 #define LoungeAct_config_h
 
-
+#define LA_PACKED __attribute__ (( __packed__ ))
 
 #endif
