@@ -32,7 +32,8 @@ typedef enum
     LA_CODEC_REAL,
     LA_CODEC_TRUE,
     LA_CODEC_FALSE,
-    LA_CODEC_NULL
+    LA_CODEC_NULL,
+    LA_CODEC_BINARY
 } la_codec_type;
 
 int la_codec_typeof(const la_codec_value_t *value);
@@ -46,6 +47,7 @@ int la_codec_is_false(const la_codec_value_t *value);
 int la_codec_is_null(const la_codec_value_t *value);
 int la_codec_is_number(const la_codec_value_t *value);
 int la_codec_is_boolean(const la_codec_value_t *value);
+int la_codec_is_binary(const la_codec_value_t *value);
 
 la_codec_value_t *la_codec_object(void);
 la_codec_value_t *la_codec_array(void);
@@ -56,6 +58,7 @@ la_codec_value_t *la_codec_real(double value);
 la_codec_value_t *la_codec_true(void);
 la_codec_value_t *la_codec_false(void);
 la_codec_value_t *la_codec_null(void);
+la_codec_value_t *la_codec_binary(const unsigned char *value, size_t length);
 
 la_codec_value_t *la_codec_incref(la_codec_value_t *value);
 void la_codec_decref(la_codec_value_t *value);

@@ -11,6 +11,7 @@
 #include <string.h>
 #include "../Utils/buffer.h"
 #include "../Utils/stringutils.h"
+#include "../compress/compress.h"
 
 #if defined (__APPLE__) /* Jerks. */
 # include <CommonCrypto/CommonDigest.h>
@@ -111,9 +112,20 @@ la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec
         return LA_DB_GET_ERROR;
     }
     if (object->header->deleted)
+    {
+        la_storage_destroy_object(object);
         return LA_DB_GET_NOT_FOUND;
+    }
     object_data = (const char *) la_storage_object_get_data(object);
-    v = la_codec_loadb(object_data, object->data_length, 0, error);
+    size_t deflated_size;
+    unsigned char *deflated_data = la_decompress(object_data, object->data_length, &deflated_size);
+    if (deflated_data == NULL)
+    {
+        la_storage_destroy_object(object);
+        return LA_DB_GET_ERROR;
+    }
+    v = la_codec_loadb(deflated_data, deflated_size, 0, error);
+    free(deflated_data);
     if (current_rev != NULL)
     {
         current_rev->seq = object->header->doc_seq;
@@ -191,7 +203,6 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_
     }
 
     la_revgen(putdoc, oldrev ? oldrev->seq : 0, oldrev ? &oldrev->rev : NULL, is_delete, &nextrev.rev);
-    la_codec_object_set_new(putdoc, LA_API_KEY_NAME, la_codec_string(key));
     
     buffer = la_buffer_new(256);
     if (la_codec_dump_callback(putdoc, accumulate, buffer, 0) != 0)
@@ -202,13 +213,20 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_
     }
     la_codec_decref(putdoc);
     
-    object = la_storage_create_object(key, nextrev.rev, la_buffer_data(buffer), (uint32_t) la_buffer_size(buffer), NULL, 0);
-    if (object == NULL)
+    size_t deflated_size;
+    unsigned char *deflated = la_compress(la_buffer_data(buffer), la_buffer_size(buffer), &deflated_size);
+    la_buffer_destroy(buffer);
+    if (deflated == NULL)
     {
-        la_buffer_destroy(buffer);
         return LA_DB_PUT_ERROR;
     }
-    la_buffer_destroy(buffer);
+    
+    object = la_storage_create_object(key, nextrev.rev, deflated, deflated_size, NULL, 0);
+    free(deflated);
+    if (object == NULL)
+    {
+        return LA_DB_PUT_ERROR;
+    }
     
     object->header->deleted = is_delete;
     result = la_storage_put(db->store, oldrev ? &oldrev->rev : NULL, object);
@@ -276,11 +294,17 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
         return LA_DB_PUT_ERROR;
     }
     la_codec_decref(copy);
-        
-    obj = la_storage_create_object(key, rev->rev, la_buffer_data(buffer), la_buffer_size(buffer),
-                                   oldrevs, revcount);
-    obj->header->doc_seq = rev->seq;
+    
+    size_t deflated_size;
+    unsigned char *deflated = la_compress(la_buffer_data(buffer), la_buffer_size(buffer), &deflated_size);
+    if (deflated == NULL)
+    {
+        la_buffer_destroy(buffer);
+        return LA_DB_PUT_ERROR;
+    }
+    obj = la_storage_create_object(key, rev->rev, deflated, deflated_size, oldrevs, revcount);
     la_buffer_destroy(buffer);
+    free(deflated);
     if (_oldrevs != NULL)
         free(_oldrevs);
     if (obj == NULL)
@@ -352,8 +376,16 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
             la_storage_destroy_object(object);
             continue;
         }
-        parsed = la_codec_loadb((const char *) la_storage_object_get_data(object), object->data_length, 0, error);
+        size_t inflated_size;
+        unsigned char *inflated = la_decompress(la_storage_object_get_data(object), object->data_length, &inflated_size);
+        if (inflated == NULL)
+        {
+            la_storage_destroy_object(object);
+            return LA_VIEW_ITERATOR_ERROR;
+        }
+        parsed = la_codec_loadb((const char *) inflated, inflated_size, 0, error);
         la_storage_destroy_object(object);
+        free(inflated);
         if (parsed == NULL)
         {
             return LA_VIEW_ITERATOR_ERROR;
