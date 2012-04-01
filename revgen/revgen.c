@@ -25,7 +25,6 @@ int la_rev_scan(const char *str, la_rev_t *rev)
 {
     int i, j;
     uint64_t seq;
-    unsigned char bt;
     const char *p;
     size_t len;
 
