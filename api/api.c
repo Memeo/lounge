@@ -13,6 +13,10 @@
 #include "../Utils/stringutils.h"
 #include "../compress/compress.h"
 
+#if DEBUG
+#include <signal.h>
+#endif
+
 #if defined (__APPLE__) /* Jerks. */
 # include <CommonCrypto/CommonDigest.h>
 # define SHA1_CTX CC_SHA1_CTX
@@ -269,6 +273,7 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
     la_codec_value_t *copy;
     la_storage_object *obj;
     la_storage_rev_t *_oldrevs = NULL;
+    la_rev_t locrev;
     int i;
     
     if (key == NULL || rev == NULL || doc == NULL || !la_codec_is_object(doc))
@@ -287,6 +292,24 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
     la_codec_object_del(copy, LA_API_KEY_NAME);
     la_codec_object_del(copy, LA_API_REV_NAME);
     la_codec_object_del(copy, LA_API_DELETED_NAME);
+    
+    int is_delete = 0;
+    if (la_codec_is_true(la_codec_object_get(doc, LA_API_DELETED_NAME)))
+        is_delete = 1;
+    
+    la_storage_rev_t *oldrev = NULL;
+    if (oldrevs != NULL && revcount > 0)
+        oldrev = &oldrevs[0];
+    la_revgen(copy, rev->seq - 1, oldrev, is_delete, &locrev.rev);
+    locrev.seq = rev->seq;
+    
+#if DEBUG
+    if (memcmp(rev, &locrev, sizeof(la_rev_t)) != 0)
+        raise(SIGTRAP);
+    printf("remote rev: %s\n", la_rev_string(*rev));
+    printf("local rev: %s\n", la_rev_string(locrev));
+#endif
+    
     if (la_codec_dump_callback(copy, accumulate, buffer, 0) != 0)
     {
         la_codec_decref(copy);
@@ -303,10 +326,12 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
         return LA_DB_PUT_ERROR;
     }
     obj = la_storage_create_object(key, rev->rev, deflated, deflated_size, oldrevs, revcount);
+    obj->header->deleted = is_delete;
     la_buffer_destroy(buffer);
     free(deflated);
     if (_oldrevs != NULL)
         free(_oldrevs);
+    obj->header->doc_seq = rev->seq;
     if (obj == NULL)
         return LA_DB_PUT_ERROR;
     if (la_storage_replace(db->store, obj) != LA_STORAGE_OBJECT_PUT_SUCCESS)
