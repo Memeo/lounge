@@ -13,6 +13,8 @@
 #include <stdarg.h>
 #include <stdio.h>
 
+#include <tommath.h>
+
 /*
  * This API borrows much from the jansson API, which is the
  * first and most important implementation of this API.
@@ -33,7 +35,7 @@ typedef enum
     LA_CODEC_TRUE,
     LA_CODEC_FALSE,
     LA_CODEC_NULL,
-    LA_CODEC_BINARY
+    LA_CODEC_BIGNUM
 } la_codec_type;
 
 int la_codec_typeof(const la_codec_value_t *value);
@@ -47,7 +49,7 @@ int la_codec_is_false(const la_codec_value_t *value);
 int la_codec_is_null(const la_codec_value_t *value);
 int la_codec_is_number(const la_codec_value_t *value);
 int la_codec_is_boolean(const la_codec_value_t *value);
-int la_codec_is_binary(const la_codec_value_t *value);
+int la_codec_is_bignum(const la_codec_value_t *value);
 
 la_codec_value_t *la_codec_object(void);
 la_codec_value_t *la_codec_array(void);
@@ -58,7 +60,7 @@ la_codec_value_t *la_codec_real(double value);
 la_codec_value_t *la_codec_true(void);
 la_codec_value_t *la_codec_false(void);
 la_codec_value_t *la_codec_null(void);
-la_codec_value_t *la_codec_binary(const unsigned char *value, size_t length);
+la_codec_value_t *la_codec_bignum(mp_int *value);
 
 la_codec_value_t *la_codec_incref(la_codec_value_t *value);
 void la_codec_decref(la_codec_value_t *value);
@@ -116,11 +118,13 @@ const char *la_codec_string_value(const la_codec_value_t *string);
 la_codec_int_t la_codec_integer_value(const la_codec_value_t *integer);
 double la_codec_real_value(const la_codec_value_t *real);
 double la_codec_number_value(const la_codec_value_t *json);
+mp_int *la_codec_bignum_value(const la_codec_value_t *value);
 
 int la_codec_string_set(la_codec_value_t *string, const char *value);
 int la_codec_string_set_nocheck(la_codec_value_t *string, const char *value);
 int la_codec_integer_set(la_codec_value_t *integer, la_codec_int_t value);
 int la_codec_real_set(la_codec_value_t *real, double value);
+int la_codec_bignum_set(la_codec_value_t *bignum, mp_int *value);
 
 la_codec_value_t *la_codec_pack(const char *fmt, ...);
 la_codec_value_t *la_codec_pack_ex(la_codec_error_t *error, size_t flags, const char *fmt, ...);

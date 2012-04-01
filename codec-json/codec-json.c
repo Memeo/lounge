@@ -36,6 +36,7 @@ int la_codec_typeof(const la_codec_value_t *value)
         case JSON_REAL: return LA_CODEC_REAL;
         case JSON_STRING: return LA_CODEC_STRING;
         case JSON_TRUE: return LA_CODEC_TRUE;
+        case JSON_BIGNUM: return LA_CODEC_BIGNUM;
     }
     return -1;
 }
@@ -90,6 +91,11 @@ int la_codec_is_boolean(const la_codec_value_t *value)
     return json_is_boolean((json_t *) value);
 }
 
+int la_codec_is_bignum(const la_codec_value_t *value)
+{
+    return json_is_bignum((json_t *) value);
+}
+
 la_codec_value_t *la_codec_incref(la_codec_value_t *value)
 {
     return (la_codec_value_t *) json_incref((json_t *) value);
@@ -113,6 +119,11 @@ la_codec_value_t *la_codec_false(void)
 la_codec_value_t *la_codec_null(void)
 {
     return (la_codec_value_t *) json_null();
+}
+
+la_codec_value_t *la_codec_bignum(mp_int *value)
+{
+    return (la_codec_value_t *) json_bignum(value);
 }
 
 /* Strings */
@@ -175,6 +186,16 @@ int la_codec_real_set(la_codec_value_t *real, double value)
 double la_codec_number_value(const la_codec_value_t *number)
 {
     return json_number_value((json_t *) number);
+}
+
+mp_int *la_codec_bignum_value(const la_codec_value_t *bignum)
+{
+    return json_bignum_value((json_t *) bignum);
+}
+
+int la_codec_bignum_set(la_codec_value_t *bignum, mp_int *value)
+{
+    return json_bignum_set((json_t *) bignum, value);
 }
 
 la_codec_value_t *la_codec_array(void)
