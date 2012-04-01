@@ -87,6 +87,8 @@ static const unsigned char _NIL[] = { 106 };
 static const unsigned char _LIST[] = { 108 }; // Then count, 4 bytes, then elements
 static const unsigned char _BINARY[] = { 109 }; // Then length, 4 bytes, then value
 static const unsigned char _FLOAT[] = { 99 }; // Then 31 byte formatted float.
+static const unsigned char _SMALL_BIG[] = { 110 }; // Then byte length, sign, then magnitude
+static const unsigned char _LARGE_BIG[] = { 111 }; // Then int length, sign, then magnitude
 
 #if DEBUG
 static la_buffer_t *DEBUG_BUFFER;
@@ -117,7 +119,7 @@ static void hash_value(const la_codec_value_t *value, MD5_CTX *md5)
                 MD5_Update(md5, _SMALL_INT, sizeof(_SMALL_INT));
                 MD5_Update(md5, &c, 1);
             }
-            else
+            else if (i <= INT32_MAX && i >= INT32_MIN)
             {
                 unsigned char c[] = { (unsigned char) (i >> 24),
                                       (unsigned char) (i >> 16),
@@ -126,6 +128,73 @@ static void hash_value(const la_codec_value_t *value, MD5_CTX *md5)
                 MD5_Update(md5, _INT, sizeof(_INT));
                 MD5_Update(md5, c, 4);
             }
+            else
+            {
+                unsigned char c[] = {
+                    (unsigned char) (i >> 56),
+                    (unsigned char) (i >> 48),
+                    (unsigned char) (i >> 40),
+                    (unsigned char) (i >> 32),
+                    (unsigned char) (i >> 24),
+                    (unsigned char) (i >> 16),
+                    (unsigned char) (i >>  8),
+                    (unsigned char)  i
+                };
+                int offset = 0;
+                unsigned char len, sign;
+                while (c[offset] == 0 && offset < 8) offset++;
+                int x;
+                len = 8 - offset;
+                sign = i < 0;
+                
+                MD5_Update(md5, _SMALL_BIG, sizeof(_SMALL_BIG));
+                MD5_Update(md5, &len, 1);
+                MD5_Update(md5, &sign, 1);
+                for (x = 7; x >= offset; x--)
+                    MD5_Update(md5, &c[x], 1);
+            }
+            break;
+        }
+            
+        case LA_CODEC_BIGNUM:
+        {
+            mp_int *i = la_codec_bignum_value(value);
+            unsigned char *bin;
+            int length;
+            int x;
+            
+            length = mp_unsigned_bin_size(i);
+            bin = malloc(length);
+            if (bin == NULL)
+                return;
+            mp_to_unsigned_bin(i, bin);
+            if (length < 256)
+            {
+                unsigned char l, s;
+                l = length;
+                s = SIGN(i) == MP_NEG;
+                MD5_Update(md5, _SMALL_BIG, sizeof(_SMALL_BIG));
+                MD5_Update(md5, &l, 1);
+                MD5_Update(md5, &s, 1);
+                for (x = length - 1; x >= 0; x--)
+                    MD5_Update(md5, &bin[x], 1);
+            }
+            else
+            {
+                unsigned char c[] = {
+                    (unsigned char) (length >> 24),
+                    (unsigned char) (length >> 16),
+                    (unsigned char) (length >>  8),
+                    (unsigned char)  length
+                };
+                unsigned char s = SIGN(i) == MP_NEG;
+                MD5_Update(md5, _LARGE_BIG, sizeof(_LARGE_BIG));
+                MD5_Update(md5, c, 4);
+                MD5_Update(md5, &s, 1);
+                for (x = length - 1; x >= 0; x--)
+                    MD5_Update(md5, &bin[x], 1);
+            }
+            free(bin);
             break;
         }
             
@@ -179,12 +248,6 @@ static void hash_value(const la_codec_value_t *value, MD5_CTX *md5)
         {
             MD5_Update(md5, _SMALL_TUPLE_ONE, sizeof(_SMALL_TUPLE_ONE));
             int len = (int) la_codec_object_size(value);
-            if (la_codec_object_get(value, LA_API_REV_NAME) != NULL)
-                len--;
-            if (la_codec_object_get(value, LA_API_KEY_NAME) != NULL)
-                len--;
-            if (la_codec_object_get(value, LA_API_DELETED_NAME) != NULL)
-                len--;
             unsigned char c[] = { (unsigned char) (len >> 24),
                                   (unsigned char) (len >> 16),
                                   (unsigned char) (len >>  8),
@@ -202,10 +265,6 @@ static void hash_value(const la_codec_value_t *value, MD5_CTX *md5)
                                            (unsigned char) (keylen >> 16),
                                            (unsigned char) (keylen >>  8),
                                            (unsigned char)  keylen };
-                    if (strcmp(key, LA_API_DELETED_NAME) == 0
-                        || strcmp(key, LA_API_KEY_NAME) == 0
-                        || strcmp(key, LA_API_REV_NAME) == 0)
-                        continue;
                     MD5_Update(md5, _SMALL_TUPLE_TWO, sizeof(_SMALL_TUPLE_TWO));
                     MD5_Update(md5, _BINARY, sizeof(_BINARY));
                     MD5_Update(md5, kc, 4);
@@ -276,7 +335,9 @@ int la_revgen(const la_codec_value_t *value, uint64_t old_start, la_storage_rev_
     MD5_Final(digest, &md5);
     
     if (rev)
+    {
         memcpy(rev->rev, digest, (LA_OBJECT_REVISION_LEN < MD5_DIGEST_LENGTH) ? LA_OBJECT_REVISION_LEN : MD5_DIGEST_LENGTH);
+    }
     
 #if DEBUG
     la_hexdump(la_buffer_data(DEBUG_BUFFER), la_buffer_size(DEBUG_BUFFER));
