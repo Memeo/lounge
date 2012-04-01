@@ -131,6 +131,46 @@ int main (int argc, const char * argv[])
     if (memcmp(rev.rev, test_update_rev2, 16) != 0)
         die("FAIL updated document\n");
     
+    {
+        uint64_t oldstart = 3;
+        const char *newrev = "\x12\x70\x82\x7d\x67\xf4\x09\x2a\xb6\xfc\x76\xf2\x1c\x6c\xc9\x5e";
+        const char *oldrev = "\x96\x72\x2e\x3b\x06\xab\xd7\x47\x8d\xdc\x85\xaa\x2e\x33\xcc\xf3";
+        const char *json = "{\"_id\":\"work-91e393ff4301ae11bcc802a1730fc5a7-bea301e655f30ce24d9405dad97d4b83-%25252BLLqs2KiCX%25252FZKEbTbhUPXEXL%25252F%25252Bc%25253D\",\"_rev\":\"3-96722e3b06abd7478ddc85aa2e33ccf3\",\"refrev\":\"2-bde70505970161e73fc0f5d79cdd2875\",\"args\":{\"mountpath\":\"C:\\\\\",\"blobs\":[],\"goal\":\"91e393ff4301ae11bcc802a1730fc5a7\",\"pash\":\"+LLqs2KiCX/ZKEbTbhUPXEXL/+c=\",\"blobstore\":{\"bucket\":\"com.memeo.magni.v01\",\"session\":\"825dd37617faa09f15ce15fc97265e30\",\"type\":\"s3\",\"creds\":\"AKIAJVMSHOA2ZYKKBSOQ:ExOrjM+PzXe+uSq8za0fkU6K5QEeJHQkJPaN6Cqp\"},\"library\":{\"mount\":\"1c50ee722a5d00d6544af68cdf93903d\",\"id\":\"bea301e655f30ce24d9405dad97cf2b0\",\"lib_database\":\"http://a9311d74:80/librarydb-bea301e655f30ce24d9405dad97d4b83\",\"_id\":\"bea301e655f30ce24d9405dad97d4b83\",\"type\":\"library\",\"_rev\":\"2-76cbde773c7d93e5d876143f4b493d08\",\"relpath\":\"Users\\\\geoff\\\\Documents\\\\My Memeo C1\"},\"mash\":\"u4mBuGeI8oNF7HoA23iPlL6gnac=\",\"fash\":\"bv2PRlEaYeIUgn9XROYw6ugKGsw=\",\"meta\":{\"name\":\"2008-10-06 Picts for Memeo share\",\"last_write_time\":\"Thu Jul 15 03:47:50 2010\",\"len\":0,\"ext\":\"\",\"is_folder\":true,\"relpath\":\"2008-10-06 Picts for Memeo share\"},\"agents\":[\"7a47c60e7a81d3413302e65690054f03\"],\"cash\":\"*FOLDER*\",\"path\":[],\"size\":196608,\"scanpath\":null,\"name\":\"2008-10-06 Picts for Memeo share\"},\"status_pct\":0,\"verb\":\"WRITE\",\"result\":\"SUCCESS\",\"type\":\"work\",\"refid\":\"work-91e393ff4301ae11bcc802a1730fc5a7-bea301e655f30ce24d9405dad97d4b83-%25252BLLqs2KiCX%25252FZKEbTbhUPXEXL%25252F%25252Bc%25253D\"}";
+        value = la_codec_loads(json, 0, &error);
+        if (value == NULL)
+        {
+            die("failed to parse json: %s", error.text);
+        }
+        la_storage_rev_t myrev;
+        la_revgen(value, oldstart, (la_storage_rev_t *) oldrev, 0, &myrev);
+        if (memcmp(&myrev, newrev, sizeof(la_storage_rev_t)) != 0)
+        {
+            la_hexdump(newrev, sizeof(la_storage_rev_t));
+            la_hexdump(&myrev, sizeof(la_storage_rev_t));
+            die("versions do not match\n");
+        }
+    }
+    
+    {
+        la_storage_rev_t prev = { 0xe0, 0x08, 0x14, 0x16, 0x3a, 0xa8, 0x06, 0x0f, 0x85, 0x5f, 0x4d, 0xdb, 0x5c, 0x6e, 0x52, 0x08 };
+        la_storage_rev_t newrev = { 0x18, 0x8e, 0xac, 0x05, 0x86, 0x45, 0x92, 0xac, 0xf1, 0x8d, 0x89, 0x31, 0x16, 0x16, 0x52, 0x44 };
+        uint64_t start = 277;
+        const char *json = "{\"_id\":\"hb-provider\",\"_rev\":\"278-188eac05864592acf18d893116165244\",\"last\":\"2012-02-17 17:21:59\",\"type\":\"provider\",\"message\":\"Work Item Provider\"}";
+        value = la_codec_loads(json, 0, &error);
+        if (value == NULL)
+        {
+            die("FAIL parsing object: %s\n", error.text);
+        }
+        la_storage_rev_t myrev;
+        la_revgen(value, start, &prev, 0, &myrev);
+        if (memcmp(&newrev, &myrev, sizeof(la_storage_rev_t)) != 0)
+        {
+            la_hexdump(&newrev, sizeof(la_storage_rev_t));
+            la_hexdump(&myrev, sizeof(la_storage_rev_t));
+            die("revisions did not match\n");
+        }
+    }
+    
     printf("OK\n");
     return 0;
 }

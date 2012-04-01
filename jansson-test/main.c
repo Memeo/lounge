@@ -32,5 +32,28 @@ int main (int argc, const char * argv[])
         printf("object key %s\n", key);
         iter = json_object_iter_next(obj, iter);
     }
+    json_decref(obj);
+    
+    const char *bignums = "{\"n\":18446744073709551616,\"m\":340282366920938463463374607431768211456}";
+    obj = json_loads(bignums, 0, &error);
+    if (obj == NULL)
+    {
+        printf("parsing bignum failed: %s\n", error.text);
+        return 1;
+    }
+    if (!json_is_bignum(json_object_get(obj, "n")))
+    {
+        printf("didn't get bignum\n");
+        return 1;
+    }
+    printf("bignum: ");
+    mp_fwrite(json_bignum_value(json_object_get(obj, "n")), 10, stdout);
+    putchar('\n');
+    
+    const char *str = json_dumps(obj, JSON_COMPACT);
+    printf("json: %s\n", str);
+    json_decref(obj);
+    free(str);
+    usleep(3 * 1000000);
 }
 
