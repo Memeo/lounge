@@ -32,6 +32,7 @@
 struct la_host
 {
     la_storage_env *env;
+    la_compressor_t *compressor;
 };
 
 struct la_db
@@ -62,6 +63,7 @@ la_host_t *la_host_open(const char *hosthome)
         free(host);
         return NULL;
     }
+    host->compressor = NULL;
     return host;
 }
 
@@ -69,6 +71,11 @@ void la_host_close(la_host_t *host)
 {
     la_storage_close_env(host->env);
     free(host);
+}
+
+void la_host_configure_compressor(la_host_t *host, la_compressor_t *compressor)
+{
+    host->compressor = compressor;
 }
 
 la_db_t *la_db_open(la_host_t *host, const char *name)
@@ -121,15 +128,22 @@ la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec
         return LA_DB_GET_NOT_FOUND;
     }
     object_data = (const char *) la_storage_object_get_data(object);
-    size_t deflated_size;
-    unsigned char *deflated_data = la_decompress(object_data, object->data_length, &deflated_size);
-    if (deflated_data == NULL)
+    if (db->host->compressor != NULL)
     {
-        la_storage_destroy_object(object);
-        return LA_DB_GET_ERROR;
+        size_t inflated_size;
+        unsigned char *inflated_data = db->host->compressor->decompressor(object_data, object->data_length, &inflated_size);
+        if (inflated_data == NULL)
+        {
+            la_storage_destroy_object(object);
+            return LA_DB_GET_ERROR;
+        }
+        v = la_codec_loadb(inflated_data, inflated_size, 0, error);
+        free(inflated_data);
     }
-    v = la_codec_loadb(deflated_data, deflated_size, 0, error);
-    free(deflated_data);
+    else
+    {
+        v = la_codec_loadb(object_data, object->data_length, 0, error);
+    }
     if (current_rev != NULL)
     {
         current_rev->seq = object->header->doc_seq;
@@ -217,16 +231,24 @@ static la_db_put_result do_la_db_put(la_db_t *db, const char *key, const la_rev_
     }
     la_codec_decref(putdoc);
     
-    size_t deflated_size;
-    unsigned char *deflated = la_compress(la_buffer_data(buffer), la_buffer_size(buffer), &deflated_size);
-    la_buffer_destroy(buffer);
-    if (deflated == NULL)
+    if (db->host->compressor != NULL)
     {
-        return LA_DB_PUT_ERROR;
-    }
+        size_t deflated_size;
+        unsigned char *deflated = db->host->compressor->compressor(la_buffer_data(buffer), la_buffer_size(buffer), &deflated_size);
+        la_buffer_destroy(buffer);
+        if (deflated == NULL)
+        {
+            return LA_DB_PUT_ERROR;
+        }
     
-    object = la_storage_create_object(key, nextrev.rev, deflated, deflated_size, NULL, 0);
-    free(deflated);
+        object = la_storage_create_object(key, nextrev.rev, deflated, deflated_size, NULL, 0);
+        free(deflated);
+    }
+    else
+    {
+        object = la_storage_create_object(key, nextrev.rev, la_buffer_data(buffer), la_buffer_size(buffer), NULL, 0);
+        la_buffer_destroy(buffer);
+    }
     if (object == NULL)
     {
         return LA_DB_PUT_ERROR;
@@ -318,17 +340,24 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
     }
     la_codec_decref(copy);
     
-    size_t deflated_size;
-    unsigned char *deflated = la_compress(la_buffer_data(buffer), la_buffer_size(buffer), &deflated_size);
-    if (deflated == NULL)
+    if (db->host->compressor != NULL)
     {
-        la_buffer_destroy(buffer);
-        return LA_DB_PUT_ERROR;
+        size_t deflated_size;
+        unsigned char *deflated = db->host->compressor->compressor(la_buffer_data(buffer), la_buffer_size(buffer), &deflated_size);
+        if (deflated == NULL)
+        {
+            la_buffer_destroy(buffer);
+            return LA_DB_PUT_ERROR;
+        }
+        obj = la_storage_create_object(key, rev->rev, deflated, deflated_size, oldrevs, revcount);
+        free(deflated);
     }
-    obj = la_storage_create_object(key, rev->rev, deflated, deflated_size, oldrevs, revcount);
+    else
+    {
+        obj = la_storage_create_object(key, rev->rev, la_buffer_data(buffer), la_buffer_size(buffer), oldrevs, revcount);
+    }
     obj->header->deleted = is_delete;
     la_buffer_destroy(buffer);
-    free(deflated);
     if (_oldrevs != NULL)
         free(_oldrevs);
     obj->header->doc_seq = rev->seq;
@@ -401,16 +430,23 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
             la_storage_destroy_object(object);
             continue;
         }
-        size_t inflated_size;
-        unsigned char *inflated = la_decompress(la_storage_object_get_data(object), object->data_length, &inflated_size);
-        if (inflated == NULL)
+        if (it->db->host->compressor != NULL)
         {
-            la_storage_destroy_object(object);
-            return LA_VIEW_ITERATOR_ERROR;
+            size_t inflated_size;
+            unsigned char *inflated = it->db->host->compressor->compressor(la_storage_object_get_data(object), object->data_length, &inflated_size);
+            if (inflated == NULL)
+            {
+                la_storage_destroy_object(object);
+                return LA_VIEW_ITERATOR_ERROR;
+            }
+            parsed = la_codec_loadb((const char *) inflated, inflated_size, 0, error);
+            free(inflated);
         }
-        parsed = la_codec_loadb((const char *) inflated, inflated_size, 0, error);
+        else
+        {
+            parsed = la_codec_loadb(la_storage_object_get_data(object), object->data_length, 0, error);
+        }
         la_storage_destroy_object(object);
-        free(inflated);
         if (parsed == NULL)
         {
             return LA_VIEW_ITERATOR_ERROR;

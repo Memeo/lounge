@@ -9,6 +9,8 @@
 #ifndef LoungeAct_compress_zlib_h
 #define LoungeAct_compress_zlib_h
 
+#include <compress/compress.h>
 
+extern la_compressor_t *zlib_compressor;
 
 #endif

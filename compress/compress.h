@@ -9,7 +9,13 @@
 #ifndef LoungeAct_compress_h
 #define LoungeAct_compress_h
 
-unsigned char *la_compress(unsigned char *input, size_t len, size_t *outlen);
-unsigned char *la_decompress(unsigned char *input, size_t len, size_t *outlen);
+typedef unsigned char *(*la_compress_fn)(unsigned char *input, size_t len, size_t *outlen);
+typedef unsigned char *(*la_decompress_fn)(unsigned char *input, size_t len, size_t *outlen);
+
+typedef struct
+{
+    la_compress_fn compressor;
+    la_decompress_fn decompressor;
+} la_compressor_t;
 
 #endif

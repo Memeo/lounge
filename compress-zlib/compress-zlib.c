@@ -15,7 +15,7 @@
 
 #define CHUNK_SIZE 4096
 
-unsigned char *la_compress(unsigned char *input, size_t len, size_t *outlen)
+static unsigned char *_zlib_compress(unsigned char *input, size_t len, size_t *outlen)
 {
     Bytef out[CHUNK_SIZE];
     z_stream zs;
@@ -56,7 +56,7 @@ unsigned char *la_compress(unsigned char *input, size_t len, size_t *outlen)
     return ret;
 }
 
-unsigned char *la_decompress(unsigned char *input, size_t len, size_t *outlen)
+static unsigned char *_zlib_decompress(unsigned char *input, size_t len, size_t *outlen)
 {
     Bytef out[CHUNK_SIZE];
     z_stream zs;
@@ -76,7 +76,7 @@ unsigned char *la_decompress(unsigned char *input, size_t len, size_t *outlen)
         zs.next_out = out;
         zs.avail_out = CHUNK_SIZE;
         int ret = inflate(&zs, Z_FINISH);
-        if (ret != Z_OK && ret != Z_STREAM_END)
+        if (ret != Z_OK && ret != Z_STREAM_END && ret != Z_BUF_ERROR)
         {
             inflateEnd(&zs);
             la_buffer_destroy(buffer);
@@ -96,3 +96,6 @@ unsigned char *la_decompress(unsigned char *input, size_t len, size_t *outlen)
     la_buffer_destroy(buffer);
     return ret;
 }
+
+la_compressor_t __zlib_compressor = { _zlib_compress, _zlib_decompress };
+la_compressor_t *zlib_compressor = &__zlib_compressor;

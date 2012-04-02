@@ -11,6 +11,7 @@
 
 #include <Codec/Codec.h>
 #include <revgen/revgen.h>
+#include <compress/compress.h>
 
 #ifndef LA_API_KEY_NAME
 #define LA_API_KEY_NAME "_id"
@@ -69,6 +70,8 @@ typedef enum
 
 la_host_t *la_host_open(const char *hosthome);
 void la_host_close(la_host_t *host);
+
+void la_host_configure_compressor(la_host_t *host, la_compressor_t *compressor);
 
 /**
  * A view state object, passed in to the la_view_mapfn to handle
