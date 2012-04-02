@@ -1,9 +1,6 @@
 [submodule "jansson"]
 	path = jansson
 	url = git@github.com:csm/jansson.git
-[submodule "nginx"]
-	path = nginx
-	url = https://github.com/git-mirror/nginx.git
 [submodule "ngx_devel_kit"]
 	path = ngx_devel_kit
 	url = https://github.com/simpl/ngx_devel_kit.git
