@@ -433,7 +433,7 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
         if (it->db->host->compressor != NULL)
         {
             size_t inflated_size;
-            unsigned char *inflated = it->db->host->compressor->compressor(la_storage_object_get_data(object), object->data_length, &inflated_size);
+            unsigned char *inflated = it->db->host->compressor->decompressor(la_storage_object_get_data(object), object->data_length, &inflated_size);
             if (inflated == NULL)
             {
                 la_storage_destroy_object(object);

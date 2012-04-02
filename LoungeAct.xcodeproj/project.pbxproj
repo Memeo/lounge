@@ -162,6 +162,10 @@
 		70590B511528007E0040037C /* libjansson.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7056F9D8150AC8B80053FF41 /* libjansson.dylib */; };
 		70590B521528007E0040037C /* liblibtommath.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70590AC71527C4F90040037C /* liblibtommath.a */; };
 		705E8FAB1502C66800FCE571 /* libLoungeAct-codec-json.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B1F7B114FECD1300A9E488 /* libLoungeAct-codec-json.dylib */; };
+		706481C5152A3E2700FB9FE6 /* libLoungeAct-compress-zlib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2ACC315251BF800968F2C /* libLoungeAct-compress-zlib.dylib */; };
+		706481D2152A40DC00FB9FE6 /* lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 706481C6152A407600FB9FE6 /* lz4.c */; };
+		706481D4152A40EA00FB9FE6 /* compress-lz4.c in Sources */ = {isa = PBXBuildFile; fileRef = 706481D3152A40EA00FB9FE6 /* compress-lz4.c */; };
+		706481D9152A452600FB9FE6 /* libloungeact-compress-lz4.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706481CE152A40D000FB9FE6 /* libloungeact-compress-lz4.dylib */; };
 		7066428514FC555900CFFCD0 /* ObjectStore-sqlite.c in Sources */ = {isa = PBXBuildFile; fileRef = 7066427C14FC552900CFFCD0 /* ObjectStore-sqlite.c */; };
 		7066428614FC555900CFFCD0 /* ObjectStore-common.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */; };
 		7066429214FD524B00CFFCD0 /* stringutils.c in Sources */ = {isa = PBXBuildFile; fileRef = 7066428914FD520700CFFCD0 /* stringutils.c */; };
@@ -205,14 +209,12 @@
 		70C2AC8D1513F5DF00968F2C /* libLoungeAct-storage-bdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */; };
 		70C2AC8E1513F5DF00968F2C /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
 		70C2AC8F1513F5DF00968F2C /* libLoungeAct.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70F14E6114F5944B00F278CA /* libLoungeAct.dylib */; };
-		70C2AC9E1523905800968F2C /* codec-bson.c in Sources */ = {isa = PBXBuildFile; fileRef = 70C2AC9315238FC300968F2C /* codec-bson.c */; };
 		70C2ACAB1523C64600968F2C /* libjansson.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7056F9D8150AC8B80053FF41 /* libjansson.dylib */; };
 		70C2ACAC1523C64600968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
 		70C2ACAD1523C64600968F2C /* libLoungeAct-storage-sqlite.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428114FC554700CFFCD0 /* libLoungeAct-storage-sqlite.dylib */; };
 		70C2ACB01524D6B500968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
 		70C2ACB31524DAF800968F2C /* libLoungeAct-revgen-couchdb.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70FA8BCB1508427300FA62CB /* libLoungeAct-revgen-couchdb.dylib */; };
-		70C2ACBA1524FC7B00968F2C /* libjansson.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7056F9D8150AC8B80053FF41 /* libjansson.dylib */; };
-		70C2ACC715251C0200968F2C /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 70C2ACBE15251B6100968F2C /* compress.c */; };
+		70C2ACC715251C0200968F2C /* compress-zlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 70C2ACBE15251B6100968F2C /* compress-zlib.c */; };
 		70C2ACC915251C1000968F2C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2ACC815251C1000968F2C /* libz.dylib */; };
 		70C2ACCC15251FED00968F2C /* libLoungeAct-utils.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7066428E14FD524600CFFCD0 /* libLoungeAct-utils.dylib */; };
 		70C2ACCF1525217700968F2C /* libLoungeAct-compress-zlib.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 70C2ACC315251BF800968F2C /* libLoungeAct-compress-zlib.dylib */; };
@@ -332,6 +334,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 70590AC61527C4F90040037C;
 			remoteInfo = libtommath;
+		};
+		706481D5152A450F00FB9FE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70C2ACC215251BF800968F2C;
+			remoteInfo = "LoungeAct-compress-zlib";
+		};
+		706481D7152A450F00FB9FE6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706481CD152A40D000FB9FE6;
+			remoteInfo = "loungeact-compress-lz4";
 		};
 		7066429414FD54AC00CFFCD0 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -514,13 +530,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 70FA8BCA1508427300FA62CB;
 			remoteInfo = "LoungeAct-revgen-couchdb";
-		};
-		70C2ACB81524FC7400968F2C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 7056F9D7150AC8B80053FF41;
-			remoteInfo = jansson;
 		};
 		70C2ACCA15251FE600968F2C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1256,6 +1265,412 @@
 		70590AC11527C4D80040037C /* tommath_class.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tommath_class.h; sourceTree = "<group>"; };
 		70590AC21527C4D80040037C /* tommath_superclass.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tommath_superclass.h; sourceTree = "<group>"; };
 		70590AC71527C4F90040037C /* liblibtommath.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = liblibtommath.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		706481A7152A2C5900FB9FE6 /* compress-zlib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "compress-zlib.h"; sourceTree = "<group>"; };
+		706481C6152A407600FB9FE6 /* lz4.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = lz4.c; path = lz4/lz4.c; sourceTree = "<group>"; };
+		706481C7152A407600FB9FE6 /* lz4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = lz4.h; path = lz4/lz4.h; sourceTree = "<group>"; };
+		706481C9152A409A00FB9FE6 /* compress-lz4.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "compress-lz4.h"; sourceTree = "<group>"; };
+		706481CE152A40D000FB9FE6 /* libloungeact-compress-lz4.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libloungeact-compress-lz4.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
+		706481D3152A40EA00FB9FE6 /* compress-lz4.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "compress-lz4.c"; sourceTree = "<group>"; };
+		706481DD152A457D00FB9FE6 /* acc */ = {isa = PBXFileReference; lastKnownFileType = text; path = acc; sourceTree = "<group>"; };
+		706481DE152A457D00FB9FE6 /* bcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = bcc; sourceTree = "<group>"; };
+		706481DF152A457D00FB9FE6 /* ccc */ = {isa = PBXFileReference; lastKnownFileType = text; path = ccc; sourceTree = "<group>"; };
+		706481E0152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481E1152A457D00FB9FE6 /* gcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = gcc; sourceTree = "<group>"; };
+		706481E2152A457D00FB9FE6 /* icc */ = {isa = PBXFileReference; lastKnownFileType = text; path = icc; sourceTree = "<group>"; };
+		706481E3152A457D00FB9FE6 /* msvc */ = {isa = PBXFileReference; lastKnownFileType = text; path = msvc; sourceTree = "<group>"; };
+		706481E4152A457D00FB9FE6 /* name */ = {isa = PBXFileReference; lastKnownFileType = text; path = name; sourceTree = "<group>"; };
+		706481E5152A457D00FB9FE6 /* owc */ = {isa = PBXFileReference; lastKnownFileType = text; path = owc; sourceTree = "<group>"; };
+		706481E6152A457D00FB9FE6 /* sunc */ = {isa = PBXFileReference; lastKnownFileType = text; path = sunc; sourceTree = "<group>"; };
+		706481E7152A457D00FB9FE6 /* configure */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = configure; sourceTree = "<group>"; };
+		706481E8152A457D00FB9FE6 /* define */ = {isa = PBXFileReference; lastKnownFileType = text; path = define; sourceTree = "<group>"; };
+		706481E9152A457D00FB9FE6 /* endianess */ = {isa = PBXFileReference; lastKnownFileType = text; path = endianess; sourceTree = "<group>"; };
+		706481EA152A457D00FB9FE6 /* feature */ = {isa = PBXFileReference; lastKnownFileType = text; path = feature; sourceTree = "<group>"; };
+		706481EB152A457D00FB9FE6 /* have */ = {isa = PBXFileReference; lastKnownFileType = text; path = have; sourceTree = "<group>"; };
+		706481EC152A457D00FB9FE6 /* have_headers */ = {isa = PBXFileReference; lastKnownFileType = text; path = have_headers; sourceTree = "<group>"; };
+		706481ED152A457D00FB9FE6 /* headers */ = {isa = PBXFileReference; lastKnownFileType = text; path = headers; sourceTree = "<group>"; };
+		706481EE152A457D00FB9FE6 /* include */ = {isa = PBXFileReference; lastKnownFileType = text; path = include; sourceTree = "<group>"; };
+		706481EF152A457D00FB9FE6 /* init */ = {isa = PBXFileReference; lastKnownFileType = text; path = init; sourceTree = "<group>"; };
+		706481F0152A457D00FB9FE6 /* install */ = {isa = PBXFileReference; lastKnownFileType = text; path = install; sourceTree = "<group>"; };
+		706481F2152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481F4152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481F6152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481F8152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481F9152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		706481FB152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481FD152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		706481FE152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		70648200152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		70648201152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		70648202152A457D00FB9FE6 /* makefile.bcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.bcc; sourceTree = "<group>"; };
+		70648203152A457D00FB9FE6 /* makefile.msvc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.msvc; sourceTree = "<group>"; };
+		70648204152A457D00FB9FE6 /* makefile.owc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.owc; sourceTree = "<group>"; };
+		70648206152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		70648207152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		70648208152A457D00FB9FE6 /* makefile.bcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.bcc; sourceTree = "<group>"; };
+		70648209152A457D00FB9FE6 /* makefile.msvc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.msvc; sourceTree = "<group>"; };
+		7064820B152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		7064820C152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		7064820D152A457D00FB9FE6 /* makefile.bcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.bcc; sourceTree = "<group>"; };
+		7064820E152A457D00FB9FE6 /* makefile.msvc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.msvc; sourceTree = "<group>"; };
+		7064820F152A457D00FB9FE6 /* makefile.owc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.owc; sourceTree = "<group>"; };
+		70648211152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		70648212152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		70648214152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		70648215152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		70648216152A457D00FB9FE6 /* makefile.bcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.bcc; sourceTree = "<group>"; };
+		70648217152A457D00FB9FE6 /* makefile.msvc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.msvc; sourceTree = "<group>"; };
+		70648218152A457D00FB9FE6 /* makefile.owc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.owc; sourceTree = "<group>"; };
+		70648219152A457D00FB9FE6 /* test */ = {isa = PBXFileReference; lastKnownFileType = text; path = test; sourceTree = "<group>"; };
+		7064821B152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		7064821C152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		7064821D152A457D00FB9FE6 /* makefile.bcc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.bcc; sourceTree = "<group>"; };
+		7064821E152A457D00FB9FE6 /* makefile.msvc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.msvc; sourceTree = "<group>"; };
+		7064821F152A457D00FB9FE6 /* makefile.owc */ = {isa = PBXFileReference; lastKnownFileType = text; path = makefile.owc; sourceTree = "<group>"; };
+		70648220152A457D00FB9FE6 /* patch.zlib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = patch.zlib.h; sourceTree = "<group>"; };
+		70648221152A457D00FB9FE6 /* make */ = {isa = PBXFileReference; lastKnownFileType = text; path = make; sourceTree = "<group>"; };
+		70648222152A457D00FB9FE6 /* modules */ = {isa = PBXFileReference; lastKnownFileType = text; path = modules; sourceTree = "<group>"; };
+		70648223152A457D00FB9FE6 /* nohave */ = {isa = PBXFileReference; lastKnownFileType = text; path = nohave; sourceTree = "<group>"; };
+		70648224152A457D00FB9FE6 /* options */ = {isa = PBXFileReference; lastKnownFileType = text; path = options; sourceTree = "<group>"; };
+		70648226152A457D00FB9FE6 /* conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = conf; sourceTree = "<group>"; };
+		70648227152A457D00FB9FE6 /* darwin */ = {isa = PBXFileReference; lastKnownFileType = text; path = darwin; sourceTree = "<group>"; };
+		70648228152A457D00FB9FE6 /* freebsd */ = {isa = PBXFileReference; lastKnownFileType = text; path = freebsd; sourceTree = "<group>"; };
+		70648229152A457D00FB9FE6 /* linux */ = {isa = PBXFileReference; lastKnownFileType = text; path = linux; sourceTree = "<group>"; };
+		7064822A152A457D00FB9FE6 /* solaris */ = {isa = PBXFileReference; lastKnownFileType = text; path = solaris; sourceTree = "<group>"; };
+		7064822B152A457D00FB9FE6 /* win32 */ = {isa = PBXFileReference; lastKnownFileType = text; path = win32; sourceTree = "<group>"; };
+		7064822C152A457D00FB9FE6 /* sources */ = {isa = PBXFileReference; lastKnownFileType = text; path = sources; sourceTree = "<group>"; };
+		7064822D152A457D00FB9FE6 /* stubs */ = {isa = PBXFileReference; lastKnownFileType = text; path = stubs; sourceTree = "<group>"; };
+		7064822E152A457D00FB9FE6 /* summary */ = {isa = PBXFileReference; lastKnownFileType = text; path = summary; sourceTree = "<group>"; };
+		70648230152A457D00FB9FE6 /* sizeof */ = {isa = PBXFileReference; lastKnownFileType = text; path = sizeof; sourceTree = "<group>"; };
+		70648231152A457D00FB9FE6 /* typedef */ = {isa = PBXFileReference; lastKnownFileType = text; path = typedef; sourceTree = "<group>"; };
+		70648232152A457D00FB9FE6 /* uintptr_t */ = {isa = PBXFileReference; lastKnownFileType = text; path = uintptr_t; sourceTree = "<group>"; };
+		70648233152A457D00FB9FE6 /* value */ = {isa = PBXFileReference; lastKnownFileType = text; path = value; sourceTree = "<group>"; };
+		70648234152A457D00FB9FE6 /* unix */ = {isa = PBXFileReference; lastKnownFileType = text; path = unix; sourceTree = "<group>"; };
+		70648236152A457D00FB9FE6 /* fastcgi.conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = fastcgi.conf; sourceTree = "<group>"; };
+		70648237152A457D00FB9FE6 /* fastcgi_params */ = {isa = PBXFileReference; lastKnownFileType = text; path = fastcgi_params; sourceTree = "<group>"; };
+		70648238152A457D00FB9FE6 /* koi-utf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "koi-utf"; sourceTree = "<group>"; };
+		70648239152A457D00FB9FE6 /* koi-win */ = {isa = PBXFileReference; lastKnownFileType = text; path = "koi-win"; sourceTree = "<group>"; };
+		7064823A152A457D00FB9FE6 /* mime.types */ = {isa = PBXFileReference; lastKnownFileType = text; path = mime.types; sourceTree = "<group>"; };
+		7064823B152A457D00FB9FE6 /* nginx.conf */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx.conf; sourceTree = "<group>"; };
+		7064823C152A457D00FB9FE6 /* scgi_params */ = {isa = PBXFileReference; lastKnownFileType = text; path = scgi_params; sourceTree = "<group>"; };
+		7064823D152A457D00FB9FE6 /* uwsgi_params */ = {isa = PBXFileReference; lastKnownFileType = text; path = uwsgi_params; sourceTree = "<group>"; };
+		7064823E152A457D00FB9FE6 /* win-utf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "win-utf"; sourceTree = "<group>"; };
+		70648240152A457D00FB9FE6 /* geo2nginx.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = geo2nginx.pl; sourceTree = "<group>"; };
+		70648241152A457D00FB9FE6 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		70648243152A457D00FB9FE6 /* koi-utf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "koi-utf"; sourceTree = "<group>"; };
+		70648244152A457D00FB9FE6 /* unicode-to-nginx.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = "unicode-to-nginx.pl"; sourceTree = "<group>"; };
+		70648245152A457D00FB9FE6 /* win-utf */ = {isa = PBXFileReference; lastKnownFileType = text; path = "win-utf"; sourceTree = "<group>"; };
+		70648248152A457D00FB9FE6 /* change_log_conf.dtd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = change_log_conf.dtd; sourceTree = "<group>"; };
+		70648249152A457D00FB9FE6 /* changes.dtd */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = changes.dtd; sourceTree = "<group>"; };
+		7064824A152A457D00FB9FE6 /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		7064824C152A457D00FB9FE6 /* 50x.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = 50x.html; sourceTree = "<group>"; };
+		7064824D152A457D00FB9FE6 /* index.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
+		7064824F152A457D00FB9FE6 /* nginx.8 */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx.8; sourceTree = "<group>"; };
+		70648251152A457D00FB9FE6 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		70648252152A457D00FB9FE6 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		70648254152A457D00FB9FE6 /* change_log_conf.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = change_log_conf.xml; sourceTree = "<group>"; };
+		70648256152A457D00FB9FE6 /* changes.xml */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = changes.xml; sourceTree = "<group>"; };
+		70648258152A457D00FB9FE6 /* changes.xsls */ = {isa = PBXFileReference; lastKnownFileType = text; path = changes.xsls; sourceTree = "<group>"; };
+		70648259152A457D00FB9FE6 /* dump.xsls */ = {isa = PBXFileReference; lastKnownFileType = text; path = dump.xsls; sourceTree = "<group>"; };
+		7064825B152A457D00FB9FE6 /* changes.xslt */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = changes.xslt; sourceTree = "<group>"; };
+		7064825D152A457D00FB9FE6 /* GNUmakefile */ = {isa = PBXFileReference; lastKnownFileType = text; path = GNUmakefile; sourceTree = "<group>"; };
+		7064825E152A457D00FB9FE6 /* README */ = {isa = PBXFileReference; lastKnownFileType = text; path = README; sourceTree = "<group>"; };
+		70648261152A457D00FB9FE6 /* nginx.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = nginx.c; sourceTree = "<group>"; };
+		70648262152A457D00FB9FE6 /* nginx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = nginx.h; sourceTree = "<group>"; };
+		70648263152A457D00FB9FE6 /* ngx_array.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_array.c; sourceTree = "<group>"; };
+		70648264152A457D00FB9FE6 /* ngx_array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_array.h; sourceTree = "<group>"; };
+		70648265152A457D00FB9FE6 /* ngx_buf.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_buf.c; sourceTree = "<group>"; };
+		70648266152A457D00FB9FE6 /* ngx_buf.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_buf.h; sourceTree = "<group>"; };
+		70648267152A457D00FB9FE6 /* ngx_conf_file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_conf_file.c; sourceTree = "<group>"; };
+		70648268152A457D00FB9FE6 /* ngx_conf_file.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_conf_file.h; sourceTree = "<group>"; };
+		70648269152A457D00FB9FE6 /* ngx_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_config.h; sourceTree = "<group>"; };
+		7064826A152A457D00FB9FE6 /* ngx_connection.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_connection.c; sourceTree = "<group>"; };
+		7064826B152A457D00FB9FE6 /* ngx_connection.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_connection.h; sourceTree = "<group>"; };
+		7064826C152A457D00FB9FE6 /* ngx_core.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_core.h; sourceTree = "<group>"; };
+		7064826D152A457D00FB9FE6 /* ngx_cpuinfo.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_cpuinfo.c; sourceTree = "<group>"; };
+		7064826E152A457D00FB9FE6 /* ngx_crc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_crc.h; sourceTree = "<group>"; };
+		7064826F152A457D00FB9FE6 /* ngx_crc32.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_crc32.c; sourceTree = "<group>"; };
+		70648270152A457D00FB9FE6 /* ngx_crc32.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_crc32.h; sourceTree = "<group>"; };
+		70648271152A457D00FB9FE6 /* ngx_crypt.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_crypt.c; sourceTree = "<group>"; };
+		70648272152A457D00FB9FE6 /* ngx_crypt.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_crypt.h; sourceTree = "<group>"; };
+		70648273152A457D00FB9FE6 /* ngx_cycle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_cycle.c; sourceTree = "<group>"; };
+		70648274152A457D00FB9FE6 /* ngx_cycle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_cycle.h; sourceTree = "<group>"; };
+		70648275152A457D00FB9FE6 /* ngx_file.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_file.c; sourceTree = "<group>"; };
+		70648276152A457D00FB9FE6 /* ngx_file.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_file.h; sourceTree = "<group>"; };
+		70648277152A457D00FB9FE6 /* ngx_hash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_hash.c; sourceTree = "<group>"; };
+		70648278152A457D00FB9FE6 /* ngx_hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_hash.h; sourceTree = "<group>"; };
+		70648279152A457D00FB9FE6 /* ngx_inet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_inet.c; sourceTree = "<group>"; };
+		7064827A152A457D00FB9FE6 /* ngx_inet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_inet.h; sourceTree = "<group>"; };
+		7064827B152A457D00FB9FE6 /* ngx_list.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_list.c; sourceTree = "<group>"; };
+		7064827C152A457D00FB9FE6 /* ngx_list.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_list.h; sourceTree = "<group>"; };
+		7064827D152A457D00FB9FE6 /* ngx_log.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_log.c; sourceTree = "<group>"; };
+		7064827E152A457D00FB9FE6 /* ngx_log.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_log.h; sourceTree = "<group>"; };
+		7064827F152A457D00FB9FE6 /* ngx_md5.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_md5.c; sourceTree = "<group>"; };
+		70648280152A457D00FB9FE6 /* ngx_md5.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_md5.h; sourceTree = "<group>"; };
+		70648281152A457D00FB9FE6 /* ngx_murmurhash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_murmurhash.c; sourceTree = "<group>"; };
+		70648282152A457D00FB9FE6 /* ngx_murmurhash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_murmurhash.h; sourceTree = "<group>"; };
+		70648283152A457D00FB9FE6 /* ngx_open_file_cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_open_file_cache.c; sourceTree = "<group>"; };
+		70648284152A457D00FB9FE6 /* ngx_open_file_cache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_open_file_cache.h; sourceTree = "<group>"; };
+		70648285152A457D00FB9FE6 /* ngx_output_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_output_chain.c; sourceTree = "<group>"; };
+		70648286152A457D00FB9FE6 /* ngx_palloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_palloc.c; sourceTree = "<group>"; };
+		70648287152A457D00FB9FE6 /* ngx_palloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_palloc.h; sourceTree = "<group>"; };
+		70648288152A457D00FB9FE6 /* ngx_parse.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_parse.c; sourceTree = "<group>"; };
+		70648289152A457D00FB9FE6 /* ngx_parse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_parse.h; sourceTree = "<group>"; };
+		7064828A152A457D00FB9FE6 /* ngx_queue.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_queue.c; sourceTree = "<group>"; };
+		7064828B152A457D00FB9FE6 /* ngx_queue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_queue.h; sourceTree = "<group>"; };
+		7064828C152A457D00FB9FE6 /* ngx_radix_tree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_radix_tree.c; sourceTree = "<group>"; };
+		7064828D152A457D00FB9FE6 /* ngx_radix_tree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_radix_tree.h; sourceTree = "<group>"; };
+		7064828E152A457D00FB9FE6 /* ngx_rbtree.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_rbtree.c; sourceTree = "<group>"; };
+		7064828F152A457D00FB9FE6 /* ngx_rbtree.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_rbtree.h; sourceTree = "<group>"; };
+		70648290152A457D00FB9FE6 /* ngx_regex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_regex.c; sourceTree = "<group>"; };
+		70648291152A457D00FB9FE6 /* ngx_regex.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_regex.h; sourceTree = "<group>"; };
+		70648292152A457D00FB9FE6 /* ngx_resolver.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_resolver.c; sourceTree = "<group>"; };
+		70648293152A457D00FB9FE6 /* ngx_resolver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_resolver.h; sourceTree = "<group>"; };
+		70648294152A457D00FB9FE6 /* ngx_sha1.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_sha1.h; sourceTree = "<group>"; };
+		70648295152A457D00FB9FE6 /* ngx_shmtx.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_shmtx.c; sourceTree = "<group>"; };
+		70648296152A457D00FB9FE6 /* ngx_shmtx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_shmtx.h; sourceTree = "<group>"; };
+		70648297152A457D00FB9FE6 /* ngx_slab.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_slab.c; sourceTree = "<group>"; };
+		70648298152A457D00FB9FE6 /* ngx_slab.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_slab.h; sourceTree = "<group>"; };
+		70648299152A457D00FB9FE6 /* ngx_spinlock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_spinlock.c; sourceTree = "<group>"; };
+		7064829A152A457D00FB9FE6 /* ngx_string.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_string.c; sourceTree = "<group>"; };
+		7064829B152A457D00FB9FE6 /* ngx_string.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_string.h; sourceTree = "<group>"; };
+		7064829C152A457D00FB9FE6 /* ngx_times.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_times.c; sourceTree = "<group>"; };
+		7064829D152A457D00FB9FE6 /* ngx_times.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_times.h; sourceTree = "<group>"; };
+		706482A0152A457D00FB9FE6 /* ngx_aio_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_aio_module.c; sourceTree = "<group>"; };
+		706482A1152A457D00FB9FE6 /* ngx_devpoll_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_devpoll_module.c; sourceTree = "<group>"; };
+		706482A2152A457D00FB9FE6 /* ngx_epoll_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_epoll_module.c; sourceTree = "<group>"; };
+		706482A3152A457D00FB9FE6 /* ngx_eventport_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_eventport_module.c; sourceTree = "<group>"; };
+		706482A4152A457D00FB9FE6 /* ngx_iocp_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_iocp_module.c; sourceTree = "<group>"; };
+		706482A5152A457D00FB9FE6 /* ngx_iocp_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_iocp_module.h; sourceTree = "<group>"; };
+		706482A6152A457D00FB9FE6 /* ngx_kqueue_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_kqueue_module.c; sourceTree = "<group>"; };
+		706482A7152A457D00FB9FE6 /* ngx_poll_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_poll_module.c; sourceTree = "<group>"; };
+		706482A8152A457D00FB9FE6 /* ngx_rtsig_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_rtsig_module.c; sourceTree = "<group>"; };
+		706482A9152A457D00FB9FE6 /* ngx_select_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_select_module.c; sourceTree = "<group>"; };
+		706482AA152A457D00FB9FE6 /* ngx_win32_select_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_win32_select_module.c; sourceTree = "<group>"; };
+		706482AB152A457D00FB9FE6 /* ngx_event.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event.c; sourceTree = "<group>"; };
+		706482AC152A457D00FB9FE6 /* ngx_event.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event.h; sourceTree = "<group>"; };
+		706482AD152A457D00FB9FE6 /* ngx_event_accept.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_accept.c; sourceTree = "<group>"; };
+		706482AE152A457D00FB9FE6 /* ngx_event_acceptex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_acceptex.c; sourceTree = "<group>"; };
+		706482AF152A457D00FB9FE6 /* ngx_event_busy_lock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_busy_lock.c; sourceTree = "<group>"; };
+		706482B0152A457D00FB9FE6 /* ngx_event_busy_lock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event_busy_lock.h; sourceTree = "<group>"; };
+		706482B1152A457D00FB9FE6 /* ngx_event_connect.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_connect.c; sourceTree = "<group>"; };
+		706482B2152A457D00FB9FE6 /* ngx_event_connect.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event_connect.h; sourceTree = "<group>"; };
+		706482B3152A457D00FB9FE6 /* ngx_event_connectex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_connectex.c; sourceTree = "<group>"; };
+		706482B4152A457D00FB9FE6 /* ngx_event_mutex.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_mutex.c; sourceTree = "<group>"; };
+		706482B5152A457D00FB9FE6 /* ngx_event_openssl.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_openssl.c; sourceTree = "<group>"; };
+		706482B6152A457D00FB9FE6 /* ngx_event_openssl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event_openssl.h; sourceTree = "<group>"; };
+		706482B7152A457D00FB9FE6 /* ngx_event_pipe.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_pipe.c; sourceTree = "<group>"; };
+		706482B8152A457D00FB9FE6 /* ngx_event_pipe.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event_pipe.h; sourceTree = "<group>"; };
+		706482B9152A457D00FB9FE6 /* ngx_event_posted.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_posted.c; sourceTree = "<group>"; };
+		706482BA152A457D00FB9FE6 /* ngx_event_posted.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event_posted.h; sourceTree = "<group>"; };
+		706482BB152A457D00FB9FE6 /* ngx_event_timer.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_timer.c; sourceTree = "<group>"; };
+		706482BC152A457D00FB9FE6 /* ngx_event_timer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_event_timer.h; sourceTree = "<group>"; };
+		706482BF152A457D00FB9FE6 /* ngx_http_access_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_access_module.c; sourceTree = "<group>"; };
+		706482C0152A457D00FB9FE6 /* ngx_http_addition_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_addition_filter_module.c; sourceTree = "<group>"; };
+		706482C1152A457D00FB9FE6 /* ngx_http_auth_basic_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_auth_basic_module.c; sourceTree = "<group>"; };
+		706482C2152A457D00FB9FE6 /* ngx_http_autoindex_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_autoindex_module.c; sourceTree = "<group>"; };
+		706482C3152A457D00FB9FE6 /* ngx_http_browser_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_browser_module.c; sourceTree = "<group>"; };
+		706482C4152A457D00FB9FE6 /* ngx_http_charset_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_charset_filter_module.c; sourceTree = "<group>"; };
+		706482C5152A457D00FB9FE6 /* ngx_http_chunked_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_chunked_filter_module.c; sourceTree = "<group>"; };
+		706482C6152A457D00FB9FE6 /* ngx_http_dav_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_dav_module.c; sourceTree = "<group>"; };
+		706482C7152A457D00FB9FE6 /* ngx_http_degradation_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_degradation_module.c; sourceTree = "<group>"; };
+		706482C8152A457D00FB9FE6 /* ngx_http_empty_gif_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_empty_gif_module.c; sourceTree = "<group>"; };
+		706482C9152A457D00FB9FE6 /* ngx_http_fastcgi_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_fastcgi_module.c; sourceTree = "<group>"; };
+		706482CA152A457D00FB9FE6 /* ngx_http_flv_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_flv_module.c; sourceTree = "<group>"; };
+		706482CB152A457D00FB9FE6 /* ngx_http_geo_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_geo_module.c; sourceTree = "<group>"; };
+		706482CC152A457D00FB9FE6 /* ngx_http_geoip_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_geoip_module.c; sourceTree = "<group>"; };
+		706482CD152A457D00FB9FE6 /* ngx_http_gzip_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_gzip_filter_module.c; sourceTree = "<group>"; };
+		706482CE152A457D00FB9FE6 /* ngx_http_gzip_static_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_gzip_static_module.c; sourceTree = "<group>"; };
+		706482CF152A457D00FB9FE6 /* ngx_http_headers_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_headers_filter_module.c; sourceTree = "<group>"; };
+		706482D0152A457D00FB9FE6 /* ngx_http_image_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_image_filter_module.c; sourceTree = "<group>"; };
+		706482D1152A457D00FB9FE6 /* ngx_http_index_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_index_module.c; sourceTree = "<group>"; };
+		706482D2152A457D00FB9FE6 /* ngx_http_limit_req_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_limit_req_module.c; sourceTree = "<group>"; };
+		706482D3152A457D00FB9FE6 /* ngx_http_limit_zone_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_limit_zone_module.c; sourceTree = "<group>"; };
+		706482D4152A457D00FB9FE6 /* ngx_http_log_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_log_module.c; sourceTree = "<group>"; };
+		706482D5152A457D00FB9FE6 /* ngx_http_map_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_map_module.c; sourceTree = "<group>"; };
+		706482D6152A457D00FB9FE6 /* ngx_http_memcached_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_memcached_module.c; sourceTree = "<group>"; };
+		706482D7152A457D00FB9FE6 /* ngx_http_mp4_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_mp4_module.c; sourceTree = "<group>"; };
+		706482D8152A457D00FB9FE6 /* ngx_http_not_modified_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_not_modified_filter_module.c; sourceTree = "<group>"; };
+		706482D9152A457D00FB9FE6 /* ngx_http_proxy_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_proxy_module.c; sourceTree = "<group>"; };
+		706482DA152A457D00FB9FE6 /* ngx_http_random_index_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_random_index_module.c; sourceTree = "<group>"; };
+		706482DB152A457D00FB9FE6 /* ngx_http_range_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_range_filter_module.c; sourceTree = "<group>"; };
+		706482DC152A457D00FB9FE6 /* ngx_http_realip_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_realip_module.c; sourceTree = "<group>"; };
+		706482DD152A457D00FB9FE6 /* ngx_http_referer_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_referer_module.c; sourceTree = "<group>"; };
+		706482DE152A457D00FB9FE6 /* ngx_http_rewrite_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_rewrite_module.c; sourceTree = "<group>"; };
+		706482DF152A457D00FB9FE6 /* ngx_http_scgi_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_scgi_module.c; sourceTree = "<group>"; };
+		706482E0152A457D00FB9FE6 /* ngx_http_secure_link_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_secure_link_module.c; sourceTree = "<group>"; };
+		706482E1152A457D00FB9FE6 /* ngx_http_split_clients_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_split_clients_module.c; sourceTree = "<group>"; };
+		706482E2152A457D00FB9FE6 /* ngx_http_ssi_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_ssi_filter_module.c; sourceTree = "<group>"; };
+		706482E3152A457D00FB9FE6 /* ngx_http_ssi_filter_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_ssi_filter_module.h; sourceTree = "<group>"; };
+		706482E4152A457D00FB9FE6 /* ngx_http_ssl_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_ssl_module.c; sourceTree = "<group>"; };
+		706482E5152A457D00FB9FE6 /* ngx_http_ssl_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_ssl_module.h; sourceTree = "<group>"; };
+		706482E6152A457D00FB9FE6 /* ngx_http_static_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_static_module.c; sourceTree = "<group>"; };
+		706482E7152A457D00FB9FE6 /* ngx_http_stub_status_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_stub_status_module.c; sourceTree = "<group>"; };
+		706482E8152A457D00FB9FE6 /* ngx_http_sub_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_sub_filter_module.c; sourceTree = "<group>"; };
+		706482E9152A457D00FB9FE6 /* ngx_http_upstream_ip_hash_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_upstream_ip_hash_module.c; sourceTree = "<group>"; };
+		706482EA152A457D00FB9FE6 /* ngx_http_userid_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_userid_filter_module.c; sourceTree = "<group>"; };
+		706482EB152A457D00FB9FE6 /* ngx_http_uwsgi_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_uwsgi_module.c; sourceTree = "<group>"; };
+		706482EC152A457D00FB9FE6 /* ngx_http_xslt_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_xslt_filter_module.c; sourceTree = "<group>"; };
+		706482EE152A457D00FB9FE6 /* Makefile.PL */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = Makefile.PL; sourceTree = "<group>"; };
+		706482EF152A457D00FB9FE6 /* nginx.pm */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = nginx.pm; sourceTree = "<group>"; };
+		706482F0152A457D00FB9FE6 /* nginx.xs */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx.xs; sourceTree = "<group>"; };
+		706482F1152A457D00FB9FE6 /* ngx_http_perl_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_perl_module.c; sourceTree = "<group>"; };
+		706482F2152A457D00FB9FE6 /* ngx_http_perl_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_perl_module.h; sourceTree = "<group>"; };
+		706482F3152A457D00FB9FE6 /* typemap */ = {isa = PBXFileReference; lastKnownFileType = text; path = typemap; sourceTree = "<group>"; };
+		706482F4152A457D00FB9FE6 /* ngx_http.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http.c; sourceTree = "<group>"; };
+		706482F5152A457D00FB9FE6 /* ngx_http.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http.h; sourceTree = "<group>"; };
+		706482F6152A457D00FB9FE6 /* ngx_http_busy_lock.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_busy_lock.c; sourceTree = "<group>"; };
+		706482F7152A457D00FB9FE6 /* ngx_http_busy_lock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_busy_lock.h; sourceTree = "<group>"; };
+		706482F8152A457D00FB9FE6 /* ngx_http_cache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_cache.h; sourceTree = "<group>"; };
+		706482F9152A457D00FB9FE6 /* ngx_http_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_config.h; sourceTree = "<group>"; };
+		706482FA152A457D00FB9FE6 /* ngx_http_copy_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_copy_filter_module.c; sourceTree = "<group>"; };
+		706482FB152A457D00FB9FE6 /* ngx_http_core_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_core_module.c; sourceTree = "<group>"; };
+		706482FC152A457D00FB9FE6 /* ngx_http_core_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_core_module.h; sourceTree = "<group>"; };
+		706482FD152A457D00FB9FE6 /* ngx_http_file_cache.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_file_cache.c; sourceTree = "<group>"; };
+		706482FE152A457D00FB9FE6 /* ngx_http_header_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_header_filter_module.c; sourceTree = "<group>"; };
+		706482FF152A457D00FB9FE6 /* ngx_http_parse.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_parse.c; sourceTree = "<group>"; };
+		70648300152A457D00FB9FE6 /* ngx_http_parse_time.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_parse_time.c; sourceTree = "<group>"; };
+		70648301152A457D00FB9FE6 /* ngx_http_postpone_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_postpone_filter_module.c; sourceTree = "<group>"; };
+		70648302152A457D00FB9FE6 /* ngx_http_request.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_request.c; sourceTree = "<group>"; };
+		70648303152A457D00FB9FE6 /* ngx_http_request.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_request.h; sourceTree = "<group>"; };
+		70648304152A457D00FB9FE6 /* ngx_http_request_body.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_request_body.c; sourceTree = "<group>"; };
+		70648305152A457D00FB9FE6 /* ngx_http_script.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_script.c; sourceTree = "<group>"; };
+		70648306152A457D00FB9FE6 /* ngx_http_script.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_script.h; sourceTree = "<group>"; };
+		70648307152A457D00FB9FE6 /* ngx_http_special_response.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_special_response.c; sourceTree = "<group>"; };
+		70648308152A457D00FB9FE6 /* ngx_http_upstream.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_upstream.c; sourceTree = "<group>"; };
+		70648309152A457D00FB9FE6 /* ngx_http_upstream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_upstream.h; sourceTree = "<group>"; };
+		7064830A152A457D00FB9FE6 /* ngx_http_upstream_round_robin.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_upstream_round_robin.c; sourceTree = "<group>"; };
+		7064830B152A457D00FB9FE6 /* ngx_http_upstream_round_robin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_upstream_round_robin.h; sourceTree = "<group>"; };
+		7064830C152A457D00FB9FE6 /* ngx_http_variables.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_variables.c; sourceTree = "<group>"; };
+		7064830D152A457D00FB9FE6 /* ngx_http_variables.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_http_variables.h; sourceTree = "<group>"; };
+		7064830E152A457D00FB9FE6 /* ngx_http_write_filter_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_write_filter_module.c; sourceTree = "<group>"; };
+		70648310152A457D00FB9FE6 /* ngx_mail.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail.c; sourceTree = "<group>"; };
+		70648311152A457D00FB9FE6 /* ngx_mail.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_mail.h; sourceTree = "<group>"; };
+		70648312152A457D00FB9FE6 /* ngx_mail_auth_http_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_auth_http_module.c; sourceTree = "<group>"; };
+		70648313152A457D00FB9FE6 /* ngx_mail_core_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_core_module.c; sourceTree = "<group>"; };
+		70648314152A457D00FB9FE6 /* ngx_mail_handler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_handler.c; sourceTree = "<group>"; };
+		70648315152A457D00FB9FE6 /* ngx_mail_imap_handler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_imap_handler.c; sourceTree = "<group>"; };
+		70648316152A457D00FB9FE6 /* ngx_mail_imap_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_imap_module.c; sourceTree = "<group>"; };
+		70648317152A457D00FB9FE6 /* ngx_mail_imap_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_mail_imap_module.h; sourceTree = "<group>"; };
+		70648318152A457D00FB9FE6 /* ngx_mail_parse.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_parse.c; sourceTree = "<group>"; };
+		70648319152A457D00FB9FE6 /* ngx_mail_pop3_handler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_pop3_handler.c; sourceTree = "<group>"; };
+		7064831A152A457D00FB9FE6 /* ngx_mail_pop3_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_pop3_module.c; sourceTree = "<group>"; };
+		7064831B152A457D00FB9FE6 /* ngx_mail_pop3_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_mail_pop3_module.h; sourceTree = "<group>"; };
+		7064831C152A457D00FB9FE6 /* ngx_mail_proxy_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_proxy_module.c; sourceTree = "<group>"; };
+		7064831D152A457D00FB9FE6 /* ngx_mail_smtp_handler.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_smtp_handler.c; sourceTree = "<group>"; };
+		7064831E152A457D00FB9FE6 /* ngx_mail_smtp_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_smtp_module.c; sourceTree = "<group>"; };
+		7064831F152A457D00FB9FE6 /* ngx_mail_smtp_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_mail_smtp_module.h; sourceTree = "<group>"; };
+		70648320152A457D00FB9FE6 /* ngx_mail_ssl_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mail_ssl_module.c; sourceTree = "<group>"; };
+		70648321152A457D00FB9FE6 /* ngx_mail_ssl_module.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_mail_ssl_module.h; sourceTree = "<group>"; };
+		70648323152A457D00FB9FE6 /* ngx_cpp_test_module.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = ngx_cpp_test_module.cpp; sourceTree = "<group>"; };
+		70648324152A457D00FB9FE6 /* ngx_google_perftools_module.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_google_perftools_module.c; sourceTree = "<group>"; };
+		70648326152A457D00FB9FE6 /* config */ = {isa = PBXFileReference; lastKnownFileType = text; path = config; sourceTree = "<group>"; };
+		70648327152A457D00FB9FE6 /* ngx_http_mysql_test.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_http_mysql_test.c; sourceTree = "<group>"; };
+		70648328152A457D00FB9FE6 /* ngx_mysql.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_mysql.c; sourceTree = "<group>"; };
+		70648329152A457D00FB9FE6 /* ngx_mysql.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_mysql.h; sourceTree = "<group>"; };
+		7064832C152A457D00FB9FE6 /* ngx_aio_read.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_aio_read.c; sourceTree = "<group>"; };
+		7064832D152A457D00FB9FE6 /* ngx_aio_read_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_aio_read_chain.c; sourceTree = "<group>"; };
+		7064832E152A457D00FB9FE6 /* ngx_aio_write.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_aio_write.c; sourceTree = "<group>"; };
+		7064832F152A457D00FB9FE6 /* ngx_aio_write_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_aio_write_chain.c; sourceTree = "<group>"; };
+		70648330152A457D00FB9FE6 /* ngx_alloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_alloc.c; sourceTree = "<group>"; };
+		70648331152A457D00FB9FE6 /* ngx_alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_alloc.h; sourceTree = "<group>"; };
+		70648332152A457D00FB9FE6 /* ngx_atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_atomic.h; sourceTree = "<group>"; };
+		70648333152A457D00FB9FE6 /* ngx_channel.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_channel.c; sourceTree = "<group>"; };
+		70648334152A457D00FB9FE6 /* ngx_channel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_channel.h; sourceTree = "<group>"; };
+		70648335152A457D00FB9FE6 /* ngx_daemon.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_daemon.c; sourceTree = "<group>"; };
+		70648336152A457D00FB9FE6 /* ngx_darwin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_darwin.h; sourceTree = "<group>"; };
+		70648337152A457D00FB9FE6 /* ngx_darwin_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_darwin_config.h; sourceTree = "<group>"; };
+		70648338152A457D00FB9FE6 /* ngx_darwin_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_darwin_init.c; sourceTree = "<group>"; };
+		70648339152A457D00FB9FE6 /* ngx_darwin_sendfile_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_darwin_sendfile_chain.c; sourceTree = "<group>"; };
+		7064833A152A457D00FB9FE6 /* ngx_errno.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_errno.c; sourceTree = "<group>"; };
+		7064833B152A457D00FB9FE6 /* ngx_errno.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_errno.h; sourceTree = "<group>"; };
+		7064833C152A457D00FB9FE6 /* ngx_file_aio_read.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_file_aio_read.c; sourceTree = "<group>"; };
+		7064833D152A457D00FB9FE6 /* ngx_files.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_files.c; sourceTree = "<group>"; };
+		7064833E152A457D00FB9FE6 /* ngx_files.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_files.h; sourceTree = "<group>"; };
+		7064833F152A457D00FB9FE6 /* ngx_freebsd.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_freebsd.h; sourceTree = "<group>"; };
+		70648340152A457D00FB9FE6 /* ngx_freebsd_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_freebsd_config.h; sourceTree = "<group>"; };
+		70648341152A457D00FB9FE6 /* ngx_freebsd_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_freebsd_init.c; sourceTree = "<group>"; };
+		70648342152A457D00FB9FE6 /* ngx_freebsd_rfork_thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_freebsd_rfork_thread.c; sourceTree = "<group>"; };
+		70648343152A457D00FB9FE6 /* ngx_freebsd_rfork_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_freebsd_rfork_thread.h; sourceTree = "<group>"; };
+		70648344152A457D00FB9FE6 /* ngx_freebsd_sendfile_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_freebsd_sendfile_chain.c; sourceTree = "<group>"; };
+		70648345152A457D00FB9FE6 /* ngx_gcc_atomic_amd64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_gcc_atomic_amd64.h; sourceTree = "<group>"; };
+		70648346152A457D00FB9FE6 /* ngx_gcc_atomic_ppc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_gcc_atomic_ppc.h; sourceTree = "<group>"; };
+		70648347152A457D00FB9FE6 /* ngx_gcc_atomic_sparc64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_gcc_atomic_sparc64.h; sourceTree = "<group>"; };
+		70648348152A457D00FB9FE6 /* ngx_gcc_atomic_x86.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_gcc_atomic_x86.h; sourceTree = "<group>"; };
+		70648349152A457D00FB9FE6 /* ngx_linux.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_linux.h; sourceTree = "<group>"; };
+		7064834A152A457D00FB9FE6 /* ngx_linux_aio_read.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_linux_aio_read.c; sourceTree = "<group>"; };
+		7064834B152A457D00FB9FE6 /* ngx_linux_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_linux_config.h; sourceTree = "<group>"; };
+		7064834C152A457D00FB9FE6 /* ngx_linux_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_linux_init.c; sourceTree = "<group>"; };
+		7064834D152A457D00FB9FE6 /* ngx_linux_sendfile_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_linux_sendfile_chain.c; sourceTree = "<group>"; };
+		7064834E152A457D00FB9FE6 /* ngx_os.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_os.h; sourceTree = "<group>"; };
+		7064834F152A457D00FB9FE6 /* ngx_posix_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_posix_config.h; sourceTree = "<group>"; };
+		70648350152A457D00FB9FE6 /* ngx_posix_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_posix_init.c; sourceTree = "<group>"; };
+		70648351152A457D00FB9FE6 /* ngx_process.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_process.c; sourceTree = "<group>"; };
+		70648352152A457D00FB9FE6 /* ngx_process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_process.h; sourceTree = "<group>"; };
+		70648353152A457D00FB9FE6 /* ngx_process_cycle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_process_cycle.c; sourceTree = "<group>"; };
+		70648354152A457D00FB9FE6 /* ngx_process_cycle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_process_cycle.h; sourceTree = "<group>"; };
+		70648355152A457D00FB9FE6 /* ngx_pthread_thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_pthread_thread.c; sourceTree = "<group>"; };
+		70648356152A457D00FB9FE6 /* ngx_readv_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_readv_chain.c; sourceTree = "<group>"; };
+		70648357152A457D00FB9FE6 /* ngx_recv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_recv.c; sourceTree = "<group>"; };
+		70648358152A457D00FB9FE6 /* ngx_send.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_send.c; sourceTree = "<group>"; };
+		70648359152A457D00FB9FE6 /* ngx_setproctitle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_setproctitle.c; sourceTree = "<group>"; };
+		7064835A152A457D00FB9FE6 /* ngx_setproctitle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_setproctitle.h; sourceTree = "<group>"; };
+		7064835B152A457D00FB9FE6 /* ngx_shmem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_shmem.c; sourceTree = "<group>"; };
+		7064835C152A457D00FB9FE6 /* ngx_shmem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_shmem.h; sourceTree = "<group>"; };
+		7064835D152A457D00FB9FE6 /* ngx_socket.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_socket.c; sourceTree = "<group>"; };
+		7064835E152A457D00FB9FE6 /* ngx_socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_socket.h; sourceTree = "<group>"; };
+		7064835F152A457D00FB9FE6 /* ngx_solaris.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_solaris.h; sourceTree = "<group>"; };
+		70648360152A457D00FB9FE6 /* ngx_solaris_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_solaris_config.h; sourceTree = "<group>"; };
+		70648361152A457D00FB9FE6 /* ngx_solaris_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_solaris_init.c; sourceTree = "<group>"; };
+		70648362152A457D00FB9FE6 /* ngx_solaris_sendfilev_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_solaris_sendfilev_chain.c; sourceTree = "<group>"; };
+		70648363152A457D00FB9FE6 /* ngx_sunpro_amd64.il */ = {isa = PBXFileReference; lastKnownFileType = text; path = ngx_sunpro_amd64.il; sourceTree = "<group>"; };
+		70648364152A457D00FB9FE6 /* ngx_sunpro_atomic_sparc64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_sunpro_atomic_sparc64.h; sourceTree = "<group>"; };
+		70648365152A457D00FB9FE6 /* ngx_sunpro_sparc64.il */ = {isa = PBXFileReference; lastKnownFileType = text; path = ngx_sunpro_sparc64.il; sourceTree = "<group>"; };
+		70648366152A457D00FB9FE6 /* ngx_sunpro_x86.il */ = {isa = PBXFileReference; lastKnownFileType = text; path = ngx_sunpro_x86.il; sourceTree = "<group>"; };
+		70648367152A457D00FB9FE6 /* ngx_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_thread.h; sourceTree = "<group>"; };
+		70648368152A457D00FB9FE6 /* ngx_time.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_time.c; sourceTree = "<group>"; };
+		70648369152A457D00FB9FE6 /* ngx_time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_time.h; sourceTree = "<group>"; };
+		7064836A152A457D00FB9FE6 /* ngx_udp_recv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_udp_recv.c; sourceTree = "<group>"; };
+		7064836B152A457D00FB9FE6 /* ngx_user.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_user.c; sourceTree = "<group>"; };
+		7064836C152A457D00FB9FE6 /* ngx_user.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_user.h; sourceTree = "<group>"; };
+		7064836D152A457D00FB9FE6 /* ngx_writev_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_writev_chain.c; sourceTree = "<group>"; };
+		7064836E152A457D00FB9FE6 /* rfork_thread.S */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = rfork_thread.S; sourceTree = "<group>"; };
+		70648370152A457D00FB9FE6 /* nginx.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = nginx.ico; sourceTree = "<group>"; };
+		70648371152A457D00FB9FE6 /* nginx.rc */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx.rc; sourceTree = "<group>"; };
+		70648372152A457D00FB9FE6 /* nginx_icon16.xpm */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx_icon16.xpm; sourceTree = "<group>"; };
+		70648373152A457D00FB9FE6 /* nginx_icon32.xpm */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx_icon32.xpm; sourceTree = "<group>"; };
+		70648374152A457D00FB9FE6 /* nginx_icon48.xpm */ = {isa = PBXFileReference; lastKnownFileType = text; path = nginx_icon48.xpm; sourceTree = "<group>"; };
+		70648375152A457D00FB9FE6 /* ngx_alloc.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_alloc.c; sourceTree = "<group>"; };
+		70648376152A457D00FB9FE6 /* ngx_alloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_alloc.h; sourceTree = "<group>"; };
+		70648377152A457D00FB9FE6 /* ngx_atomic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_atomic.h; sourceTree = "<group>"; };
+		70648378152A457D00FB9FE6 /* ngx_errno.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_errno.c; sourceTree = "<group>"; };
+		70648379152A457D00FB9FE6 /* ngx_errno.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_errno.h; sourceTree = "<group>"; };
+		7064837A152A457D00FB9FE6 /* ngx_event_log.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_event_log.c; sourceTree = "<group>"; };
+		7064837B152A457D00FB9FE6 /* ngx_files.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_files.c; sourceTree = "<group>"; };
+		7064837C152A457D00FB9FE6 /* ngx_files.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_files.h; sourceTree = "<group>"; };
+		7064837D152A457D00FB9FE6 /* ngx_os.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_os.h; sourceTree = "<group>"; };
+		7064837E152A457D00FB9FE6 /* ngx_process.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_process.c; sourceTree = "<group>"; };
+		7064837F152A457D00FB9FE6 /* ngx_process.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_process.h; sourceTree = "<group>"; };
+		70648380152A457D00FB9FE6 /* ngx_process_cycle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_process_cycle.c; sourceTree = "<group>"; };
+		70648381152A457D00FB9FE6 /* ngx_process_cycle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_process_cycle.h; sourceTree = "<group>"; };
+		70648382152A457D00FB9FE6 /* ngx_service.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_service.c; sourceTree = "<group>"; };
+		70648383152A457D00FB9FE6 /* ngx_shmem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_shmem.c; sourceTree = "<group>"; };
+		70648384152A457D00FB9FE6 /* ngx_shmem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_shmem.h; sourceTree = "<group>"; };
+		70648385152A457D00FB9FE6 /* ngx_socket.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_socket.c; sourceTree = "<group>"; };
+		70648386152A457D00FB9FE6 /* ngx_socket.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_socket.h; sourceTree = "<group>"; };
+		70648387152A457D00FB9FE6 /* ngx_stat.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_stat.c; sourceTree = "<group>"; };
+		70648388152A457D00FB9FE6 /* ngx_thread.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_thread.c; sourceTree = "<group>"; };
+		70648389152A457D00FB9FE6 /* ngx_thread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_thread.h; sourceTree = "<group>"; };
+		7064838A152A457D00FB9FE6 /* ngx_time.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_time.c; sourceTree = "<group>"; };
+		7064838B152A457D00FB9FE6 /* ngx_time.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_time.h; sourceTree = "<group>"; };
+		7064838C152A457D00FB9FE6 /* ngx_udp_wsarecv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_udp_wsarecv.c; sourceTree = "<group>"; };
+		7064838D152A457D00FB9FE6 /* ngx_user.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_user.c; sourceTree = "<group>"; };
+		7064838E152A457D00FB9FE6 /* ngx_user.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_user.h; sourceTree = "<group>"; };
+		7064838F152A457D00FB9FE6 /* ngx_win32_config.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ngx_win32_config.h; sourceTree = "<group>"; };
+		70648390152A457D00FB9FE6 /* ngx_win32_init.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_win32_init.c; sourceTree = "<group>"; };
+		70648391152A457D00FB9FE6 /* ngx_wsarecv.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_wsarecv.c; sourceTree = "<group>"; };
+		70648392152A457D00FB9FE6 /* ngx_wsarecv_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_wsarecv_chain.c; sourceTree = "<group>"; };
+		70648393152A457D00FB9FE6 /* ngx_wsasend.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_wsasend.c; sourceTree = "<group>"; };
+		70648394152A457D00FB9FE6 /* ngx_wsasend_chain.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ngx_wsasend_chain.c; sourceTree = "<group>"; };
 		7066427C14FC552900CFFCD0 /* ObjectStore-sqlite.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "ObjectStore-sqlite.c"; sourceTree = "<group>"; };
 		7066428114FC554700CFFCD0 /* libLoungeAct-storage-sqlite.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-storage-sqlite.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7066428814FD519100CFFCD0 /* stringutils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = stringutils.h; sourceTree = "<group>"; };
@@ -1283,9 +1698,8 @@
 		70C2AC741513E42100968F2C /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		70C2AC761513E42100968F2C /* test_pull_bdb_json.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = test_pull_bdb_json.1; sourceTree = "<group>"; };
 		70C2AC9315238FC300968F2C /* codec-bson.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "codec-bson.c"; sourceTree = "<group>"; };
-		70C2AC981523904200968F2C /* libLoungeAct-codec-bson.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-codec-bson.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70C2ACBC15251AEF00968F2C /* compress.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = compress.h; sourceTree = "<group>"; };
-		70C2ACBE15251B6100968F2C /* compress.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = compress.c; sourceTree = "<group>"; };
+		70C2ACBE15251B6100968F2C /* compress-zlib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "compress-zlib.c"; sourceTree = "<group>"; };
 		70C2ACC315251BF800968F2C /* libLoungeAct-compress-zlib.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-compress-zlib.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		70C2ACC815251C1000968F2C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		70DD58D2150B1573005AB1CA /* revgen.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = revgen.c; sourceTree = "<group>"; };
@@ -10555,6 +10969,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		706481CB152A40D000FB9FE6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7066427E14FC554700CFFCD0 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -10635,6 +11056,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				706481D9152A452600FB9FE6 /* libloungeact-compress-lz4.dylib in Frameworks */,
+				706481C5152A3E2700FB9FE6 /* libLoungeAct-compress-zlib.dylib in Frameworks */,
 				70590B4D152800100040037C /* liblibtommath.a in Frameworks */,
 				70C2AC891513F5DF00968F2C /* libjansson.dylib in Frameworks */,
 				70C2AC8A1513F5DF00968F2C /* libLoungeAct-codec-json.dylib in Frameworks */,
@@ -10644,14 +11067,6 @@
 				70C2AC8E1513F5DF00968F2C /* libLoungeAct-utils.dylib in Frameworks */,
 				70C2AC8F1513F5DF00968F2C /* libLoungeAct.dylib in Frameworks */,
 				70C2AC721513E42100968F2C /* CoreFoundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		70C2AC951523904200968F2C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				70C2ACBA1524FC7B00968F2C /* libjansson.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12416,6 +12831,760 @@
 			path = tombc;
 			sourceTree = "<group>";
 		};
+		706481C8152A407B00FB9FE6 /* compress-lz4 */ = {
+			isa = PBXGroup;
+			children = (
+				706481C6152A407600FB9FE6 /* lz4.c */,
+				706481C7152A407600FB9FE6 /* lz4.h */,
+				706481C9152A409A00FB9FE6 /* compress-lz4.h */,
+				706481D3152A40EA00FB9FE6 /* compress-lz4.c */,
+			);
+			path = "compress-lz4";
+			sourceTree = "<group>";
+		};
+		706481DA152A457D00FB9FE6 /* nginx */ = {
+			isa = PBXGroup;
+			children = (
+				706481DB152A457D00FB9FE6 /* auto */,
+				70648235152A457D00FB9FE6 /* conf */,
+				7064823F152A457D00FB9FE6 /* contrib */,
+				70648246152A457D00FB9FE6 /* docs */,
+				7064825C152A457D00FB9FE6 /* misc */,
+				7064825F152A457D00FB9FE6 /* src */,
+			);
+			path = nginx;
+			sourceTree = "<group>";
+		};
+		706481DB152A457D00FB9FE6 /* auto */ = {
+			isa = PBXGroup;
+			children = (
+				706481DC152A457D00FB9FE6 /* cc */,
+				706481E7152A457D00FB9FE6 /* configure */,
+				706481E8152A457D00FB9FE6 /* define */,
+				706481E9152A457D00FB9FE6 /* endianess */,
+				706481EA152A457D00FB9FE6 /* feature */,
+				706481EB152A457D00FB9FE6 /* have */,
+				706481EC152A457D00FB9FE6 /* have_headers */,
+				706481ED152A457D00FB9FE6 /* headers */,
+				706481EE152A457D00FB9FE6 /* include */,
+				706481EF152A457D00FB9FE6 /* init */,
+				706481F0152A457D00FB9FE6 /* install */,
+				706481F1152A457D00FB9FE6 /* lib */,
+				70648221152A457D00FB9FE6 /* make */,
+				70648222152A457D00FB9FE6 /* modules */,
+				70648223152A457D00FB9FE6 /* nohave */,
+				70648224152A457D00FB9FE6 /* options */,
+				70648225152A457D00FB9FE6 /* os */,
+				7064822C152A457D00FB9FE6 /* sources */,
+				7064822D152A457D00FB9FE6 /* stubs */,
+				7064822E152A457D00FB9FE6 /* summary */,
+				7064822F152A457D00FB9FE6 /* types */,
+				70648234152A457D00FB9FE6 /* unix */,
+			);
+			path = auto;
+			sourceTree = "<group>";
+		};
+		706481DC152A457D00FB9FE6 /* cc */ = {
+			isa = PBXGroup;
+			children = (
+				706481DD152A457D00FB9FE6 /* acc */,
+				706481DE152A457D00FB9FE6 /* bcc */,
+				706481DF152A457D00FB9FE6 /* ccc */,
+				706481E0152A457D00FB9FE6 /* conf */,
+				706481E1152A457D00FB9FE6 /* gcc */,
+				706481E2152A457D00FB9FE6 /* icc */,
+				706481E3152A457D00FB9FE6 /* msvc */,
+				706481E4152A457D00FB9FE6 /* name */,
+				706481E5152A457D00FB9FE6 /* owc */,
+				706481E6152A457D00FB9FE6 /* sunc */,
+			);
+			path = cc;
+			sourceTree = "<group>";
+		};
+		706481F1152A457D00FB9FE6 /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				706481F2152A457D00FB9FE6 /* conf */,
+				706481F3152A457D00FB9FE6 /* geoip */,
+				706481F5152A457D00FB9FE6 /* google-perftools */,
+				706481F7152A457D00FB9FE6 /* libatomic */,
+				706481FA152A457D00FB9FE6 /* libgd */,
+				706481FC152A457D00FB9FE6 /* libxslt */,
+				706481FE152A457D00FB9FE6 /* make */,
+				706481FF152A457D00FB9FE6 /* md5 */,
+				70648205152A457D00FB9FE6 /* openssl */,
+				7064820A152A457D00FB9FE6 /* pcre */,
+				70648210152A457D00FB9FE6 /* perl */,
+				70648213152A457D00FB9FE6 /* sha1 */,
+				70648219152A457D00FB9FE6 /* test */,
+				7064821A152A457D00FB9FE6 /* zlib */,
+			);
+			path = lib;
+			sourceTree = "<group>";
+		};
+		706481F3152A457D00FB9FE6 /* geoip */ = {
+			isa = PBXGroup;
+			children = (
+				706481F4152A457D00FB9FE6 /* conf */,
+			);
+			path = geoip;
+			sourceTree = "<group>";
+		};
+		706481F5152A457D00FB9FE6 /* google-perftools */ = {
+			isa = PBXGroup;
+			children = (
+				706481F6152A457D00FB9FE6 /* conf */,
+			);
+			path = "google-perftools";
+			sourceTree = "<group>";
+		};
+		706481F7152A457D00FB9FE6 /* libatomic */ = {
+			isa = PBXGroup;
+			children = (
+				706481F8152A457D00FB9FE6 /* conf */,
+				706481F9152A457D00FB9FE6 /* make */,
+			);
+			path = libatomic;
+			sourceTree = "<group>";
+		};
+		706481FA152A457D00FB9FE6 /* libgd */ = {
+			isa = PBXGroup;
+			children = (
+				706481FB152A457D00FB9FE6 /* conf */,
+			);
+			path = libgd;
+			sourceTree = "<group>";
+		};
+		706481FC152A457D00FB9FE6 /* libxslt */ = {
+			isa = PBXGroup;
+			children = (
+				706481FD152A457D00FB9FE6 /* conf */,
+			);
+			path = libxslt;
+			sourceTree = "<group>";
+		};
+		706481FF152A457D00FB9FE6 /* md5 */ = {
+			isa = PBXGroup;
+			children = (
+				70648200152A457D00FB9FE6 /* conf */,
+				70648201152A457D00FB9FE6 /* make */,
+				70648202152A457D00FB9FE6 /* makefile.bcc */,
+				70648203152A457D00FB9FE6 /* makefile.msvc */,
+				70648204152A457D00FB9FE6 /* makefile.owc */,
+			);
+			path = md5;
+			sourceTree = "<group>";
+		};
+		70648205152A457D00FB9FE6 /* openssl */ = {
+			isa = PBXGroup;
+			children = (
+				70648206152A457D00FB9FE6 /* conf */,
+				70648207152A457D00FB9FE6 /* make */,
+				70648208152A457D00FB9FE6 /* makefile.bcc */,
+				70648209152A457D00FB9FE6 /* makefile.msvc */,
+			);
+			path = openssl;
+			sourceTree = "<group>";
+		};
+		7064820A152A457D00FB9FE6 /* pcre */ = {
+			isa = PBXGroup;
+			children = (
+				7064820B152A457D00FB9FE6 /* conf */,
+				7064820C152A457D00FB9FE6 /* make */,
+				7064820D152A457D00FB9FE6 /* makefile.bcc */,
+				7064820E152A457D00FB9FE6 /* makefile.msvc */,
+				7064820F152A457D00FB9FE6 /* makefile.owc */,
+			);
+			path = pcre;
+			sourceTree = "<group>";
+		};
+		70648210152A457D00FB9FE6 /* perl */ = {
+			isa = PBXGroup;
+			children = (
+				70648211152A457D00FB9FE6 /* conf */,
+				70648212152A457D00FB9FE6 /* make */,
+			);
+			path = perl;
+			sourceTree = "<group>";
+		};
+		70648213152A457D00FB9FE6 /* sha1 */ = {
+			isa = PBXGroup;
+			children = (
+				70648214152A457D00FB9FE6 /* conf */,
+				70648215152A457D00FB9FE6 /* make */,
+				70648216152A457D00FB9FE6 /* makefile.bcc */,
+				70648217152A457D00FB9FE6 /* makefile.msvc */,
+				70648218152A457D00FB9FE6 /* makefile.owc */,
+			);
+			path = sha1;
+			sourceTree = "<group>";
+		};
+		7064821A152A457D00FB9FE6 /* zlib */ = {
+			isa = PBXGroup;
+			children = (
+				7064821B152A457D00FB9FE6 /* conf */,
+				7064821C152A457D00FB9FE6 /* make */,
+				7064821D152A457D00FB9FE6 /* makefile.bcc */,
+				7064821E152A457D00FB9FE6 /* makefile.msvc */,
+				7064821F152A457D00FB9FE6 /* makefile.owc */,
+				70648220152A457D00FB9FE6 /* patch.zlib.h */,
+			);
+			path = zlib;
+			sourceTree = "<group>";
+		};
+		70648225152A457D00FB9FE6 /* os */ = {
+			isa = PBXGroup;
+			children = (
+				70648226152A457D00FB9FE6 /* conf */,
+				70648227152A457D00FB9FE6 /* darwin */,
+				70648228152A457D00FB9FE6 /* freebsd */,
+				70648229152A457D00FB9FE6 /* linux */,
+				7064822A152A457D00FB9FE6 /* solaris */,
+				7064822B152A457D00FB9FE6 /* win32 */,
+			);
+			path = os;
+			sourceTree = "<group>";
+		};
+		7064822F152A457D00FB9FE6 /* types */ = {
+			isa = PBXGroup;
+			children = (
+				70648230152A457D00FB9FE6 /* sizeof */,
+				70648231152A457D00FB9FE6 /* typedef */,
+				70648232152A457D00FB9FE6 /* uintptr_t */,
+				70648233152A457D00FB9FE6 /* value */,
+			);
+			path = types;
+			sourceTree = "<group>";
+		};
+		70648235152A457D00FB9FE6 /* conf */ = {
+			isa = PBXGroup;
+			children = (
+				70648236152A457D00FB9FE6 /* fastcgi.conf */,
+				70648237152A457D00FB9FE6 /* fastcgi_params */,
+				70648238152A457D00FB9FE6 /* koi-utf */,
+				70648239152A457D00FB9FE6 /* koi-win */,
+				7064823A152A457D00FB9FE6 /* mime.types */,
+				7064823B152A457D00FB9FE6 /* nginx.conf */,
+				7064823C152A457D00FB9FE6 /* scgi_params */,
+				7064823D152A457D00FB9FE6 /* uwsgi_params */,
+				7064823E152A457D00FB9FE6 /* win-utf */,
+			);
+			path = conf;
+			sourceTree = "<group>";
+		};
+		7064823F152A457D00FB9FE6 /* contrib */ = {
+			isa = PBXGroup;
+			children = (
+				70648240152A457D00FB9FE6 /* geo2nginx.pl */,
+				70648241152A457D00FB9FE6 /* README */,
+				70648242152A457D00FB9FE6 /* unicode2nginx */,
+			);
+			path = contrib;
+			sourceTree = "<group>";
+		};
+		70648242152A457D00FB9FE6 /* unicode2nginx */ = {
+			isa = PBXGroup;
+			children = (
+				70648243152A457D00FB9FE6 /* koi-utf */,
+				70648244152A457D00FB9FE6 /* unicode-to-nginx.pl */,
+				70648245152A457D00FB9FE6 /* win-utf */,
+			);
+			path = unicode2nginx;
+			sourceTree = "<group>";
+		};
+		70648246152A457D00FB9FE6 /* docs */ = {
+			isa = PBXGroup;
+			children = (
+				70648247152A457D00FB9FE6 /* dtd */,
+				7064824A152A457D00FB9FE6 /* GNUmakefile */,
+				7064824B152A457D00FB9FE6 /* html */,
+				7064824E152A457D00FB9FE6 /* man */,
+				70648250152A457D00FB9FE6 /* text */,
+				70648253152A457D00FB9FE6 /* xml */,
+				70648257152A457D00FB9FE6 /* xsls */,
+				7064825A152A457D00FB9FE6 /* xslt */,
+			);
+			path = docs;
+			sourceTree = "<group>";
+		};
+		70648247152A457D00FB9FE6 /* dtd */ = {
+			isa = PBXGroup;
+			children = (
+				70648248152A457D00FB9FE6 /* change_log_conf.dtd */,
+				70648249152A457D00FB9FE6 /* changes.dtd */,
+			);
+			path = dtd;
+			sourceTree = "<group>";
+		};
+		7064824B152A457D00FB9FE6 /* html */ = {
+			isa = PBXGroup;
+			children = (
+				7064824C152A457D00FB9FE6 /* 50x.html */,
+				7064824D152A457D00FB9FE6 /* index.html */,
+			);
+			path = html;
+			sourceTree = "<group>";
+		};
+		7064824E152A457D00FB9FE6 /* man */ = {
+			isa = PBXGroup;
+			children = (
+				7064824F152A457D00FB9FE6 /* nginx.8 */,
+			);
+			path = man;
+			sourceTree = "<group>";
+		};
+		70648250152A457D00FB9FE6 /* text */ = {
+			isa = PBXGroup;
+			children = (
+				70648251152A457D00FB9FE6 /* LICENSE */,
+				70648252152A457D00FB9FE6 /* README */,
+			);
+			path = text;
+			sourceTree = "<group>";
+		};
+		70648253152A457D00FB9FE6 /* xml */ = {
+			isa = PBXGroup;
+			children = (
+				70648254152A457D00FB9FE6 /* change_log_conf.xml */,
+				70648255152A457D00FB9FE6 /* nginx */,
+			);
+			path = xml;
+			sourceTree = "<group>";
+		};
+		70648255152A457D00FB9FE6 /* nginx */ = {
+			isa = PBXGroup;
+			children = (
+				70648256152A457D00FB9FE6 /* changes.xml */,
+			);
+			path = nginx;
+			sourceTree = "<group>";
+		};
+		70648257152A457D00FB9FE6 /* xsls */ = {
+			isa = PBXGroup;
+			children = (
+				70648258152A457D00FB9FE6 /* changes.xsls */,
+				70648259152A457D00FB9FE6 /* dump.xsls */,
+			);
+			path = xsls;
+			sourceTree = "<group>";
+		};
+		7064825A152A457D00FB9FE6 /* xslt */ = {
+			isa = PBXGroup;
+			children = (
+				7064825B152A457D00FB9FE6 /* changes.xslt */,
+			);
+			path = xslt;
+			sourceTree = "<group>";
+		};
+		7064825C152A457D00FB9FE6 /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				7064825D152A457D00FB9FE6 /* GNUmakefile */,
+				7064825E152A457D00FB9FE6 /* README */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
+		7064825F152A457D00FB9FE6 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				70648260152A457D00FB9FE6 /* core */,
+				7064829E152A457D00FB9FE6 /* event */,
+				706482BD152A457D00FB9FE6 /* http */,
+				7064830F152A457D00FB9FE6 /* mail */,
+				70648322152A457D00FB9FE6 /* misc */,
+				70648325152A457D00FB9FE6 /* mysql */,
+				7064832A152A457D00FB9FE6 /* os */,
+			);
+			path = src;
+			sourceTree = "<group>";
+		};
+		70648260152A457D00FB9FE6 /* core */ = {
+			isa = PBXGroup;
+			children = (
+				70648261152A457D00FB9FE6 /* nginx.c */,
+				70648262152A457D00FB9FE6 /* nginx.h */,
+				70648263152A457D00FB9FE6 /* ngx_array.c */,
+				70648264152A457D00FB9FE6 /* ngx_array.h */,
+				70648265152A457D00FB9FE6 /* ngx_buf.c */,
+				70648266152A457D00FB9FE6 /* ngx_buf.h */,
+				70648267152A457D00FB9FE6 /* ngx_conf_file.c */,
+				70648268152A457D00FB9FE6 /* ngx_conf_file.h */,
+				70648269152A457D00FB9FE6 /* ngx_config.h */,
+				7064826A152A457D00FB9FE6 /* ngx_connection.c */,
+				7064826B152A457D00FB9FE6 /* ngx_connection.h */,
+				7064826C152A457D00FB9FE6 /* ngx_core.h */,
+				7064826D152A457D00FB9FE6 /* ngx_cpuinfo.c */,
+				7064826E152A457D00FB9FE6 /* ngx_crc.h */,
+				7064826F152A457D00FB9FE6 /* ngx_crc32.c */,
+				70648270152A457D00FB9FE6 /* ngx_crc32.h */,
+				70648271152A457D00FB9FE6 /* ngx_crypt.c */,
+				70648272152A457D00FB9FE6 /* ngx_crypt.h */,
+				70648273152A457D00FB9FE6 /* ngx_cycle.c */,
+				70648274152A457D00FB9FE6 /* ngx_cycle.h */,
+				70648275152A457D00FB9FE6 /* ngx_file.c */,
+				70648276152A457D00FB9FE6 /* ngx_file.h */,
+				70648277152A457D00FB9FE6 /* ngx_hash.c */,
+				70648278152A457D00FB9FE6 /* ngx_hash.h */,
+				70648279152A457D00FB9FE6 /* ngx_inet.c */,
+				7064827A152A457D00FB9FE6 /* ngx_inet.h */,
+				7064827B152A457D00FB9FE6 /* ngx_list.c */,
+				7064827C152A457D00FB9FE6 /* ngx_list.h */,
+				7064827D152A457D00FB9FE6 /* ngx_log.c */,
+				7064827E152A457D00FB9FE6 /* ngx_log.h */,
+				7064827F152A457D00FB9FE6 /* ngx_md5.c */,
+				70648280152A457D00FB9FE6 /* ngx_md5.h */,
+				70648281152A457D00FB9FE6 /* ngx_murmurhash.c */,
+				70648282152A457D00FB9FE6 /* ngx_murmurhash.h */,
+				70648283152A457D00FB9FE6 /* ngx_open_file_cache.c */,
+				70648284152A457D00FB9FE6 /* ngx_open_file_cache.h */,
+				70648285152A457D00FB9FE6 /* ngx_output_chain.c */,
+				70648286152A457D00FB9FE6 /* ngx_palloc.c */,
+				70648287152A457D00FB9FE6 /* ngx_palloc.h */,
+				70648288152A457D00FB9FE6 /* ngx_parse.c */,
+				70648289152A457D00FB9FE6 /* ngx_parse.h */,
+				7064828A152A457D00FB9FE6 /* ngx_queue.c */,
+				7064828B152A457D00FB9FE6 /* ngx_queue.h */,
+				7064828C152A457D00FB9FE6 /* ngx_radix_tree.c */,
+				7064828D152A457D00FB9FE6 /* ngx_radix_tree.h */,
+				7064828E152A457D00FB9FE6 /* ngx_rbtree.c */,
+				7064828F152A457D00FB9FE6 /* ngx_rbtree.h */,
+				70648290152A457D00FB9FE6 /* ngx_regex.c */,
+				70648291152A457D00FB9FE6 /* ngx_regex.h */,
+				70648292152A457D00FB9FE6 /* ngx_resolver.c */,
+				70648293152A457D00FB9FE6 /* ngx_resolver.h */,
+				70648294152A457D00FB9FE6 /* ngx_sha1.h */,
+				70648295152A457D00FB9FE6 /* ngx_shmtx.c */,
+				70648296152A457D00FB9FE6 /* ngx_shmtx.h */,
+				70648297152A457D00FB9FE6 /* ngx_slab.c */,
+				70648298152A457D00FB9FE6 /* ngx_slab.h */,
+				70648299152A457D00FB9FE6 /* ngx_spinlock.c */,
+				7064829A152A457D00FB9FE6 /* ngx_string.c */,
+				7064829B152A457D00FB9FE6 /* ngx_string.h */,
+				7064829C152A457D00FB9FE6 /* ngx_times.c */,
+				7064829D152A457D00FB9FE6 /* ngx_times.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
+		7064829E152A457D00FB9FE6 /* event */ = {
+			isa = PBXGroup;
+			children = (
+				7064829F152A457D00FB9FE6 /* modules */,
+				706482AB152A457D00FB9FE6 /* ngx_event.c */,
+				706482AC152A457D00FB9FE6 /* ngx_event.h */,
+				706482AD152A457D00FB9FE6 /* ngx_event_accept.c */,
+				706482AE152A457D00FB9FE6 /* ngx_event_acceptex.c */,
+				706482AF152A457D00FB9FE6 /* ngx_event_busy_lock.c */,
+				706482B0152A457D00FB9FE6 /* ngx_event_busy_lock.h */,
+				706482B1152A457D00FB9FE6 /* ngx_event_connect.c */,
+				706482B2152A457D00FB9FE6 /* ngx_event_connect.h */,
+				706482B3152A457D00FB9FE6 /* ngx_event_connectex.c */,
+				706482B4152A457D00FB9FE6 /* ngx_event_mutex.c */,
+				706482B5152A457D00FB9FE6 /* ngx_event_openssl.c */,
+				706482B6152A457D00FB9FE6 /* ngx_event_openssl.h */,
+				706482B7152A457D00FB9FE6 /* ngx_event_pipe.c */,
+				706482B8152A457D00FB9FE6 /* ngx_event_pipe.h */,
+				706482B9152A457D00FB9FE6 /* ngx_event_posted.c */,
+				706482BA152A457D00FB9FE6 /* ngx_event_posted.h */,
+				706482BB152A457D00FB9FE6 /* ngx_event_timer.c */,
+				706482BC152A457D00FB9FE6 /* ngx_event_timer.h */,
+			);
+			path = event;
+			sourceTree = "<group>";
+		};
+		7064829F152A457D00FB9FE6 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				706482A0152A457D00FB9FE6 /* ngx_aio_module.c */,
+				706482A1152A457D00FB9FE6 /* ngx_devpoll_module.c */,
+				706482A2152A457D00FB9FE6 /* ngx_epoll_module.c */,
+				706482A3152A457D00FB9FE6 /* ngx_eventport_module.c */,
+				706482A4152A457D00FB9FE6 /* ngx_iocp_module.c */,
+				706482A5152A457D00FB9FE6 /* ngx_iocp_module.h */,
+				706482A6152A457D00FB9FE6 /* ngx_kqueue_module.c */,
+				706482A7152A457D00FB9FE6 /* ngx_poll_module.c */,
+				706482A8152A457D00FB9FE6 /* ngx_rtsig_module.c */,
+				706482A9152A457D00FB9FE6 /* ngx_select_module.c */,
+				706482AA152A457D00FB9FE6 /* ngx_win32_select_module.c */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		706482BD152A457D00FB9FE6 /* http */ = {
+			isa = PBXGroup;
+			children = (
+				706482BE152A457D00FB9FE6 /* modules */,
+				706482F4152A457D00FB9FE6 /* ngx_http.c */,
+				706482F5152A457D00FB9FE6 /* ngx_http.h */,
+				706482F6152A457D00FB9FE6 /* ngx_http_busy_lock.c */,
+				706482F7152A457D00FB9FE6 /* ngx_http_busy_lock.h */,
+				706482F8152A457D00FB9FE6 /* ngx_http_cache.h */,
+				706482F9152A457D00FB9FE6 /* ngx_http_config.h */,
+				706482FA152A457D00FB9FE6 /* ngx_http_copy_filter_module.c */,
+				706482FB152A457D00FB9FE6 /* ngx_http_core_module.c */,
+				706482FC152A457D00FB9FE6 /* ngx_http_core_module.h */,
+				706482FD152A457D00FB9FE6 /* ngx_http_file_cache.c */,
+				706482FE152A457D00FB9FE6 /* ngx_http_header_filter_module.c */,
+				706482FF152A457D00FB9FE6 /* ngx_http_parse.c */,
+				70648300152A457D00FB9FE6 /* ngx_http_parse_time.c */,
+				70648301152A457D00FB9FE6 /* ngx_http_postpone_filter_module.c */,
+				70648302152A457D00FB9FE6 /* ngx_http_request.c */,
+				70648303152A457D00FB9FE6 /* ngx_http_request.h */,
+				70648304152A457D00FB9FE6 /* ngx_http_request_body.c */,
+				70648305152A457D00FB9FE6 /* ngx_http_script.c */,
+				70648306152A457D00FB9FE6 /* ngx_http_script.h */,
+				70648307152A457D00FB9FE6 /* ngx_http_special_response.c */,
+				70648308152A457D00FB9FE6 /* ngx_http_upstream.c */,
+				70648309152A457D00FB9FE6 /* ngx_http_upstream.h */,
+				7064830A152A457D00FB9FE6 /* ngx_http_upstream_round_robin.c */,
+				7064830B152A457D00FB9FE6 /* ngx_http_upstream_round_robin.h */,
+				7064830C152A457D00FB9FE6 /* ngx_http_variables.c */,
+				7064830D152A457D00FB9FE6 /* ngx_http_variables.h */,
+				7064830E152A457D00FB9FE6 /* ngx_http_write_filter_module.c */,
+			);
+			path = http;
+			sourceTree = "<group>";
+		};
+		706482BE152A457D00FB9FE6 /* modules */ = {
+			isa = PBXGroup;
+			children = (
+				706482BF152A457D00FB9FE6 /* ngx_http_access_module.c */,
+				706482C0152A457D00FB9FE6 /* ngx_http_addition_filter_module.c */,
+				706482C1152A457D00FB9FE6 /* ngx_http_auth_basic_module.c */,
+				706482C2152A457D00FB9FE6 /* ngx_http_autoindex_module.c */,
+				706482C3152A457D00FB9FE6 /* ngx_http_browser_module.c */,
+				706482C4152A457D00FB9FE6 /* ngx_http_charset_filter_module.c */,
+				706482C5152A457D00FB9FE6 /* ngx_http_chunked_filter_module.c */,
+				706482C6152A457D00FB9FE6 /* ngx_http_dav_module.c */,
+				706482C7152A457D00FB9FE6 /* ngx_http_degradation_module.c */,
+				706482C8152A457D00FB9FE6 /* ngx_http_empty_gif_module.c */,
+				706482C9152A457D00FB9FE6 /* ngx_http_fastcgi_module.c */,
+				706482CA152A457D00FB9FE6 /* ngx_http_flv_module.c */,
+				706482CB152A457D00FB9FE6 /* ngx_http_geo_module.c */,
+				706482CC152A457D00FB9FE6 /* ngx_http_geoip_module.c */,
+				706482CD152A457D00FB9FE6 /* ngx_http_gzip_filter_module.c */,
+				706482CE152A457D00FB9FE6 /* ngx_http_gzip_static_module.c */,
+				706482CF152A457D00FB9FE6 /* ngx_http_headers_filter_module.c */,
+				706482D0152A457D00FB9FE6 /* ngx_http_image_filter_module.c */,
+				706482D1152A457D00FB9FE6 /* ngx_http_index_module.c */,
+				706482D2152A457D00FB9FE6 /* ngx_http_limit_req_module.c */,
+				706482D3152A457D00FB9FE6 /* ngx_http_limit_zone_module.c */,
+				706482D4152A457D00FB9FE6 /* ngx_http_log_module.c */,
+				706482D5152A457D00FB9FE6 /* ngx_http_map_module.c */,
+				706482D6152A457D00FB9FE6 /* ngx_http_memcached_module.c */,
+				706482D7152A457D00FB9FE6 /* ngx_http_mp4_module.c */,
+				706482D8152A457D00FB9FE6 /* ngx_http_not_modified_filter_module.c */,
+				706482D9152A457D00FB9FE6 /* ngx_http_proxy_module.c */,
+				706482DA152A457D00FB9FE6 /* ngx_http_random_index_module.c */,
+				706482DB152A457D00FB9FE6 /* ngx_http_range_filter_module.c */,
+				706482DC152A457D00FB9FE6 /* ngx_http_realip_module.c */,
+				706482DD152A457D00FB9FE6 /* ngx_http_referer_module.c */,
+				706482DE152A457D00FB9FE6 /* ngx_http_rewrite_module.c */,
+				706482DF152A457D00FB9FE6 /* ngx_http_scgi_module.c */,
+				706482E0152A457D00FB9FE6 /* ngx_http_secure_link_module.c */,
+				706482E1152A457D00FB9FE6 /* ngx_http_split_clients_module.c */,
+				706482E2152A457D00FB9FE6 /* ngx_http_ssi_filter_module.c */,
+				706482E3152A457D00FB9FE6 /* ngx_http_ssi_filter_module.h */,
+				706482E4152A457D00FB9FE6 /* ngx_http_ssl_module.c */,
+				706482E5152A457D00FB9FE6 /* ngx_http_ssl_module.h */,
+				706482E6152A457D00FB9FE6 /* ngx_http_static_module.c */,
+				706482E7152A457D00FB9FE6 /* ngx_http_stub_status_module.c */,
+				706482E8152A457D00FB9FE6 /* ngx_http_sub_filter_module.c */,
+				706482E9152A457D00FB9FE6 /* ngx_http_upstream_ip_hash_module.c */,
+				706482EA152A457D00FB9FE6 /* ngx_http_userid_filter_module.c */,
+				706482EB152A457D00FB9FE6 /* ngx_http_uwsgi_module.c */,
+				706482EC152A457D00FB9FE6 /* ngx_http_xslt_filter_module.c */,
+				706482ED152A457D00FB9FE6 /* perl */,
+			);
+			path = modules;
+			sourceTree = "<group>";
+		};
+		706482ED152A457D00FB9FE6 /* perl */ = {
+			isa = PBXGroup;
+			children = (
+				706482EE152A457D00FB9FE6 /* Makefile.PL */,
+				706482EF152A457D00FB9FE6 /* nginx.pm */,
+				706482F0152A457D00FB9FE6 /* nginx.xs */,
+				706482F1152A457D00FB9FE6 /* ngx_http_perl_module.c */,
+				706482F2152A457D00FB9FE6 /* ngx_http_perl_module.h */,
+				706482F3152A457D00FB9FE6 /* typemap */,
+			);
+			path = perl;
+			sourceTree = "<group>";
+		};
+		7064830F152A457D00FB9FE6 /* mail */ = {
+			isa = PBXGroup;
+			children = (
+				70648310152A457D00FB9FE6 /* ngx_mail.c */,
+				70648311152A457D00FB9FE6 /* ngx_mail.h */,
+				70648312152A457D00FB9FE6 /* ngx_mail_auth_http_module.c */,
+				70648313152A457D00FB9FE6 /* ngx_mail_core_module.c */,
+				70648314152A457D00FB9FE6 /* ngx_mail_handler.c */,
+				70648315152A457D00FB9FE6 /* ngx_mail_imap_handler.c */,
+				70648316152A457D00FB9FE6 /* ngx_mail_imap_module.c */,
+				70648317152A457D00FB9FE6 /* ngx_mail_imap_module.h */,
+				70648318152A457D00FB9FE6 /* ngx_mail_parse.c */,
+				70648319152A457D00FB9FE6 /* ngx_mail_pop3_handler.c */,
+				7064831A152A457D00FB9FE6 /* ngx_mail_pop3_module.c */,
+				7064831B152A457D00FB9FE6 /* ngx_mail_pop3_module.h */,
+				7064831C152A457D00FB9FE6 /* ngx_mail_proxy_module.c */,
+				7064831D152A457D00FB9FE6 /* ngx_mail_smtp_handler.c */,
+				7064831E152A457D00FB9FE6 /* ngx_mail_smtp_module.c */,
+				7064831F152A457D00FB9FE6 /* ngx_mail_smtp_module.h */,
+				70648320152A457D00FB9FE6 /* ngx_mail_ssl_module.c */,
+				70648321152A457D00FB9FE6 /* ngx_mail_ssl_module.h */,
+			);
+			path = mail;
+			sourceTree = "<group>";
+		};
+		70648322152A457D00FB9FE6 /* misc */ = {
+			isa = PBXGroup;
+			children = (
+				70648323152A457D00FB9FE6 /* ngx_cpp_test_module.cpp */,
+				70648324152A457D00FB9FE6 /* ngx_google_perftools_module.c */,
+			);
+			path = misc;
+			sourceTree = "<group>";
+		};
+		70648325152A457D00FB9FE6 /* mysql */ = {
+			isa = PBXGroup;
+			children = (
+				70648326152A457D00FB9FE6 /* config */,
+				70648327152A457D00FB9FE6 /* ngx_http_mysql_test.c */,
+				70648328152A457D00FB9FE6 /* ngx_mysql.c */,
+				70648329152A457D00FB9FE6 /* ngx_mysql.h */,
+			);
+			path = mysql;
+			sourceTree = "<group>";
+		};
+		7064832A152A457D00FB9FE6 /* os */ = {
+			isa = PBXGroup;
+			children = (
+				7064832B152A457D00FB9FE6 /* unix */,
+				7064836F152A457D00FB9FE6 /* win32 */,
+			);
+			path = os;
+			sourceTree = "<group>";
+		};
+		7064832B152A457D00FB9FE6 /* unix */ = {
+			isa = PBXGroup;
+			children = (
+				7064832C152A457D00FB9FE6 /* ngx_aio_read.c */,
+				7064832D152A457D00FB9FE6 /* ngx_aio_read_chain.c */,
+				7064832E152A457D00FB9FE6 /* ngx_aio_write.c */,
+				7064832F152A457D00FB9FE6 /* ngx_aio_write_chain.c */,
+				70648330152A457D00FB9FE6 /* ngx_alloc.c */,
+				70648331152A457D00FB9FE6 /* ngx_alloc.h */,
+				70648332152A457D00FB9FE6 /* ngx_atomic.h */,
+				70648333152A457D00FB9FE6 /* ngx_channel.c */,
+				70648334152A457D00FB9FE6 /* ngx_channel.h */,
+				70648335152A457D00FB9FE6 /* ngx_daemon.c */,
+				70648336152A457D00FB9FE6 /* ngx_darwin.h */,
+				70648337152A457D00FB9FE6 /* ngx_darwin_config.h */,
+				70648338152A457D00FB9FE6 /* ngx_darwin_init.c */,
+				70648339152A457D00FB9FE6 /* ngx_darwin_sendfile_chain.c */,
+				7064833A152A457D00FB9FE6 /* ngx_errno.c */,
+				7064833B152A457D00FB9FE6 /* ngx_errno.h */,
+				7064833C152A457D00FB9FE6 /* ngx_file_aio_read.c */,
+				7064833D152A457D00FB9FE6 /* ngx_files.c */,
+				7064833E152A457D00FB9FE6 /* ngx_files.h */,
+				7064833F152A457D00FB9FE6 /* ngx_freebsd.h */,
+				70648340152A457D00FB9FE6 /* ngx_freebsd_config.h */,
+				70648341152A457D00FB9FE6 /* ngx_freebsd_init.c */,
+				70648342152A457D00FB9FE6 /* ngx_freebsd_rfork_thread.c */,
+				70648343152A457D00FB9FE6 /* ngx_freebsd_rfork_thread.h */,
+				70648344152A457D00FB9FE6 /* ngx_freebsd_sendfile_chain.c */,
+				70648345152A457D00FB9FE6 /* ngx_gcc_atomic_amd64.h */,
+				70648346152A457D00FB9FE6 /* ngx_gcc_atomic_ppc.h */,
+				70648347152A457D00FB9FE6 /* ngx_gcc_atomic_sparc64.h */,
+				70648348152A457D00FB9FE6 /* ngx_gcc_atomic_x86.h */,
+				70648349152A457D00FB9FE6 /* ngx_linux.h */,
+				7064834A152A457D00FB9FE6 /* ngx_linux_aio_read.c */,
+				7064834B152A457D00FB9FE6 /* ngx_linux_config.h */,
+				7064834C152A457D00FB9FE6 /* ngx_linux_init.c */,
+				7064834D152A457D00FB9FE6 /* ngx_linux_sendfile_chain.c */,
+				7064834E152A457D00FB9FE6 /* ngx_os.h */,
+				7064834F152A457D00FB9FE6 /* ngx_posix_config.h */,
+				70648350152A457D00FB9FE6 /* ngx_posix_init.c */,
+				70648351152A457D00FB9FE6 /* ngx_process.c */,
+				70648352152A457D00FB9FE6 /* ngx_process.h */,
+				70648353152A457D00FB9FE6 /* ngx_process_cycle.c */,
+				70648354152A457D00FB9FE6 /* ngx_process_cycle.h */,
+				70648355152A457D00FB9FE6 /* ngx_pthread_thread.c */,
+				70648356152A457D00FB9FE6 /* ngx_readv_chain.c */,
+				70648357152A457D00FB9FE6 /* ngx_recv.c */,
+				70648358152A457D00FB9FE6 /* ngx_send.c */,
+				70648359152A457D00FB9FE6 /* ngx_setproctitle.c */,
+				7064835A152A457D00FB9FE6 /* ngx_setproctitle.h */,
+				7064835B152A457D00FB9FE6 /* ngx_shmem.c */,
+				7064835C152A457D00FB9FE6 /* ngx_shmem.h */,
+				7064835D152A457D00FB9FE6 /* ngx_socket.c */,
+				7064835E152A457D00FB9FE6 /* ngx_socket.h */,
+				7064835F152A457D00FB9FE6 /* ngx_solaris.h */,
+				70648360152A457D00FB9FE6 /* ngx_solaris_config.h */,
+				70648361152A457D00FB9FE6 /* ngx_solaris_init.c */,
+				70648362152A457D00FB9FE6 /* ngx_solaris_sendfilev_chain.c */,
+				70648363152A457D00FB9FE6 /* ngx_sunpro_amd64.il */,
+				70648364152A457D00FB9FE6 /* ngx_sunpro_atomic_sparc64.h */,
+				70648365152A457D00FB9FE6 /* ngx_sunpro_sparc64.il */,
+				70648366152A457D00FB9FE6 /* ngx_sunpro_x86.il */,
+				70648367152A457D00FB9FE6 /* ngx_thread.h */,
+				70648368152A457D00FB9FE6 /* ngx_time.c */,
+				70648369152A457D00FB9FE6 /* ngx_time.h */,
+				7064836A152A457D00FB9FE6 /* ngx_udp_recv.c */,
+				7064836B152A457D00FB9FE6 /* ngx_user.c */,
+				7064836C152A457D00FB9FE6 /* ngx_user.h */,
+				7064836D152A457D00FB9FE6 /* ngx_writev_chain.c */,
+				7064836E152A457D00FB9FE6 /* rfork_thread.S */,
+			);
+			path = unix;
+			sourceTree = "<group>";
+		};
+		7064836F152A457D00FB9FE6 /* win32 */ = {
+			isa = PBXGroup;
+			children = (
+				70648370152A457D00FB9FE6 /* nginx.ico */,
+				70648371152A457D00FB9FE6 /* nginx.rc */,
+				70648372152A457D00FB9FE6 /* nginx_icon16.xpm */,
+				70648373152A457D00FB9FE6 /* nginx_icon32.xpm */,
+				70648374152A457D00FB9FE6 /* nginx_icon48.xpm */,
+				70648375152A457D00FB9FE6 /* ngx_alloc.c */,
+				70648376152A457D00FB9FE6 /* ngx_alloc.h */,
+				70648377152A457D00FB9FE6 /* ngx_atomic.h */,
+				70648378152A457D00FB9FE6 /* ngx_errno.c */,
+				70648379152A457D00FB9FE6 /* ngx_errno.h */,
+				7064837A152A457D00FB9FE6 /* ngx_event_log.c */,
+				7064837B152A457D00FB9FE6 /* ngx_files.c */,
+				7064837C152A457D00FB9FE6 /* ngx_files.h */,
+				7064837D152A457D00FB9FE6 /* ngx_os.h */,
+				7064837E152A457D00FB9FE6 /* ngx_process.c */,
+				7064837F152A457D00FB9FE6 /* ngx_process.h */,
+				70648380152A457D00FB9FE6 /* ngx_process_cycle.c */,
+				70648381152A457D00FB9FE6 /* ngx_process_cycle.h */,
+				70648382152A457D00FB9FE6 /* ngx_service.c */,
+				70648383152A457D00FB9FE6 /* ngx_shmem.c */,
+				70648384152A457D00FB9FE6 /* ngx_shmem.h */,
+				70648385152A457D00FB9FE6 /* ngx_socket.c */,
+				70648386152A457D00FB9FE6 /* ngx_socket.h */,
+				70648387152A457D00FB9FE6 /* ngx_stat.c */,
+				70648388152A457D00FB9FE6 /* ngx_thread.c */,
+				70648389152A457D00FB9FE6 /* ngx_thread.h */,
+				7064838A152A457D00FB9FE6 /* ngx_time.c */,
+				7064838B152A457D00FB9FE6 /* ngx_time.h */,
+				7064838C152A457D00FB9FE6 /* ngx_udp_wsarecv.c */,
+				7064838D152A457D00FB9FE6 /* ngx_user.c */,
+				7064838E152A457D00FB9FE6 /* ngx_user.h */,
+				7064838F152A457D00FB9FE6 /* ngx_win32_config.h */,
+				70648390152A457D00FB9FE6 /* ngx_win32_init.c */,
+				70648391152A457D00FB9FE6 /* ngx_wsarecv.c */,
+				70648392152A457D00FB9FE6 /* ngx_wsarecv_chain.c */,
+				70648393152A457D00FB9FE6 /* ngx_wsasend.c */,
+				70648394152A457D00FB9FE6 /* ngx_wsasend_chain.c */,
+			);
+			path = win32;
+			sourceTree = "<group>";
+		};
 		7066428714FD510900CFFCD0 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
@@ -12488,7 +13657,8 @@
 		70C2ACBD15251B3800968F2C /* ZLib Compression */ = {
 			isa = PBXGroup;
 			children = (
-				70C2ACBE15251B6100968F2C /* compress.c */,
+				70C2ACBE15251B6100968F2C /* compress-zlib.c */,
+				706481A7152A2C5900FB9FE6 /* compress-zlib.h */,
 			);
 			name = "ZLib Compression";
 			path = "compress-zlib";
@@ -12497,6 +13667,8 @@
 		70F14E5614F5944900F278CA = {
 			isa = PBXGroup;
 			children = (
+				706481DA152A457D00FB9FE6 /* nginx */,
+				706481C8152A407B00FB9FE6 /* compress-lz4 */,
 				705909F51527C4D70040037C /* libtommath */,
 				70C2ACC815251C1000968F2C /* libz.dylib */,
 				70C2ACBD15251B3800968F2C /* ZLib Compression */,
@@ -12546,9 +13718,9 @@
 				70FD589E1508511A00A5930D /* revgen-couch-test */,
 				7056F9D8150AC8B80053FF41 /* libjansson.dylib */,
 				70C2AC701513E42100968F2C /* test-pull-bdb-json */,
-				70C2AC981523904200968F2C /* libLoungeAct-codec-bson.dylib */,
 				70C2ACC315251BF800968F2C /* libLoungeAct-compress-zlib.dylib */,
 				70590AC71527C4F90040037C /* liblibtommath.a */,
+				706481CE152A40D000FB9FE6 /* libloungeact-compress-lz4.dylib */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -24693,6 +25865,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		706481CC152A40D000FB9FE6 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7066427F14FC554700CFFCD0 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -24726,13 +25905,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		70B1F7AF14FECD1300A9E488 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		70C2AC961523904200968F2C /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -24933,6 +26105,23 @@
 			productReference = 70590AC71527C4F90040037C /* liblibtommath.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		706481CD152A40D000FB9FE6 /* loungeact-compress-lz4 */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 706481CF152A40D000FB9FE6 /* Build configuration list for PBXNativeTarget "loungeact-compress-lz4" */;
+			buildPhases = (
+				706481CA152A40D000FB9FE6 /* Sources */,
+				706481CB152A40D000FB9FE6 /* Frameworks */,
+				706481CC152A40D000FB9FE6 /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "loungeact-compress-lz4";
+			productName = "loungeact-compress-lz4";
+			productReference = 706481CE152A40D000FB9FE6 /* libloungeact-compress-lz4.dylib */;
+			productType = "com.apple.product-type.library.dynamic";
+		};
 		7066428014FC554700CFFCD0 /* LoungeAct-storage-sqlite */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7066428214FC554700CFFCD0 /* Build configuration list for PBXNativeTarget "LoungeAct-storage-sqlite" */;
@@ -25095,6 +26284,8 @@
 			buildRules = (
 			);
 			dependencies = (
+				706481D6152A450F00FB9FE6 /* PBXTargetDependency */,
+				706481D8152A450F00FB9FE6 /* PBXTargetDependency */,
 				70590B4C152800070040037C /* PBXTargetDependency */,
 				70C2AC7C1513F5CF00968F2C /* PBXTargetDependency */,
 				70C2AC7E1513F5CF00968F2C /* PBXTargetDependency */,
@@ -25108,24 +26299,6 @@
 			productName = "test-pull-bdb-json";
 			productReference = 70C2AC701513E42100968F2C /* test-pull-bdb-json */;
 			productType = "com.apple.product-type.tool";
-		};
-		70C2AC971523904200968F2C /* LoungeAct-codec-bson */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 70C2AC991523904300968F2C /* Build configuration list for PBXNativeTarget "LoungeAct-codec-bson" */;
-			buildPhases = (
-				70C2AC941523904200968F2C /* Sources */,
-				70C2AC951523904200968F2C /* Frameworks */,
-				70C2AC961523904200968F2C /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				70C2ACB91524FC7400968F2C /* PBXTargetDependency */,
-			);
-			name = "LoungeAct-codec-bson";
-			productName = "LoungeAct-codec-bson";
-			productReference = 70C2AC981523904200968F2C /* libLoungeAct-codec-bson.dylib */;
-			productType = "com.apple.product-type.library.dynamic";
 		};
 		70C2ACC215251BF800968F2C /* LoungeAct-compress-zlib */ = {
 			isa = PBXNativeTarget;
@@ -25291,9 +26464,9 @@
 				70FD58BB150A960800A5930D /* jansson test */,
 				7056F9D7150AC8B80053FF41 /* jansson */,
 				70C2AC6F1513E42100968F2C /* test-pull-bdb-json */,
-				70C2AC971523904200968F2C /* LoungeAct-codec-bson */,
 				70C2ACC215251BF800968F2C /* LoungeAct-compress-zlib */,
 				70590AC61527C4F90040037C /* libtommath */,
+				706481CD152A40D000FB9FE6 /* loungeact-compress-lz4 */,
 			);
 		};
 /* End PBXProject section */
@@ -25450,6 +26623,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		706481CA152A40D000FB9FE6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				706481D2152A40DC00FB9FE6 /* lz4.c in Sources */,
+				706481D4152A40EA00FB9FE6 /* compress-lz4.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7066427D14FC554700CFFCD0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -25526,19 +26708,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		70C2AC941523904200968F2C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				70C2AC9E1523905800968F2C /* codec-bson.c in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		70C2ACBF15251BF800968F2C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70C2ACC715251C0200968F2C /* compress.c in Sources */,
+				70C2ACC715251C0200968F2C /* compress-zlib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -25655,6 +26829,16 @@
 			isa = PBXTargetDependency;
 			target = 70590AC61527C4F90040037C /* libtommath */;
 			targetProxy = 70590B4F152800780040037C /* PBXContainerItemProxy */;
+		};
+		706481D6152A450F00FB9FE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70C2ACC215251BF800968F2C /* LoungeAct-compress-zlib */;
+			targetProxy = 706481D5152A450F00FB9FE6 /* PBXContainerItemProxy */;
+		};
+		706481D8152A450F00FB9FE6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706481CD152A40D000FB9FE6 /* loungeact-compress-lz4 */;
+			targetProxy = 706481D7152A450F00FB9FE6 /* PBXContainerItemProxy */;
 		};
 		7066429514FD54AD00CFFCD0 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -25785,11 +26969,6 @@
 			isa = PBXTargetDependency;
 			target = 70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */;
 			targetProxy = 70C2ACB11524DAF300968F2C /* PBXContainerItemProxy */;
-		};
-		70C2ACB91524FC7400968F2C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 7056F9D7150AC8B80053FF41 /* jansson */;
-			targetProxy = 70C2ACB81524FC7400968F2C /* PBXContainerItemProxy */;
 		};
 		70C2ACCB15251FE600968F2C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -25974,6 +27153,24 @@
 				EXECUTABLE_PREFIX = lib;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/jansson/libtommath";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		706481D0152A40D000FB9FE6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		706481D1152A40D000FB9FE6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -26168,26 +27365,6 @@
 					"$(SRCROOT)/jansson/libtommath",
 					"$(SRCROOT)",
 				);
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		70C2AC9A1523904300968F2C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/jansson/src";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		70C2AC9B1523904300968F2C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				EXECUTABLE_PREFIX = lib;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				HEADER_SEARCH_PATHS = "$(SRCROOT)/jansson/src";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -26522,6 +27699,15 @@
 				70590ACA1527C4FA0040037C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		706481CF152A40D000FB9FE6 /* Build configuration list for PBXNativeTarget "loungeact-compress-lz4" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				706481D0152A40D000FB9FE6 /* Debug */,
+				706481D1152A40D000FB9FE6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
 		};
 		7066428214FC554700CFFCD0 /* Build configuration list for PBXNativeTarget "LoungeAct-storage-sqlite" */ = {
 			isa = XCConfigurationList;
@@ -26600,15 +27786,6 @@
 			buildConfigurations = (
 				70C2AC791513E42200968F2C /* Debug */,
 				70C2AC7A1513E42200968F2C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		70C2AC991523904300968F2C /* Build configuration list for PBXNativeTarget "LoungeAct-codec-bson" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				70C2AC9A1523904300968F2C /* Debug */,
-				70C2AC9B1523904300968F2C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

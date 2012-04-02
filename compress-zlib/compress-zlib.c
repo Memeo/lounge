@@ -98,4 +98,4 @@ static unsigned char *_zlib_decompress(unsigned char *input, size_t len, size_t 
 }
 
 la_compressor_t __zlib_compressor = { _zlib_compress, _zlib_decompress };
-la_compressor_t *zlib_compressor = &__zlib_compressor;
+la_compressor_t *la_zlib_compressor = &__zlib_compressor;

@@ -15,6 +15,8 @@
 
 #include "../api/LoungeAct.h"
 #include "../pull/pull.h"
+#include "../compress-zlib/compress-zlib.h"
+#include "../compress-lz4/compress-lz4.h"
 
 int cb1(const char *path, const struct stat *ptr, int flag, struct FTW *ftw);
 int cb1(const char *path, const struct stat *ptr, int flag, struct FTW *ftw)
@@ -74,6 +76,9 @@ int main(int argc, const char * argv[])
     }
     OK();
     
+    //la_host_configure_compressor(host, zlib_compressor);
+    la_host_configure_compressor(host, la_lz4_compressor);
+    
     printf("opening db... ");
     if ((db = la_db_open(host, "apitest")) == NULL)
     {
@@ -82,7 +87,7 @@ int main(int argc, const char * argv[])
     OK();
     
     la_pull_params_t params;
-    params.dbname = "agentdb-bea301e655f30ce24d9405dad97cf2b0";
+    params.dbname = "library-53b825ecc2fd4f85afd2b93cc4da7739";
     params.filter = NULL;
     params.host = "localhost";
     params.port = 5984;
