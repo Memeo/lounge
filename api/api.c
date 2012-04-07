@@ -299,11 +299,19 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
     int i;
     
     if (key == NULL || rev == NULL || doc == NULL || !la_codec_is_object(doc))
+    {
+#if DEBUG
+        printf("invalid arg\n");
+#endif
         return LA_DB_PUT_INVALID_ARG;
+    }
     
     buffer = la_buffer_new(1024);
     if (buffer == NULL)
+    {
+        printf("memory error\n");
         return LA_DB_PUT_ERROR;
+    }
     copy = la_codec_copy(doc);
     if (copy == NULL)
     {
@@ -360,10 +368,14 @@ la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev
     la_buffer_destroy(buffer);
     if (_oldrevs != NULL)
         free(_oldrevs);
-    obj->header->doc_seq = rev->seq;
     if (obj == NULL)
+    {
+        printf("create object memory error\n");
         return LA_DB_PUT_ERROR;
-    if (la_storage_replace(db->store, obj) != LA_STORAGE_OBJECT_PUT_SUCCESS)
+    }
+    obj->header->doc_seq = rev->seq;
+    int ret;
+    if ((ret = la_storage_replace(db->store, obj)) != LA_STORAGE_OBJECT_PUT_SUCCESS)
     {
         la_storage_destroy_object(obj);
         return LA_DB_PUT_ERROR;

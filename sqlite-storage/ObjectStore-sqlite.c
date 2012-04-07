@@ -436,7 +436,10 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     int ret;
     
     if (sqlite3_exec(store->db, begintxn, NULL, NULL, NULL) != SQLITE_OK)
+    {
+        printf("failed to begin transaction\n");
         return LA_STORAGE_OBJECT_PUT_ERROR;
+    }
     if (sqlite3_prepare(store->db, putdoc, (int) strlen(putdoc), &stmt, NULL) != SQLITE_OK)
     {
         sqlite3_exec(store->db, rollback, NULL, NULL, NULL);
@@ -491,6 +494,7 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
         sqlite3_finalize(stmt);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
+    sqlite3_exec(store->db, endtxn, NULL, NULL, NULL);
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
