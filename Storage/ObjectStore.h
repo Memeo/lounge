@@ -73,6 +73,12 @@ typedef struct la_storage_object
     uint32_t data_length;
 } la_storage_object;
 
+typedef struct la_storage_stat_s
+{
+    int numkeys;
+    uint64_t size;
+} la_storage_stat_t;
+
 #define la_storage_object_get_data(obj) ((obj)->header->revs_data + (LA_OBJECT_REVISION_LEN * (obj)->header->rev_count))
 #define la_storage_object_total_size(obj) (sizeof(struct la_storage_object_header) + (LA_OBJECT_REVISION_LEN * (obj)->header->rev_count) + (obj)->data_length)
 
@@ -132,12 +138,29 @@ void la_storage_close_env(la_storage_env *env);
  */
 int la_storage_revs_overlap(const la_storage_rev_t *revs1, int count1, const la_storage_rev_t *revs2, int count2);
 
+typedef enum
+{
+    LA_STORAGE_OPEN_FLAG_CREATE = 1,
+    LA_STORAGE_OPEN_FLAG_EXCL   = 2
+} la_storage_open_flag_t;
+
+typedef enum
+{
+    LA_STORAGE_OPEN_OK        = 0,
+    LA_STORAGE_OPEN_CREATED   = 1,
+    LA_STORAGE_OPEN_NOT_FOUND = 2,
+    LA_STORAGE_OPEN_EXISTS    = 3,
+    LA_STORAGE_OPEN_ERROR     = 4
+} la_storage_open_result_t;
+
 /**
  * Open an object store.
  *
  * Returns NULL if opening the store fails.
  */
-la_storage_object_store *la_storage_open(la_storage_env *env, const char *name);
+la_storage_open_result_t la_storage_open(la_storage_env *env, const char *name, int flags, la_storage_object_store **store);
+
+int la_storage_object_store_delete(la_storage_object_store *store);
 
 /**
  * Get an object from the store, placing it in the given pointer.
@@ -182,6 +205,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
 la_storage_object_put_result la_storage_replace(la_storage_object_store *store, la_storage_object *obj);
 
 uint64_t la_storage_lastseq(la_storage_object_store *store);
+int la_storage_stat(la_storage_object_store *store, la_storage_stat_t *stat);
 
 la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *store, uint64_t since);
 la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_iterator *iterator, la_storage_object **obj);
