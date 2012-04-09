@@ -78,19 +78,29 @@ void la_host_configure_compressor(la_host_t *host, la_compressor_t *compressor)
     host->compressor = compressor;
 }
 
-la_db_t *la_db_open(la_host_t *host, const char *name)
+la_db_open_result_t la_db_open(la_host_t *host, const char *name, int flags, la_db_t **_db)
 {
+    la_storage_open_result_t result;
     la_db_t *db = (la_db_t *) malloc(sizeof(struct la_db));
     if (db == NULL)
-        return NULL;
+        return LA_DB_OPEN_ERROR;
     db->host = host;
-    db->store = la_storage_open(host->env, name);
-    if (db->store == NULL)
+    result = la_storage_open(host->env, name, flags, &db->store);
+    if (result != LA_STORAGE_OPEN_OK && result != LA_STORAGE_OPEN_CREATED)
     {
         free(db);
-        return NULL;
+        return result;
     }
-    return db;
+    *_db = db;
+    return result;
+}
+
+int la_db_delete_db(la_db_t *db)
+{
+    int ret = la_storage_object_store_delete(db->store);
+    if (ret == 0)
+        db->store = NULL;
+    return ret;
 }
 
 static int is_tombstone(la_codec_value_t *doc)
@@ -167,6 +177,16 @@ la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec
 int la_db_get_allrevs(la_db_t *db, const char *key, uint64_t *start, la_storage_rev_t **revs)
 {
     return la_storage_get_all_revs(db->store, key, start, revs);
+}
+
+uint64_t la_db_last_seq(la_db_t *db)
+{
+    return la_storage_lastseq(db->store);
+}
+
+int la_db_stat(la_db_t *db, la_storage_stat_t *stat)
+{
+    return la_storage_stat(db->store, stat);
 }
 
 static int hashdoc(const char *str, size_t size, void *data)
@@ -505,6 +525,7 @@ void la_view_iterator_close(la_view_iterator_t *it)
 
 void la_db_close(la_db_t *db)
 {
-    la_storage_close(db->store);
+    if (db->store)
+        la_storage_close(db->store);
     free(db);
 }

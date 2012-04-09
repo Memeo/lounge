@@ -106,10 +106,28 @@ typedef la_codec_value_t *(*la_view_reducefn)(la_codec_value_t *accum, la_codec_
  */
 typedef la_codec_value_t *(*la_view_rereducefn)(la_codec_value_t *partials, void *baton);
 
-la_db_t *la_db_open(la_host_t *host, const char *name);
+typedef enum
+{
+    LA_DB_OPEN_FLAG_CREATE = LA_STORAGE_OPEN_FLAG_CREATE, /* Create the DB if it doesn't exist. */
+    LA_DB_OPEN_FLAG_EXCL   = LA_STORAGE_OPEN_FLAG_EXCL  /* Fail if creating a DB and it already exists. */
+} la_db_open_flag_t;
+
+typedef enum
+{
+    LA_DB_OPEN_OK        = LA_STORAGE_OPEN_OK,
+    LA_DB_OPEN_CREATED   = LA_STORAGE_OPEN_CREATED,
+    LA_DB_OPEN_NOT_FOUND = LA_STORAGE_OPEN_NOT_FOUND,
+    LA_DB_OPEN_EXISTS    = LA_STORAGE_OPEN_EXISTS,
+    LA_DB_OPEN_ERROR     = LA_STORAGE_OPEN_ERROR
+} la_db_open_result_t;
+
+la_db_open_result_t la_db_open(la_host_t *host, const char *name, int flags, la_db_t **db);
+int la_db_delete_db(la_db_t *db);
 la_db_get_result la_db_get(la_db_t *db, const char *key, la_rev_t *rev, la_codec_value_t **value,
                            la_rev_t *current_rev, la_codec_error_t *error);
 int la_db_get_allrevs(la_db_t *db, const char *key, uint64_t *start, la_storage_rev_t **revs);
+uint64_t la_db_last_seq(la_db_t *db);
+int la_db_stat(la_db_t *db, la_storage_stat_t *stat);
 la_db_put_result la_db_put(la_db_t *db, const char *key, const la_rev_t *rev, const la_codec_value_t *doc, la_rev_t *newrev);
 la_db_put_result la_db_replace(la_db_t *db, const char *key, const la_rev_t *rev, const la_codec_value_t *doc,
                                const la_storage_rev_t *oldrevs, size_t revcount);
