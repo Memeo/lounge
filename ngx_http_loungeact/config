@@ -1,4 +1,4 @@
 ngx_addon_name=ngx_http_loungeact
 HTTP_MODULES="$HTTP_MODULES ngx_http_loungeact"
-NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_loungeact.c"
+NGX_ADDON_SRCS="$NGX_ADDON_SRCS $ngx_addon_dir/ngx_http_loungeact.c $ngx_addon_dir/db_cache.c"
 CORE_LIBS="$CORE_LIBS -lLoungeAct -lLoungeAct-codec-json -lLoungeAct-storage-bdb -lLoungeAct-compress-lz4 -lLoungeAct-compress-zlib -lz -ljansson -lLoungeAct-pull-bdb-json -lLoungeAct-revgen-couchdb -lLoungeAct-utils -ldb"
