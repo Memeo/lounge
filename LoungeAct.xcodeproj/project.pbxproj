@@ -240,6 +240,8 @@
 		706642A814FD554E00CFFCD0 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 706642A714FD554E00CFFCD0 /* libsqlite3.dylib */; };
 		706642B114FD55AA00CFFCD0 /* ObjectStore-BDB.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1740C14F6F9EF00F278CA /* ObjectStore-BDB.c */; };
 		706642B214FD55AA00CFFCD0 /* ObjectStore-common.c in Sources */ = {isa = PBXBuildFile; fileRef = 70F1741B14F6FD8D00F278CA /* ObjectStore-common.c */; };
+		709A81E21530C7C900282110 /* db_cache.c in Sources */ = {isa = PBXBuildFile; fileRef = 709A81E11530C7C900282110 /* db_cache.c */; };
+		709A81E61530D6EE00282110 /* uthash.h in Headers */ = {isa = PBXBuildFile; fileRef = 709A81E51530D6EE00282110 /* uthash.h */; };
 		709D9EAD1502885A00650F4B /* hexdump.h in Headers */ = {isa = PBXBuildFile; fileRef = 709D9EAC1502885A00650F4B /* hexdump.h */; };
 		709D9EB0150288BF00650F4B /* hexdump.c in Sources */ = {isa = PBXBuildFile; fileRef = 709D9EAF150288BF00650F4B /* hexdump.c */; };
 		709D9EB8150295A700650F4B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 709D9EB7150295A700650F4B /* Foundation.framework */; };
@@ -654,6 +656,76 @@
 			remoteInfo = libtommath;
 		};
 		709468DB152FABF4007B62C0 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706481CD152A40D000FB9FE6;
+			remoteInfo = "loungeact-compress-lz4";
+		};
+		709A81E715310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70F14E6014F5944B00F278CA;
+			remoteInfo = LoungeAct;
+		};
+		709A81E915310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7066428D14FD524600CFFCD0;
+			remoteInfo = "LoungeAct-utils";
+		};
+		709A81EB15310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 706642AC14FD55A000CFFCD0;
+			remoteInfo = "LoungeAct-storage-bdb";
+		};
+		709A81ED15310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70B1F7B014FECD1300A9E488;
+			remoteInfo = "LoungeAct-codec-json";
+		};
+		709A81EF15310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70FA8BA41505744F00FA62CB;
+			remoteInfo = "LoungeAct-pull-bdb-json";
+		};
+		709A81F115310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70FA8BCA1508427300FA62CB;
+			remoteInfo = "LoungeAct-revgen-couchdb";
+		};
+		709A81F315310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7056F9D7150AC8B80053FF41;
+			remoteInfo = jansson;
+		};
+		709A81F515310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70C2ACC215251BF800968F2C;
+			remoteInfo = "LoungeAct-compress-zlib";
+		};
+		709A81F715310F6800282110 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 70590AC61527C4F90040037C;
+			remoteInfo = libtommath;
+		};
+		709A81F915310F6800282110 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 70F14E5814F5944A00F278CA /* Project object */;
 			proxyType = 1;
@@ -1966,6 +2038,10 @@
 		706642A714FD554E00CFFCD0 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		706642AD14FD55A000CFFCD0 /* libLoungeAct-storage-bdb.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libLoungeAct-storage-bdb.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
 		709468BE152FA9F9007B62C0 /* config */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = config; sourceTree = "<group>"; };
+		709A81DE1530BC0C00282110 /* la_config.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = la_config.sh; sourceTree = "<group>"; };
+		709A81E01530C5A500282110 /* db_cache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = db_cache.h; sourceTree = "<group>"; };
+		709A81E11530C7C900282110 /* db_cache.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = db_cache.c; sourceTree = "<group>"; };
+		709A81E51530D6EE00282110 /* uthash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
 		709D9EAC1502885A00650F4B /* hexdump.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hexdump.h; sourceTree = "<group>"; };
 		709D9EAF150288BF00650F4B /* hexdump.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = hexdump.c; sourceTree = "<group>"; };
 		709D9EB5150295A700650F4B /* apitest-sqlite-json */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "apitest-sqlite-json"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -13193,8 +13269,11 @@
 		70648395152A561700FB9FE6 /* ngx_http_loungeact */ = {
 			isa = PBXGroup;
 			children = (
+				709A81E51530D6EE00282110 /* uthash.h */,
 				70648396152A567100FB9FE6 /* ngx_http_loungeact.c */,
 				709468BE152FA9F9007B62C0 /* config */,
+				709A81E01530C5A500282110 /* db_cache.h */,
+				709A81E11530C7C900282110 /* db_cache.c */,
 			);
 			path = ngx_http_loungeact;
 			sourceTree = "<group>";
@@ -13248,6 +13327,7 @@
 				70648490152A6DBF00FB9FE6 /* objs */,
 				706484A2152A6DBF00FB9FE6 /* README */,
 				706484A3152A6DBF00FB9FE6 /* src */,
+				709A81DE1530BC0C00282110 /* la_config.sh */,
 			);
 			path = "nginx-1.0.14";
 			sourceTree = "<group>";
@@ -26258,6 +26338,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				709A81E61530D6EE00282110 /* uthash.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -26592,6 +26673,16 @@
 			buildRules = (
 			);
 			dependencies = (
+				709A81E815310F6800282110 /* PBXTargetDependency */,
+				709A81EA15310F6800282110 /* PBXTargetDependency */,
+				709A81EC15310F6800282110 /* PBXTargetDependency */,
+				709A81EE15310F6800282110 /* PBXTargetDependency */,
+				709A81F015310F6800282110 /* PBXTargetDependency */,
+				709A81F215310F6800282110 /* PBXTargetDependency */,
+				709A81F415310F6800282110 /* PBXTargetDependency */,
+				709A81F615310F6800282110 /* PBXTargetDependency */,
+				709A81F815310F6800282110 /* PBXTargetDependency */,
+				709A81FA15310F6800282110 /* PBXTargetDependency */,
 			);
 			name = ngx_http_loungeact_fake;
 			productName = ngx_http_loungeact_fake;
@@ -27145,6 +27236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7064841A152A6CDA00FB9FE6 /* ngx_http_loungeact.c in Sources */,
+				709A81E21530C7C900282110 /* db_cache.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -27530,6 +27622,56 @@
 			isa = PBXTargetDependency;
 			target = 706481CD152A40D000FB9FE6 /* loungeact-compress-lz4 */;
 			targetProxy = 709468DB152FABF4007B62C0 /* PBXContainerItemProxy */;
+		};
+		709A81E815310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70F14E6014F5944B00F278CA /* LoungeAct */;
+			targetProxy = 709A81E715310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81EA15310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7066428D14FD524600CFFCD0 /* LoungeAct-utils */;
+			targetProxy = 709A81E915310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81EC15310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706642AC14FD55A000CFFCD0 /* LoungeAct-storage-bdb */;
+			targetProxy = 709A81EB15310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81EE15310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70B1F7B014FECD1300A9E488 /* LoungeAct-codec-json */;
+			targetProxy = 709A81ED15310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81F015310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70FA8BA41505744F00FA62CB /* LoungeAct-pull-bdb-json */;
+			targetProxy = 709A81EF15310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81F215310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70FA8BCA1508427300FA62CB /* LoungeAct-revgen-couchdb */;
+			targetProxy = 709A81F115310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81F415310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7056F9D7150AC8B80053FF41 /* jansson */;
+			targetProxy = 709A81F315310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81F615310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70C2ACC215251BF800968F2C /* LoungeAct-compress-zlib */;
+			targetProxy = 709A81F515310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81F815310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 70590AC61527C4F90040037C /* libtommath */;
+			targetProxy = 709A81F715310F6800282110 /* PBXContainerItemProxy */;
+		};
+		709A81FA15310F6800282110 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 706481CD152A40D000FB9FE6 /* loungeact-compress-lz4 */;
+			targetProxy = 709A81F915310F6800282110 /* PBXContainerItemProxy */;
 		};
 		709D9ECC150295E900650F4B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -27950,6 +28092,7 @@
 					"$(SRCROOT)",
 					"$(SRCROOT)/jansson/libtommath",
 					"$(SRCROOT)/jansson",
+					"$(SRCROOT)/ngx_http_loungeact",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -27971,6 +28114,7 @@
 					"$(SRCROOT)",
 					"$(SRCROOT)/jansson/libtommath",
 					"$(SRCROOT)/jansson",
+					"$(SRCROOT)/ngx_http_loungeact",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -28607,6 +28751,7 @@
 				709468C2152FABD4007B62C0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		709D9EC0150295A700650F4B /* Build configuration list for PBXNativeTarget "apitest-sqlite-json" */ = {
 			isa = XCConfigurationList;
