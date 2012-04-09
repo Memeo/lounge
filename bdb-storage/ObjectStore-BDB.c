@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <syslog.h>
 
 #include <db.h>
 #include "../Storage/ObjectStore.h"
@@ -25,6 +26,27 @@
 #else
 #define debug(fmt,args...)
 #endif
+
+#define txn_abort(txn) do { \
+    syslog(LOG_NOTICE, "ABORT txn %p %x (%s:%d)", txn, txn->txnid, __FILE__, __LINE__); \
+    int abort_ret = txn->abort(txn); \
+    syslog(LOG_NOTICE, "  --> %d", abort_ret); \
+} while (0)
+#define txn_commit(txn,flags) do { \
+    syslog(LOG_NOTICE, "COMMIT txn %p %d %x (%s:%d)", txn, flags, txn->txnid, __FILE__, __LINE__); \
+    int commit_ret = txn->commit(txn, flags); \
+    syslog(LOG_NOTICE, "  --> %d", commit_ret); \
+} while (0)
+
+static inline int
+do_txn_begin(DB_ENV *env, DB_TXN *parent, DB_TXN **txn, u_int32_t flags, const char *file, int line)
+{
+    int ret = env->txn_begin(env, parent, txn, flags);
+    if (ret == 0)
+        syslog(LOG_NOTICE, "BEGIN txn %p %x (%s:%d)", *txn, (*txn)->txnid, file, line);
+    return ret;
+}
+#define txn_begin(env,parent,txn,flags) do_txn_begin(env, parent, txn, flags, __FILE__, __LINE__)
 
 static char *
 keycpy(char *key, u_int32_t len)
@@ -146,60 +168,73 @@ static int compare_seq(DB *db, const DBT *key1, const DBT *key2)
     return 0;
 }
 
-la_storage_object_store *la_storage_open(la_storage_env *env, const char *path)
+la_storage_open_result_t la_storage_open(la_storage_env *env, const char *path, int flags, la_storage_object_store **_store)
 {
     la_storage_object_store *store = (la_storage_object_store *) malloc(sizeof(struct la_storage_object_store));
     DB_TXN *txn;
     char *seqpath;
     DBT seq_key;
     char seq_name[4];
-    
+    int dbflags;
+    int ret;
+
     if (store == NULL)
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     store->env = env;
-    if (env->env->txn_begin(env->env, NULL, &txn, DB_TXN_SNAPSHOT | DB_TXN_WRITE_NOSYNC) != 0)
+    if (txn_begin(env->env, NULL, &txn, DB_TXN_WRITE_NOSYNC) != 0)
     {
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
     if (db_create(&store->db, env->env, 0) != 0)
     {
+        txn_abort(txn);
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
     if (db_create(&store->seq_db, env->env, 0) != 0)
     {
+        txn_abort(txn);
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
-    if (store->db->open(store->db, txn, path, NULL, DB_BTREE, DB_CREATE | DB_MULTIVERSION | DB_THREAD | DB_READ_UNCOMMITTED, 0) != 0)
+    dbflags = 0;
+    if (flags & LA_STORAGE_OPEN_FLAG_CREATE)
+        dbflags = DB_CREATE;
+    if (flags & LA_STORAGE_OPEN_FLAG_EXCL)
+        dbflags |= DB_EXCL;
+    if ((ret = store->db->open(store->db, txn, path, NULL, DB_BTREE, dbflags | DB_MULTIVERSION | DB_THREAD, 0)) != 0)
     {
-        txn->abort(txn);
+        txn_abort(txn);
         free(store);
-        return NULL;
+        if (ret == EEXIST)
+            return LA_STORAGE_OPEN_EXISTS;
+        if (ret == ENOENT)
+            return LA_STORAGE_OPEN_NOT_FOUND;
+        return LA_STORAGE_OPEN_ERROR;
     }
     seqpath = string_append(path, ".seq");
     if (seqpath == NULL)
     {
         store->db->close(store->db, 0);
-        txn->abort(txn);
+        txn_abort(txn);
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
     if (store->seq_db->set_bt_compare(store->seq_db, compare_seq) != 0)
     {
         store->db->close(store->db, 0);
-        txn->abort(txn);
+        txn_abort(txn);
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
-    if (store->seq_db->open(store->seq_db, txn, seqpath, NULL, DB_BTREE, DB_CREATE | DB_THREAD | DB_READ_UNCOMMITTED, 0) != 0)
+    if (store->seq_db->open(store->seq_db, txn, seqpath, NULL, DB_BTREE, DB_CREATE | DB_THREAD, 0) != 0)
     {
         free(seqpath);
         store->db->close(store->db, 0);
-        txn->abort(txn);
+        txn_abort(txn);
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
     free(seqpath);
     store->db->associate(store->db, txn, store->seq_db, seqindex, 0);
@@ -207,9 +242,9 @@ la_storage_object_store *la_storage_open(la_storage_env *env, const char *path)
     {
         store->seq_db->close(store->seq_db, 0);
         store->db->close(store->db, 0);
-        txn->abort(txn);
+        txn_abort(txn);
         free(store);
-        return NULL;
+        return LA_STORAGE_OPEN_ERROR;
     }
     store->seq->initial_value(store->seq, 1);
     seq_name[0] = '\0';
@@ -224,12 +259,79 @@ la_storage_object_store *la_storage_open(la_storage_env *env, const char *path)
     {
         store->seq_db->close(store->seq_db, 0);
         store->db->close(store->db, 0);
-        txn->abort(txn);
+        txn_abort(txn);
         free(store);
-        return NULL;        
+        return LA_STORAGE_OPEN_ERROR;        
     }
-    txn->commit(txn, 0);
-    return store;
+    txn_commit(txn, DB_TXN_NOSYNC);
+    *_store = store;
+    if ((flags & (LA_STORAGE_OPEN_FLAG_CREATE|LA_STORAGE_OPEN_FLAG_EXCL)) == (LA_STORAGE_OPEN_FLAG_CREATE|LA_STORAGE_OPEN_FLAG_EXCL))
+        return LA_STORAGE_OPEN_CREATED;
+    return LA_STORAGE_OPEN_OK;
+}
+
+#include <syslog.h>
+
+int la_storage_object_store_delete(la_storage_object_store *store)
+{
+    const char *dbname;
+    const char *seqdbname;
+    const char *home;
+    const char *parts[2];
+    DB_TXN *txn;
+    DB_ENV *env = store->env->env;
+    int ret;
+    
+    if ((ret = store->db->get_dbname(store->db, &dbname, NULL)) != 0)
+    {
+        syslog(LOG_NOTICE, "could not get main db name: %d", ret);
+        return -1;
+    }
+    if ((ret = store->db->get_dbname(store->seq_db, &seqdbname, NULL)) != 0)
+    {
+        syslog(LOG_NOTICE, "could not get sequence db name: %d", ret);
+        return -1;
+    }
+    if ((ret = env->get_home(env, &home)) != 0)
+    {
+        syslog(LOG_NOTICE, "could not get db home %d", ret);
+        return -1;
+    }
+    parts[0] = home;
+    parts[1] = dbname;
+    dbname = string_join("/", parts, 2);
+    parts[1] = seqdbname;
+    seqdbname = string_join("/", parts, 2);
+    
+    syslog(LOG_NOTICE, "deleting db %s and sequence db %s", dbname, seqdbname);
+    
+    la_storage_close(store);
+    
+    if ((ret = txn_begin(env, NULL, &txn, DB_TXN_NOWAIT | DB_TXN_WRITE_NOSYNC)) != 0)
+    {
+        syslog(LOG_NOTICE, "delete db begin transaction %d", ret);
+        free(dbname);
+        free(seqdbname);
+        return -1;
+    }
+    
+    syslog(LOG_NOTICE, "env %p txn %p home %s name %s", env, txn, home, dbname);
+    
+    if ((ret = env->dbremove(env, txn, dbname, NULL, 0)) != 0)
+    {
+        syslog(LOG_NOTICE, "deleting main DB: %d", ret);
+        txn_abort(txn);
+        return -1;
+    }
+    syslog(LOG_NOTICE, "env %p txn %p home %s name %s", env, txn, home, seqdbname);
+    if ((ret = env->dbremove(env, txn, seqdbname, NULL, 0)) != 0)
+    {
+        syslog(LOG_NOTICE, "deleting sequence DB: %d", ret);
+        txn_abort(txn);
+        return -1;
+    }
+    txn_commit(txn, DB_TXN_NOSYNC);
+    return 0;
 }
 
 /**
@@ -397,13 +499,13 @@ la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store,
     db_value.ulen = 0;
     db_value.flags = DB_DBT_MALLOC;
     
-    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
+    if (txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
     
     result = store->db->get(store->db, txn, &db_key, &db_value, DB_RMW);
     if (result != 0)
     {
-        txn->abort(txn);
+        txn_abort(txn);
         if (result == DB_LOCK_NOTGRANTED)
             return LA_STORAGE_OBJECT_PUT_CONFLICT;
         return LA_STORAGE_OBJECT_PUT_ERROR;
@@ -433,10 +535,10 @@ la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store,
     free(db_value.data);
     if (result != 0)
     {
-        txn->abort(txn);
+        txn_abort(txn);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
-    txn->commit(txn, 0);
+    txn_commit(txn, DB_TXN_NOSYNC);
     return 0;
 }
 
@@ -471,13 +573,13 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     db_value_read.doff = 0;
     db_value_read.flags = DB_DBT_USERMEM | DB_DBT_PARTIAL;
     
-    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
+    if (txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
     
     result = store->db->get(store->db, txn, &db_key, &db_value_read, DB_RMW);
     if (result != 0 && result != DB_NOTFOUND)
     {
-        txn->abort(txn);
+        txn_abort(txn);
         if (result == DB_LOCK_NOTGRANTED)
             return LA_STORAGE_OBJECT_PUT_CONFLICT;
         return LA_STORAGE_OBJECT_PUT_ERROR;
@@ -488,7 +590,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
         debug("data size: %d, data: %s\n", db_value_read.size, db_value_read.data);
         if (rev == NULL || memcmp(rev, &header.rev, sizeof(la_storage_rev_t)) != 0)
         {
-            txn->abort(txn);
+            txn_abort(txn);
             return LA_STORAGE_OBJECT_PUT_CONFLICT;
         }
         obj->header->doc_seq = header.doc_seq + 1;
@@ -531,10 +633,10 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     result = store->db->put(store->db, txn, &db_key, &db_value_write, 0);
     if (result != 0)
     {
-        txn->abort(txn);
+        txn_abort(txn);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
-    txn->commit(txn, DB_TXN_NOSYNC);
+    txn_commit(txn, DB_TXN_NOSYNC);
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
@@ -557,7 +659,7 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     db_value.size = db_value.ulen = la_storage_object_total_size(obj);
     db_value.flags = DB_DBT_USERMEM;
     
-    if (store->env->env->txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
+    if (txn_begin(store->env->env, NULL, &txn, DB_TXN_NOSYNC | DB_TXN_NOWAIT) != 0)
         return LA_STORAGE_OBJECT_PUT_ERROR;
 
     db_seq_t seq;
@@ -566,11 +668,11 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     
     if (store->db->put(store->db, txn, &db_key, &db_value, 0) != 0)
     {
-        txn->abort(txn);
+        txn_abort(txn);
         return LA_STORAGE_OBJECT_PUT_ERROR;
     }
     
-    txn->commit(txn, 0);
+    txn_commit(txn, DB_TXN_NOSYNC);
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
@@ -578,10 +680,36 @@ uint64_t la_storage_lastseq(la_storage_object_store *store)
 {
     DB_SEQUENCE_STAT *stat;
     db_seq_t seq;
-    store->seq->stat(store->seq, &stat, 0);
+    if (store->seq->stat(store->seq, &stat, 0) != 0)
+        return 0;
     seq = stat->st_current;
     free(stat);
     return seq;
+}
+
+int la_storage_stat(la_storage_object_store *store, la_storage_stat_t *stat)
+{
+    DB_TXN *txn;
+    DB_BTREE_STAT *mainStat, *seqStat;
+    if (txn_begin(store->env->env, NULL, &txn, DB_READ_COMMITTED | DB_TXN_NOSYNC) != 0)
+        return -1;
+    if (store->db->stat(store->db, txn, &mainStat, DB_FAST_STAT | DB_READ_COMMITTED) != 0)
+    {
+        txn_abort(txn);
+        return -1;
+    }
+    if (store->db->stat(store->seq_db, txn, &seqStat, DB_FAST_STAT | DB_READ_COMMITTED) != 0)
+    {
+        txn_abort(txn);
+        return -1;
+    }
+    stat->numkeys = mainStat->bt_nkeys;
+    stat->size = ((uint64_t) mainStat->bt_pagecnt * (uint64_t) mainStat->bt_pagesize)
+        + ((uint64_t) seqStat->bt_pagecnt * (uint64_t) seqStat->bt_pagesize);
+    free(mainStat);
+    free(seqStat);
+    txn_commit(txn, DB_TXN_NOSYNC);
+    return 0;
 }
 
 la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *store, uint64_t since)
@@ -683,8 +811,14 @@ void la_storage_iterator_close(la_storage_object_iterator *it)
 
 void la_storage_close(la_storage_object_store *store)
 {
-    store->seq->close(store->seq, 0);
-    store->seq_db->close(store->seq_db, 0);
-    store->db->close(store->db, 0);
+    int ret;
+    ret = store->seq->close(store->seq, 0);
+    syslog(LOG_NOTICE, "close sequence: %d", ret);
+    store->seq_db->sync(store->seq_db, 0);
+    ret = store->seq_db->close(store->seq_db, 0);
+    syslog(LOG_NOTICE, "close sequence db: %d", ret);
+    store->db->sync(store->db, 0);
+    ret = store->db->close(store->db, 0);
+    syslog(LOG_NOTICE, "close db: %d", ret);
     free(store);
 }
