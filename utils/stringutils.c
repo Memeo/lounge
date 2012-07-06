@@ -60,8 +60,8 @@ string_randhex(char *str, size_t len)
     
     if (urandom == NULL)
         return -1;
-    
-    for (int i = 0; i < len; i += 2)
+    int i;
+    for (i = 0; i < len; i += 2)
     {
         if (fread(&b, 1, 1, urandom) != 1)
         {

@@ -95,13 +95,7 @@ struct la_storage_object_iterator
     sqlite3_stmt *stmt;
 };
 
-const char *
-la_storage_driver(void)
-{
-    return "SQLite";
-}
-
-la_storage_env *la_storage_open_env(const char *name)
+static la_storage_env *sqlite_la_storage_open_env(const char *name)
 {
     struct stat st;
     int ret;
@@ -140,13 +134,13 @@ la_storage_env *la_storage_open_env(const char *name)
     return env;
 }
 
-void la_storage_close_env(la_storage_env *env)
+static void sqlite_la_storage_close_env(la_storage_env *env)
 {
     free(env->name);
     free(env);
 }
 
-la_storage_object_store *la_storage_open(la_storage_env *env, const char *name)
+static la_storage_object_store *sqlite_la_storage_open(la_storage_env *env, const char *name)
 {
     const char *parts[2];
     char *path;
@@ -173,7 +167,7 @@ la_storage_object_store *la_storage_open(la_storage_env *env, const char *name)
     return store;
 }
 
-la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const la_storage_rev_t *rev, la_storage_object **obj)
+static la_storage_object_get_result sqlite_la_storage_get(la_storage_object_store *store, const char *key, const la_storage_rev_t *rev, la_storage_object **obj)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -227,7 +221,7 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_GET_ERROR;
 }
 
-la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, la_storage_rev_t *rev)
+static la_storage_object_get_result sqlite_la_storage_get_rev(la_storage_object_store *store, const char *key, la_storage_rev_t *rev)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -258,7 +252,7 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_GET_ERROR;
 }
 
-int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs)
+static int sqlite_la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -297,7 +291,7 @@ int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uin
     return LA_STORAGE_OBJECT_GET_NOT_FOUND;
 }
 
-la_storage_object_put_result la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
+static la_storage_object_put_result sqlite_la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -430,7 +424,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
-la_storage_object_put_result la_storage_replace(la_storage_object_store *store, la_storage_object *obj)
+static la_storage_object_put_result sqlite_la_storage_replace(la_storage_object_store *store, la_storage_object *obj)
 {
     sqlite3_stmt *stmt;
     int ret;
@@ -498,7 +492,7 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
-uint64_t la_storage_lastseq(la_storage_object_store *store)
+static uint64_t sqlite_la_storage_lastseq(la_storage_object_store *store)
 {
     sqlite3_stmt *stmt;
     uint64_t seq;
@@ -514,7 +508,7 @@ uint64_t la_storage_lastseq(la_storage_object_store *store)
     return seq;
 }
 
-la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *store, uint64_t since)
+static la_storage_object_iterator *sqlite_la_storage_iterator_open(la_storage_object_store *store, uint64_t since)
 {
     la_storage_object_iterator *it = (la_storage_object_iterator *) malloc(sizeof(struct la_storage_object_iterator));
     if (it == NULL)
@@ -545,7 +539,7 @@ la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *st
     return it;
 }
 
-la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_iterator *iterator, la_storage_object **obj)
+static la_storage_object_iterator_result sqlite_la_storage_iterator_next(la_storage_object_iterator *iterator, la_storage_object **obj)
 {
     int ret = sqlite3_step(iterator->stmt);
     if (ret == SQLITE_DONE)
@@ -576,14 +570,39 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
     return LA_STORAGE_OBJECT_ITERATOR_ERROR;
 }
 
-void la_storage_iterator_close(la_storage_object_iterator *iterator)
+static void sqlite_la_storage_iterator_close(la_storage_object_iterator *iterator)
 {
     sqlite3_finalize(iterator->stmt);
     free(iterator);
 }
 
-void la_storage_close(la_storage_object_store *store)
+static void sqlite_la_storage_close(la_storage_object_store *store)
 {
     sqlite3_close(store->db);
     free(store);
+}
+
+static const la_object_store_driver_t sqlite_driver = {
+    .name = "SQLite",
+    .open_env = sqlite_la_storage_open_env,
+    .close_env = sqlite_la_storage_close_env,
+    .open_store = sqlite_la_storage_open,
+    .close_store = sqlite_la_storage_close,
+    .delete_store = NULL, /* TODO */
+    .get = sqlite_la_storage_get,
+    .get_rev = sqlite_la_storage_get_rev,
+    .get_all_revs = sqlite_la_storage_get_all_revs,
+    .set_revs = NULL, /* TODO */
+    .put = sqlite_la_storage_put,
+    .replace = sqlite_la_storage_replace,
+    .lastseq = sqlite_la_storage_lastseq,
+    .stat = NULL, /* TODO */
+    .iterator_open = sqlite_la_storage_iterator_open,
+    .iterator_next = sqlite_la_storage_iterator_next,
+    .iterator_close = sqlite_la_storage_iterator_close
+};
+
+__attribute__((constructor)) void sqlite3_la_driver_init()
+{
+    la_storage_install_driver("SQLite", &sqlite_driver);
 }

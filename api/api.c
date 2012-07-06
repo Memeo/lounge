@@ -31,6 +31,7 @@
 
 struct la_host
 {
+    const char *driver;
     la_storage_env *env;
     la_compressor_t *compressor;
 };
@@ -38,7 +39,7 @@ struct la_host
 struct la_db
 {
     la_host_t *host;
-    la_storage_object_store *store;
+    la_object_store_t *store;
 };
 
 struct la_view_iterator
@@ -52,24 +53,25 @@ struct la_view_iterator
     la_codec_value_t *mapped;
 };
 
-la_host_t *la_host_open(const char *hosthome)
+la_host_t *la_host_open(const char *driver, const char *hosthome)
 {
     la_host_t *host = (la_host_t *) malloc(sizeof(struct la_host));
     if (host == NULL)
         return NULL;
-    host->env = la_storage_open_env(hosthome);
+    host->env = la_storage_open_env(driver, hosthome);
     if (host->env == NULL)
     {
         free(host);
         return NULL;
     }
+    host->driver = driver;
     host->compressor = NULL;
     return host;
 }
 
 void la_host_close(la_host_t *host)
 {
-    la_storage_close_env(host->env);
+    la_storage_close_env(host->driver, host->env);
     free(host);
 }
 
@@ -85,7 +87,7 @@ la_db_open_result_t la_db_open(la_host_t *host, const char *name, int flags, la_
     if (db == NULL)
         return LA_DB_OPEN_ERROR;
     db->host = host;
-    result = la_storage_open(host->env, name, flags, &db->store);
+    result = la_storage_open(host->driver, host->env, name, flags, &db->store);
     if (result != LA_STORAGE_OPEN_OK && result != LA_STORAGE_OPEN_CREATED)
     {
         free(db);
@@ -97,10 +99,9 @@ la_db_open_result_t la_db_open(la_host_t *host, const char *name, int flags, la_
 
 int la_db_delete_db(la_db_t *db)
 {
-    int ret = la_storage_object_store_delete(db->store);
-    if (ret == 0)
-        db->store = NULL;
-    return ret;
+    la_storage_delete_store(db->store);
+    db->store = 0;
+    return 0;
 }
 
 static int is_tombstone(la_codec_value_t *doc)
@@ -444,7 +445,7 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
         *value = NULL;
     while (la_codec_array_size(it->mapped) == 0 && parsed == NULL)
     {
-        result = la_storage_iterator_next(it->it, &object);
+        result = la_storage_iterator_next(it->db->store, it->it, &object);
     
         if (result == LA_STORAGE_OBJECT_ITERATOR_ERROR)
             return LA_VIEW_ITERATOR_ERROR;
@@ -517,7 +518,7 @@ la_view_iterator_result la_view_iterator_next(la_view_iterator_t *it, la_codec_v
 
 void la_view_iterator_close(la_view_iterator_t *it)
 {
-    la_storage_iterator_close(it->it);
+    la_storage_iterator_close(it->db->store, it->it);
     if (it->accum != NULL)
         la_codec_decref(it->accum);
     free(it);

@@ -68,7 +68,7 @@ typedef enum
     LA_VIEW_ITERATOR_ERROR
 } la_view_iterator_result;
 
-la_host_t *la_host_open(const char *hosthome);
+la_host_t *la_host_open(const char *driver, const char *hosthome);
 void la_host_close(la_host_t *host);
 
 void la_host_configure_compressor(la_host_t *host, la_compressor_t *compressor);

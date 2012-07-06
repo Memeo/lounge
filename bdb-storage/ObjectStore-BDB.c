@@ -76,13 +76,7 @@ struct la_storage_object_iterator
     DBC *cursor;
 };
 
-const char *
-la_storage_driver(void)
-{
-    return "BDB";
-}
-
-la_storage_env *la_storage_open_env(const char *name)
+static la_storage_env *bdb_la_storage_open_env(const char *name)
 {
     int ret;
     struct stat st;
@@ -130,7 +124,7 @@ la_storage_env *la_storage_open_env(const char *name)
     return env;
 }
 
-void la_storage_close_env(la_storage_env *env)
+static void bdb_la_storage_close_env(la_storage_env *env)
 {
     env->env->close(env->env, 0);
     free(env);
@@ -168,7 +162,7 @@ static int compare_seq(DB *db, const DBT *key1, const DBT *key2)
     return 0;
 }
 
-la_storage_open_result_t la_storage_open(la_storage_env *env, const char *path, int flags, la_storage_object_store **_store)
+static la_storage_open_result_t bdb_la_storage_open(la_storage_env *env, const char *path, int flags, la_storage_object_store **_store)
 {
     la_storage_object_store *store = (la_storage_object_store *) malloc(sizeof(struct la_storage_object_store));
     DB_TXN *txn;
@@ -272,7 +266,7 @@ la_storage_open_result_t la_storage_open(la_storage_env *env, const char *path, 
 
 #include <syslog.h>
 
-int la_storage_object_store_delete(la_storage_object_store *store)
+static int bdb_la_storage_object_store_delete(la_storage_object_store *store)
 {
     const char *dbname;
     const char *seqdbname;
@@ -342,7 +336,7 @@ int la_storage_object_store_delete(la_storage_object_store *store)
  * @param rev The revision to match when getting the object (if null, get the latest rev).
  * @param obj The object to .
  */
-la_storage_object_get_result la_storage_get(la_storage_object_store *store, const char *key, const la_storage_rev_t *rev, la_storage_object **obj)
+static la_storage_object_get_result bdb_la_storage_get(la_storage_object_store *store, const char *key, const la_storage_rev_t *rev, la_storage_object **obj)
 {
     la_storage_object_header header;
     DBT db_key;
@@ -400,7 +394,7 @@ la_storage_object_get_result la_storage_get(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_GET_OK;
 }
 
-la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, const char *key, la_storage_rev_t *rev)
+static la_storage_object_get_result bdb_la_storage_get_rev(la_storage_object_store *store, const char *key, la_storage_rev_t *rev)
 {
     la_storage_object_header header;
     DBT db_key;
@@ -436,7 +430,7 @@ la_storage_object_get_result la_storage_get_rev(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_GET_OK;
 }
 
-int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs)
+static int bdb_la_storage_get_all_revs(la_storage_object_store *store, const char *key, uint64_t *start, la_storage_rev_t **revs)
 {
     DBT db_key;
     DBT db_value;
@@ -477,7 +471,7 @@ int la_storage_get_all_revs(la_storage_object_store *store, const char *key, uin
     return header->rev_count;
 }
 
-la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t revcount)
+static la_storage_object_put_result bdb_la_storage_set_revs(la_storage_object_store *store, const char *key, la_storage_rev_t *revs, size_t revcount)
 {
     DB_TXN *txn;
     DBT db_key;
@@ -545,7 +539,7 @@ la_storage_object_put_result la_storage_set_revs(la_storage_object_store *store,
 /**
  * Put an object into the store.
  */
-la_storage_object_put_result la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
+static la_storage_object_put_result bdb_la_storage_put(la_storage_object_store *store, const la_storage_rev_t *rev, la_storage_object *obj)
 {
     DB_TXN *txn;
     la_storage_object_header header;
@@ -640,7 +634,7 @@ la_storage_object_put_result la_storage_put(la_storage_object_store *store, cons
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
-la_storage_object_put_result la_storage_replace(la_storage_object_store *store, la_storage_object *obj)
+static la_storage_object_put_result bdb_la_storage_replace(la_storage_object_store *store, la_storage_object *obj)
 {
     DB_TXN *txn;
     la_storage_object_header header;
@@ -676,7 +670,7 @@ la_storage_object_put_result la_storage_replace(la_storage_object_store *store, 
     return LA_STORAGE_OBJECT_PUT_SUCCESS;
 }
 
-uint64_t la_storage_lastseq(la_storage_object_store *store)
+static uint64_t bdb_la_storage_lastseq(la_storage_object_store *store)
 {
     DB_SEQUENCE_STAT *stat;
     db_seq_t seq;
@@ -687,7 +681,7 @@ uint64_t la_storage_lastseq(la_storage_object_store *store)
     return seq;
 }
 
-int la_storage_stat(la_storage_object_store *store, la_storage_stat_t *stat)
+static int bdb_la_storage_stat(la_storage_object_store *store, la_storage_stat_t *stat)
 {
     DB_TXN *txn;
     DB_BTREE_STAT *mainStat, *seqStat;
@@ -712,7 +706,7 @@ int la_storage_stat(la_storage_object_store *store, la_storage_stat_t *stat)
     return 0;
 }
 
-la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *store, uint64_t since)
+static la_storage_object_iterator *bdb_la_storage_iterator_open(la_storage_object_store *store, uint64_t since)
 {
     DBT seq_key, seq_value;
     seq_key.data = &since;
@@ -744,7 +738,7 @@ la_storage_object_iterator *la_storage_iterator_open(la_storage_object_store *st
     return it;
 }
 
-la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_iterator *it, la_storage_object **obj)
+static la_storage_object_iterator_result bdb_la_storage_iterator_next(la_storage_object_iterator *it, la_storage_object **obj)
 {
     DBT db_pkey;
     DBT db_key;
@@ -803,13 +797,13 @@ la_storage_object_iterator_result la_storage_iterator_next(la_storage_object_ite
     return LA_STORAGE_OBJECT_ITERATOR_GOT_NEXT;
 }
 
-void la_storage_iterator_close(la_storage_object_iterator *it)
+static void bdb_la_storage_iterator_close(la_storage_object_iterator *it)
 {
     it->cursor->close(it->cursor);
     free(it);
 }
 
-void la_storage_close(la_storage_object_store *store)
+static void bdb_la_storage_close(la_storage_object_store *store)
 {
     int ret;
     ret = store->seq->close(store->seq, 0);
@@ -821,4 +815,29 @@ void la_storage_close(la_storage_object_store *store)
     ret = store->db->close(store->db, 0);
     syslog(LOG_NOTICE, "close db: %d", ret);
     free(store);
+}
+
+static la_object_store_driver_t bdb_driver = {
+    .name = "BDB",
+    .open_env = bdb_la_storage_open_env,
+    .close_env = bdb_la_storage_close_env,
+    .open_store = bdb_la_storage_open,
+    .close_store = bdb_la_storage_close,
+    .delete_store = NULL,
+    .get = bdb_la_storage_get,
+    .get_rev = bdb_la_storage_get_rev,
+    .get_all_revs = bdb_la_storage_get_all_revs,
+    .set_revs = bdb_la_storage_set_revs,
+    .put = bdb_la_storage_put,
+    .replace = bdb_la_storage_replace,
+    .lastseq = bdb_la_storage_lastseq,
+    .stat = bdb_la_storage_stat,
+    .iterator_open = bdb_la_storage_iterator_open,
+    .iterator_next = bdb_la_storage_iterator_next,
+    .iterator_close = bdb_la_storage_iterator_close
+};
+
+__attribute__((constructor)) void bdb_driver_init()
+{
+    la_storage_install_driver("BDB", &bdb_driver);
 }
